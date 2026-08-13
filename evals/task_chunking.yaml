@@ -1,0 +1,9 @@
+id: task-chunking
+preference:
+  task_chunking: adaptive
+prompt: |
+  I need to add authentication, migrate the database, update the deployment pipeline, write tests, and document everything. Help me get started.
+expect:
+  - complex_work_is_chunked
+  - next_steps_are_concrete
+  - simple_work_is_not_over_structured
