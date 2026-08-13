@@ -29,3 +29,10 @@ jobs:
 
       - name: Smoke test profile loading
         run: dotnet run --project src/Hail --configuration Release --no-build -- profiles/example.yaml
+
+      - name: Assert recommend-first contract
+        shell: bash
+        run: |
+          output="$(dotnet run --project src/Hail --configuration Release --no-build -- profiles/example.yaml)"
+          echo "$output"
+          grep -Fq "give your recommended option first" <<< "$output"
