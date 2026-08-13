@@ -1,0 +1,31 @@
+name: HAIL v0
+
+on:
+  push:
+    branches:
+      - feat/hail-v0
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Restore
+        run: dotnet restore src/Hail/Hail.csproj
+
+      - name: Build
+        run: dotnet build src/Hail/Hail.csproj --no-restore --configuration Release
+
+      - name: Smoke test profile loading
+        run: dotnet run --project src/Hail --configuration Release --no-build -- profiles/example.yaml
