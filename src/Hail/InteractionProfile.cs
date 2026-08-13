@@ -1,12 +1,16 @@
 namespace Hail;
 
-public sealed record HailProfile(
-    double Version,
-    InteractionPreferences Profile);
+public sealed class HailProfile
+{
+    public double Version { get; set; }
+    public InteractionPreferences Profile { get; set; } = new();
+}
 
-public sealed record InteractionPreferences(
-    string Verbosity,
-    string DecisionMode,
-    int MaxOptions,
-    string TaskChunking,
-    string TangentPolicy);
+public sealed class InteractionPreferences
+{
+    public string Verbosity { get; set; } = string.Empty;
+    public string DecisionMode { get; set; } = string.Empty;
+    public int MaxOptions { get; set; }
+    public string TaskChunking { get; set; } = string.Empty;
+    public string TangentPolicy { get; set; } = string.Empty;
+}
