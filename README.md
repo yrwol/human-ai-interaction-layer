@@ -1,2 +1,5 @@
-# human-ai-interaction-layer
-A human-first standard for adaptive AI interaction.
+# HAIL
+
+Human-AI Interaction Layer
+
+AI should HAIL to you, not the other way around.
