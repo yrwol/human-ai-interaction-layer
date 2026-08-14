@@ -8,29 +8,29 @@ HAIL is an experimental, human-first interaction layer for expressing how a pers
 
 Milestone 1 proved that a small semantic profile can change Claude behavior. Milestone 2 proved that the same profile remains meaningful across Claude and Codex even when enforcement strength differs by harness.
 
-The current milestone asks a different question:
+The current milestone asks:
 
-> **Can a normal person configure and change HAIL conversationally without editing YAML, running a compiler, or understanding harness configuration?**
+> **Can a normal person intentionally configure persistent HAIL defaults without editing YAML, running a compiler, or understanding harness configuration?**
 
 ## Product direction
 
-The intended product boundary is now:
-
 ```text
-human language
-     ↓
-semantic HAIL profile
-     ↓
+explicit HAIL configuration
+          ↓
+persistent semantic HAIL profile
+          ↓
 harness-native integration
-     ↓
-adaptive AI behavior
+          ↓
+default adaptive AI behavior
 ```
 
-The semantic profile remains vendor-neutral. Harness integrations own harness-specific wording, persistence mechanics, and delivery behavior.
+Ordinary conversation is **not** persistent configuration. A user saying “stop waiting on me” during a task may reasonably mean “for this task,” not “change my default forever.” HAIL therefore does not silently mutate persistent preferences from ordinary conversational instructions.
+
+Temporary/session/task-specific adaptation is a separate future problem and remains intentionally parked.
 
 ## Current semantic profile
 
-HAIL currently supports five persistent preferences:
+HAIL currently supports six persistent preferences:
 
 ```yaml
 version: 0.1
@@ -39,29 +39,63 @@ profile:
   decision_mode: recommend_first
   max_options: 3
   task_chunking: adaptive
+  step_pacing: continuous
   tangent_policy: capture_and_return
 ```
+
+`task_chunking` controls how work is divided. `step_pacing` controls how quickly HAIL moves through those pieces, including whether it should wait for the user before continuing.
 
 YAML is the current reference representation. Normal users should not need to see or edit it.
 
 ## Native Claude experiment
 
-The first no-compiler profile-management experiment lives at [`integrations/claude/`](integrations/claude/).
+The first no-compiler persistent profile-management experiment lives at [`integrations/claude/`](integrations/claude/).
 
-It is a Claude plugin with a `/hail` skill. The skill is intended to handle requests such as:
+It is a Claude plugin with an explicit HAIL skill. Persistent configuration should start through HAIL, for example:
 
 ```text
-Help me set up HAIL.
-Show me how HAIL is configured.
-Stop giving me so many choices.
-Just recommend what you think I should do.
-Keep answers shorter.
-When I get distracted, remember what we were doing.
+/hail:hail
+/hail:hail show
+/hail:hail setup
+/hail:hail change
+/hail:hail reset
 ```
 
-The skill translates those requests into the existing semantic profile, persists the profile at `~/.hail/profile.yaml`, and updates only HAIL's managed section in the user's Claude instructions.
+The interaction remains conversational after invocation. For example:
+
+```text
+/hail:hail change
+> Give me one small step at a time and wait for me before moving on.
+```
+
+or:
+
+```text
+/hail:hail
+> Show me how HAIL is configured.
+```
+
+Inside explicit HAIL configuration, the skill translates natural-language needs into the semantic profile, persists the profile at `~/.hail/profile.yaml`, regenerates HAIL's Claude projection at `~/.hail/claude-code.md`, and preserves the single import in the user's `~/.claude/CLAUDE.md`.
 
 The native path does **not** invoke the .NET reference implementation.
+
+### Persistent vs contextual behavior
+
+```text
+/hail:hail change
+"Stop waiting between steps by default."
+        ↓
+persistent profile change
+
+ordinary task conversation
+"Stop waiting on me."
+        ↓
+contextual request only
+        ↓
+HAIL profile remains unchanged
+```
+
+If users later need reliable “today only,” session, task, or overload modes, that should be designed explicitly rather than smuggled into persistent profile management.
 
 ### Developer test
 
@@ -71,17 +105,11 @@ With Claude Code installed, load the plugin directly from the repository:
 claude --plugin-dir ./integrations/claude
 ```
 
-Then invoke:
-
-```text
-/hail
-```
-
-or ask naturally for one of the preference changes above. Claude Code plugins support skills as `skills/<name>/SKILL.md`, and local plugins can be tested with `--plugin-dir` before marketplace packaging.
+Then invoke `/hail:hail` and configure or inspect the persistent profile. After a change, use `/clear` and test normal behavior to verify the generated preferences survive a fresh conversation.
 
 ## Reference implementation
 
-The original .NET compiler has been moved to [`reference/dotnet/`](reference/dotnet/).
+The original .NET compiler lives under [`reference/dotnet/`](reference/dotnet/).
 
 It remains useful as reference/conformance tooling for:
 
@@ -98,14 +126,17 @@ Detailed behavioral evidence lives under [`evals/results/`](evals/results/).
 
 - Milestone 1 — static profile → Claude: **PASS**
 - Milestone 2 — same profile → Codex: **PASS for portability evidence**
+- Milestone 3 — native persistent profile management: **in progress**
 
-One of the strongest findings so far is that compatibility is preference-level rather than binary. Claude and Codex followed different semantic dimensions with different strengths, while the human-owned profile remained unchanged.
+The first native tests have already demonstrated conversational profile creation, migration from the reference-generated Claude projection, persistence across `/clear`, one-step-at-a-time pacing, and composition between pacing and tangent handling.
+
+They also demonstrated why persistent changes must be explicit: ordinary instructions such as “stop waiting on me” naturally operate as task-local instructions and should not silently redefine the user's defaults.
 
 ## Repository shape
 
 ```text
 integrations/         product-facing harness-native experiments
-  claude/             current conversational profile-management experiment
+  claude/             current explicit persistent profile-management experiment
 reference/
   dotnet/             reference compiler/conformance tooling
 profiles/             reference semantic profile examples
@@ -120,18 +151,22 @@ CLAUDE.md              Claude project guidance
 
 - Keep human intent vendor-neutral.
 - Prefer harness-native capabilities when they are sufficient.
+- Persistent preference mutation requires explicit HAIL intent.
+- Ordinary conversational adaptation must not silently rewrite the persistent profile.
 - Do not mutate user preferences to compensate for weak harness enforcement.
 - Do not expose implementation plumbing to normal users.
-- Do not add MCP, a shared runtime, more profile fields, diagnosis presets, cloud sync, or a UI until a concrete validated need requires them.
+- Do not add MCP, a shared runtime, diagnosis presets, cloud sync, or a UI until a concrete validated need requires them.
+- Treat temporary/session/task-specific behavior as a separate design problem from persistent defaults.
 
 ## Current milestone exit condition
 
-The native profile-management experiment succeeds when a user can:
+The native persistent profile-management experiment succeeds when a user can:
 
-1. express a preference change in ordinary language;
-2. have it mapped to the existing HAIL semantic profile;
-3. persist that preference without manually touching YAML;
-4. have Claude apply the updated behavior without invoking the reference compiler; and
-5. inspect or change the preference again conversationally.
+1. intentionally enter HAIL configuration;
+2. describe persistent preferences in ordinary language inside that explicit context;
+3. have them mapped to the HAIL semantic profile;
+4. persist them without manually touching YAML;
+5. have Claude apply the updated behavior across a fresh conversation without invoking the reference compiler; and
+6. inspect, change, or reset the profile again through explicit HAIL interaction.
 
-Only after that should we decide what parts of profile management need to become portable across additional harnesses.
+Only after that should we decide how persistent profile management should be packaged or ported to additional harnesses. Temporary/session adaptation remains parked until it gets its own requirements and tests.
