@@ -46,3 +46,16 @@ jobs:
           test -f artifacts/claude-code.md
           grep -Fq "# HAIL Interaction Instructions" artifacts/claude-code.md
           grep -Fq "give your recommended option first" artifacts/claude-code.md
+
+      - name: Validate safe Claude Code bootstrap
+        shell: bash
+        run: |
+          home="$RUNNER_TEMP/hail-home"
+          mkdir -p "$home/.claude"
+          printf '# Existing user instructions\nDo not remove me.\n' > "$home/.claude/CLAUDE.md"
+          dotnet run --project src/Hail --configuration Release --no-build -- profiles/example.yaml --install claude-code --home "$home"
+          dotnet run --project src/Hail --configuration Release --no-build -- profiles/example.yaml --install claude-code --home "$home"
+          test -f "$home/.hail/claude-code.md"
+          grep -Fq "# HAIL Interaction Instructions" "$home/.hail/claude-code.md"
+          grep -Fq "Do not remove me." "$home/.claude/CLAUDE.md"
+          test "$(grep -Fc '@~/.hail/claude-code.md' "$home/.claude/CLAUDE.md")" -eq 1
