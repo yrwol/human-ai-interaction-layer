@@ -36,3 +36,13 @@ jobs:
           output="$(dotnet run --project src/Hail --configuration Release --no-build -- profiles/example.yaml)"
           echo "$output"
           grep -Fq "give your recommended option first" <<< "$output"
+
+      - name: Generate Claude Code delivery artifact
+        run: dotnet run --project src/Hail --configuration Release --no-build -- profiles/example.yaml --output artifacts/claude-code.md
+
+      - name: Validate Claude Code delivery artifact
+        shell: bash
+        run: |
+          test -f artifacts/claude-code.md
+          grep -Fq "# HAIL Interaction Instructions" artifacts/claude-code.md
+          grep -Fq "give your recommended option first" artifacts/claude-code.md
