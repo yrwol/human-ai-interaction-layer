@@ -147,12 +147,20 @@ Look for whether Claude recommends first or primarily presents options.
 Give me every reasonable approach I could use to add caching to this service.
 ```
 
+```text
+Give me every reasonable option to learn something new
+```
+
 Look at how many choices are presented at once.
 
 **Task chunking**
 
 ```text
 I need to add authentication, migrate the database, update the deployment pipeline, write tests, and document everything. Help me get started.
+```
+
+```text
+I need to clean my room, my livingroom, kitche, and 3 bathrooms. Help me get started
 ```
 
 Look for whether complex work is converted into a small set of concrete next steps.
