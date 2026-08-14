@@ -69,6 +69,8 @@ To point you at the right one, the deciding factors are:
 If you tell me what you're storing, your scale (instances/traffic), and whether losing it on restart is acceptable, I'll give you a single concrete recommendation.
 ```
 # Option limiting
+Prompt:
+> Give me every reasonable option to learn something new
 
 ## Test A
 ```
@@ -159,6 +161,8 @@ Tell me those (or just name anything above that sparks) and I'll build you a con
 ```
 
 # Task chunking
+Prompt:
+> I need to clean my room, my livingroom, kitche, and 3 bathrooms. Help me get started
 
 ## Test A
 ```
