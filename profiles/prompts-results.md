@@ -345,3 +345,138 @@ Eventually the abscission layer fully severs the leaf, it falls, and the tree co
 
 Would you like me to go deeper on any part — the chemistry of the pigments, or the ecological reasons trees bother doing this?
 ```
+
+# Tangent Handling
+Prompt (1):
+> Help me plan what I need to clean today: kitchen, bedroom, living room, and bathrooms.
+
+After response, additional prompt (2):
+> Oh also I've been thinking about learning spanish
+
+## Test A
+Prompt (1)
+```
+Here's a room-by-room plan to tackle those four areas efficiently today.
+
+## Suggested order
+Work **top-down and dirtiest-last**: Bedroom → Living Room → Kitchen → Bathrooms. This keeps the grimiest jobs at the end so you're not tracking mess into freshly-cleaned rooms.
+
+---
+
+### 🛏️ Bedroom
+- Strip and remake the bed (wash sheets if due)
+- Clear surfaces — nightstands, dresser
+- Put away clothes / start a laundry load
+- Dust surfaces and any sills
+- Vacuum floor, including under the bed
+
+### 🛋️ Living Room
+- Pick up clutter, fold throws, fluff cushions
+- Dust surfaces, TV, shelves
+- Wipe down remotes/high-touch spots
+- Vacuum couch and floor (spot-clean stains if any)
+
+### 🍽️ Kitchen
+- Load/run dishwasher or wash dishes
+- Clear and wipe counters + stovetop
+- Wipe appliance fronts (microwave inside too)
+- Take out trash/recycling
+- Sweep and mop floor
+
+### 🚽 Bathrooms
+- Toilets (bowl + exterior)
+- Sink and counter
+- Mirror
+- Tub/shower
+- Empty trash, swap towels
+- Sweep/mop floor last
+
+---
+
+**Two time-savers:**
+1. Start a laundry load *first* so it runs in the background while you clean.
+2. Do the "pick up clutter" pass in every room before you start deep-cleaning any single one — it makes the actual cleaning much faster.
+
+Want me to turn this into a printable checklist, or add rough time estimates so you can fit it into your day?
+```
+
+Prompt (2)
+```
+That's a fun one to have on the horizon! 🌎 I'll park it here so we don't lose it.
+
+Want me to circle back to it once the cleaning's sorted — maybe pull together a simple starting plan (apps, a daily routine, whatever fits how you like to learn)? For now, back to the task at hand:
+
+Do you want that cleaning plan as a **printable checklist** or with **time estimates** added — or are you good to just dive in?
+```
+
+## Test B
+Prompt (1)
+```
+Here's a practical plan to tackle all four areas today. I've ordered it to work efficiently — start with the room that needs to "rest" (kitchen surfaces, bathroom disinfectant sitting) and end with floors everywhere so you're not tracking through cleaned rooms.
+
+## Suggested order & game plan
+
+### 1. Kitchen (do first — let cleaners sit while you move on)
+- Clear counters; put dishes in dishwasher or wash
+- Spray counters, stovetop, and backsplash — let sit
+- Wipe down appliance fronts (fridge, microwave, oven)
+- Clean sink and faucet
+- Wipe counters/stove clean
+- Take out trash & recycling
+- Sweep floor (mop later with other floors)
+
+### 2. Bathrooms (apply cleaners early, let them work)
+- Spray toilet bowl, tub/shower, and sink — let disinfectant dwell
+- Wipe mirrors and counters
+- Scrub tub/shower, then sink
+- Scrub and wipe toilet (inside and out)
+- Swap towels, refill soap/TP
+- Empty trash
+- Sweep/mop floor last
+
+### 3. Bedroom
+- Strip and remake bed (or launder sheets if due)
+- Clear and put away clutter/clothes
+- Dust surfaces, nightstands, dresser
+- Empty any trash
+- Sweep/vacuum floor
+
+### 4. Living room
+- Clear clutter, fold blankets, straighten cushions
+- Dust surfaces, TV, shelves, electronics
+- Wipe down remotes/high-touch spots
+- Vacuum sofa (and under cushions)
+- Vacuum/sweep floor
+
+### 5. Floors — all rooms
+Do a final pass: vacuum carpets, mop hard floors kitchen → bathrooms → bedroom → living room, working toward your exit.
+
+---
+
+**A few questions to tailor this:**
+- Do you have a time limit, or is this an all-day deep clean?
+- How many bathrooms?
+- Any laundry (sheets/towels) to fold into the timing, since that runs in the background?
+
+Want me to turn this into a printable checklist you can check off as you go?
+```
+
+Prompt (2)
+```
+Nice — that's a fun one to pick up, and honestly it pairs well with cleaning: you can run Spanish audio or a podcast while you scrub. Free hands, captive ears.
+
+To point you in the right direction, the big fork is usually *why* you want it, since that changes the whole approach:
+
+- **Travel/basics fast** → phrasebook + audio (Pimsleur, Language Transfer) to get speaking quickly
+- **Long-term fluency** → a mix of an app for daily habit (Duolingo/Busuu), plus comprehensible input (Dreaming Spanish is excellent for beginners)
+- **Conversation ASAP** → italki tutors for cheap 1-on-1 practice, even a few times a week
+- **Just curious/casual** → podcasts like *Coffee Break Spanish* or *Notes in Spanish* while you do other things
+
+A couple things that make a big difference regardless of method:
+- **Consistency beats intensity** — 15 min daily crushes 2 hours once a week
+- **Get to listening/speaking early** rather than drilling grammar in isolation
+- **Latin American vs. Spain Spanish** — worth picking based on where you'd use it (pronunciation and some vocab differ)
+
+What's drawing you to it? Travel, work, family/friends, or just something new to sink into? And do you have any past experience with it, or starting from zero? I can sketch out a realistic weekly plan that fits around your life if you want.
+```
+
