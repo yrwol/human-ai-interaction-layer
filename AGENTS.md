@@ -8,13 +8,13 @@ The product is the semantic model + harness integrations. The .NET implementatio
 
 ## Current active milestone
 
-Prove that a normal user can **intentionally manage persistent HAIL defaults** inside a harness without editing YAML, running a compiler, or understanding instruction-file plumbing.
+Milestone 3 proved explicit persistent HAIL profile management natively inside Claude.
 
-The first native experiment is the Claude plugin under `integrations/claude/`.
+The active experiment is now the Codex port under `integrations/codex/`:
 
-Current target flow:
+`explicit $hail configuration → natural-language preference → shared persistent HAIL semantic profile → native Codex AGENTS.md projection`
 
-`explicit HAIL configuration → natural-language preference → persistent HAIL semantic profile → native Claude projection`
+The goal is to learn whether profile management itself is portable without changing the human-owned semantic profile or introducing shared runtime infrastructure.
 
 No `dotnet run` dependency is allowed in this product path.
 
@@ -22,17 +22,19 @@ No `dotnet run` dependency is allowed in this product path.
 
 Keep changes small and evidence-driven.
 
-Do not add MCP, a shared runtime, desktop UI, cloud sync, diagnosis presets, or broad abstractions unless this milestone demonstrates a concrete need.
+Do not add MCP, a shared runtime, desktop UI, cloud sync, diagnosis presets, or broad abstractions unless a concrete experiment demonstrates a need.
 
 Prefer harness-native capabilities when they can preserve HAIL semantics and user ownership without extra plumbing.
 
 Temporary/session/task-specific adaptation is parked. Do not build it opportunistically into persistent profile management.
 
+Cross-harness projection synchronization is also intentionally unsolved. Record whether stale projections create a real user problem before designing synchronization infrastructure.
+
 ## Design rules
 
 - The profile is semantic and vendor-neutral.
 - Harness integrations own harness-specific wording, persistence mechanics, and delivery behavior.
-- The canonical profile is the source of truth; generated harness instructions are projections.
+- The canonical profile is the source of truth; generated harness instructions are disposable projections.
 - **Persistent profile mutation requires explicit HAIL intent.** Ordinary conversational instructions must not silently rewrite persistent defaults.
 - Contextual statements such as `stop waiting on me`, `just decide`, or `I'm overwhelmed today` may influence the current interaction through normal harness behavior, but are not persistent HAIL changes unless the user explicitly says so.
 - Normal users should not need to see or edit YAML unless they explicitly want to.
@@ -46,20 +48,22 @@ Temporary/session/task-specific adaptation is parked. Do not build it opportunis
 
 The reference .NET implementation should continue to build and preserve its existing smoke tests under `reference/dotnet/`.
 
-Native integration changes should also be validated independently of the reference compiler. Do not treat passing .NET tests as proof that a native integration works.
+Native integration changes must be validated independently of the reference compiler.
 
 Behavioral experiments and evidence belong in `evals/`.
 
-For persistent profile management, validate both configuration behavior and resulting behavior after a fresh conversation (`/clear` or equivalent).
+For persistent profile management, validate configuration behavior and resulting behavior in a fresh interaction.
 
 ## Important files
 
 - `spec/draft.md` — broader product and architecture direction
 - `spec/milestone-1-addendum.md` — first-harness learnings
 - `spec/milestone-2-addendum.md` — portability learnings
-- `spec/milestone-3-working-notes.md` — current persistent profile-management decisions and parked temporary-state questions
+- `spec/milestone-3-working-notes.md` — Claude native-management decisions and parked temporary-state questions
+- `spec/milestone-4-working-notes.md` — Codex profile-management port
 - `profiles/example.yaml` — reference semantic profile representation
-- `integrations/claude/` — current product-facing native Claude experiment
+- `integrations/claude/` — native Claude persistent profile management
+- `integrations/codex/` — active native Codex persistent profile-management experiment
 - `reference/dotnet/` — reference compiler and previous bootstrap implementations
 - `evals/` — behavioral expectations and evidence
 
