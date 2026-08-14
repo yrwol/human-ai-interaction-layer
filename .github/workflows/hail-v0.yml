@@ -1,16 +1,15 @@
-name: HAIL v0
+name: HAIL reference implementation
 
 on:
   push:
     branches:
-      - feat/hail-v0
-      - feat/hail-codex-adapter
+      - feat/hail-native-profile-management
   pull_request:
     branches:
       - main
 
 jobs:
-  build:
+  reference-dotnet:
     runs-on: ubuntu-latest
 
     steps:
@@ -23,23 +22,23 @@ jobs:
           dotnet-version: 10.0.x
 
       - name: Restore
-        run: dotnet restore src/Hail/Hail.csproj
+        run: dotnet restore reference/dotnet/Hail.csproj
 
       - name: Build
-        run: dotnet build src/Hail/Hail.csproj --no-restore --configuration Release
+        run: dotnet build reference/dotnet/Hail.csproj --no-restore --configuration Release
 
       - name: Smoke test profile loading
-        run: dotnet run --project src/Hail --configuration Release --no-build -- profiles/example.yaml
+        run: dotnet run --project reference/dotnet --configuration Release --no-build -- profiles/example.yaml
 
       - name: Assert recommend-first Claude contract
         shell: bash
         run: |
-          output="$(dotnet run --project src/Hail --configuration Release --no-build -- profiles/example.yaml)"
+          output="$(dotnet run --project reference/dotnet --configuration Release --no-build -- profiles/example.yaml)"
           echo "$output"
           grep -Fq "give your recommended option first" <<< "$output"
 
       - name: Generate Claude Code delivery artifact
-        run: dotnet run --project src/Hail --configuration Release --no-build -- profiles/example.yaml --output artifacts/claude-code.md
+        run: dotnet run --project reference/dotnet --configuration Release --no-build -- profiles/example.yaml --output artifacts/claude-code.md
 
       - name: Validate Claude Code delivery artifact
         shell: bash
@@ -54,15 +53,15 @@ jobs:
           home="$RUNNER_TEMP/hail-home"
           mkdir -p "$home/.claude"
           printf '# Existing user instructions\nDo not remove me.\n' > "$home/.claude/CLAUDE.md"
-          dotnet run --project src/Hail --configuration Release --no-build -- profiles/example.yaml --install claude-code --home "$home"
-          dotnet run --project src/Hail --configuration Release --no-build -- profiles/example.yaml --install claude-code --home "$home"
+          dotnet run --project reference/dotnet --configuration Release --no-build -- profiles/example.yaml --install claude-code --home "$home"
+          dotnet run --project reference/dotnet --configuration Release --no-build -- profiles/example.yaml --install claude-code --home "$home"
           test -f "$home/.hail/claude-code.md"
           grep -Fq "# HAIL Interaction Instructions" "$home/.hail/claude-code.md"
           grep -Fq "Do not remove me." "$home/.claude/CLAUDE.md"
           test "$(grep -Fc '@~/.hail/claude-code.md' "$home/.claude/CLAUDE.md")" -eq 1
 
       - name: Generate Codex delivery artifact
-        run: dotnet run --project src/Hail --configuration Release --no-build -- profiles/example.yaml --target codex --output artifacts/codex.md
+        run: dotnet run --project reference/dotnet --configuration Release --no-build -- profiles/example.yaml --target codex --output artifacts/codex.md
 
       - name: Validate Codex delivery artifact
         shell: bash
@@ -77,10 +76,27 @@ jobs:
           home="$RUNNER_TEMP/hail-codex-home"
           mkdir -p "$home/.codex"
           printf '# Existing Codex instructions\nDo not remove me.\n' > "$home/.codex/AGENTS.md"
-          dotnet run --project src/Hail --configuration Release --no-build -- profiles/example.yaml --install codex --home "$home"
-          dotnet run --project src/Hail --configuration Release --no-build -- profiles/example.yaml --install codex --home "$home"
+          dotnet run --project reference/dotnet --configuration Release --no-build -- profiles/example.yaml --install codex --home "$home"
+          dotnet run --project reference/dotnet --configuration Release --no-build -- profiles/example.yaml --install codex --home "$home"
           grep -Fq "Do not remove me." "$home/.codex/AGENTS.md"
           grep -Fq '<!-- HAIL:START -->' "$home/.codex/AGENTS.md"
           grep -Fq "# HAIL Interaction Instructions" "$home/.codex/AGENTS.md"
           test "$(grep -Fc '<!-- HAIL:START -->' "$home/.codex/AGENTS.md")" -eq 1
           test "$(grep -Fc '<!-- HAIL:END -->' "$home/.codex/AGENTS.md")" -eq 1
+
+  native-claude-shape:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate Claude plugin shape
+        shell: bash
+        run: |
+          test -f integrations/claude/.claude-plugin/plugin.json
+          test -f integrations/claude/skills/hail/SKILL.md
+          grep -Fq '"name": "hail"' integrations/claude/.claude-plugin/plugin.json
+          grep -Fq 'name: hail' integrations/claude/skills/hail/SKILL.md
+          grep -Fq '~/.hail/profile.yaml' integrations/claude/skills/hail/SKILL.md
+          grep -Fq '<!-- HAIL:START -->' integrations/claude/skills/hail/SKILL.md
