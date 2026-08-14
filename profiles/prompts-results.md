@@ -268,3 +268,80 @@ A couple of questions that'd help me sharpen this:
 
 Tell me the vibe and I'll build you an actual Saturday plan — timeline, what to get, and the best free resources to follow.
 ```
+
+# Verbosity
+Prompt:
+> Explain why leaves change color in the fall
+
+## Test A
+```
+Leaves change color in the fall through a combination of chemistry and the tree preparing for winter. Here's what's happening:
+
+## The green fades: chlorophyll breaks down
+
+During spring and summer, leaves are packed with **chlorophyll**, the pigment that makes them green and drives photosynthesis (converting sunlight into food). Chlorophyll is constantly being produced and broken down, so the green stays dominant.
+
+As days shorten and temperatures drop in autumn, trees sense that winter is coming. They stop producing chlorophyll, and the existing supply breaks down. As the green disappears, other pigments that were there all along become visible.
+
+## The colors that emerge
+
+- **Yellows and oranges** come from **carotenoids**, pigments present in the leaf year-round but masked by the green. These are the same compounds that make carrots orange. Once chlorophyll fades, they show through.
+
+- **Reds and purples** come from **anthocyanins**, which are mostly *newly produced* in fall. Trees make these from sugars trapped in the leaf. They're thought to act like a sunscreen, protecting the leaf as the tree reclaims nutrients before dropping it.
+
+- **Browns** come from **tannins**, waste products left behind after the other pigments are gone.
+
+## Why it happens at all
+
+The tree is recycling. Before a leaf falls, the tree pulls valuable nutrients (like nitrogen) back into its branches and trunk to store for spring. A layer of cells called the **abscission layer** forms at the base of the leaf stem, sealing it off and eventually letting it drop.
+
+## Why some years are more vivid
+
+Weather tunes the show:
+- **Bright, sunny days + cool (not freezing) nights** produce the most vivid reds, because sugars get trapped in the leaves and fuel anthocyanin production.
+- **Warm, cloudy, or rainy** autumns tend to make duller colors.
+
+So the yellows and oranges are a reveal, the reds are a fresh autumn creation, and the whole process is really the tree efficiently shutting down for winter.
+```
+
+## Test B
+```
+Leaves change color in the fall because of shifts in the pigments they contain, driven by changes in daylight and temperature. Here's what's actually happening:
+
+## The green is always being replaced
+
+During spring and summer, leaves are packed with **chlorophyll**, the pigment that captures sunlight for photosynthesis and gives leaves their green color. Chlorophyll is constantly broken down and regenerated, so as long as the tree keeps producing it, green dominates.
+
+Chlorophyll also masks other pigments that are present in the leaf the whole time.
+
+## The trigger: shorter days and cooler nights
+
+As autumn approaches, the main cue is the **lengthening of nights** (temperature and moisture play supporting roles). In response, the tree begins preparing to drop its leaves:
+
+- A layer of cells called the **abscission layer** forms at the base of each leaf stem, gradually cutting off the flow of water and nutrients.
+- The tree **stops producing chlorophyll**, and the existing chlorophyll breaks down and isn't replaced.
+
+As the green fades, the pigments that were there all along become visible.
+
+## The pigments that get revealed (or created)
+
+- **Carotenoids** — produce **yellows and oranges** (the same pigments in carrots and corn). These are present in the leaf all summer, just hidden by the green.
+- **Anthocyanins** — produce **reds and purples**. Unlike carotenoids, these are mostly **produced fresh in the fall**, made from sugars trapped in the leaf after the abscission layer forms. This is why red color varies so much year to year.
+
+## Why some years are more vivid
+
+Because anthocyanins depend on sugar and sunlight, weather matters:
+
+- **Warm, sunny days + cool (but not freezing) nights** produce the most brilliant reds — sunlight makes lots of sugar, and cool nights trap it in the leaf.
+- **Cloudy, warm, or wet** autumns tend to produce duller, more muted colors.
+
+## Why different trees differ
+
+- **Oaks** often turn brown (tannins).
+- **Maples** can turn brilliant red or orange.
+- **Aspens and birches** tend toward gold.
+
+Eventually the abscission layer fully severs the leaf, it falls, and the tree conserves resources through winter.
+
+Would you like me to go deeper on any part — the chemistry of the pigments, or the ecological reasons trees bother doing this?
+```
