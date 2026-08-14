@@ -159,7 +159,6 @@ To point you at the *best* option rather than all of them, three quick things sh
 
 Tell me those (or just name anything above that sparks) and I'll build you a concrete starting path.
 ```
-
 # Task chunking
 Prompt:
 > I need to clean my room, my livingroom, kitche, and 3 bathrooms. Help me get started
@@ -215,4 +214,57 @@ Two options depending on your mood:
 A couple of practical tips: set a timer for ~25 min per room so you don't rabbit-hole, keep a trash bag and a "belongs elsewhere" basket on you at all times, and put on music or a podcast.
 
 Want me to build you a **printable checklist** for each room, or a **timed schedule** (like a 2-hour or half-day plan) so you have a clear finish line? I can also tell you which supplies to grab so you're not hunting mid-task.
+```
+
+# Re-Test: Option limiting
+Prompt:
+> I have Saturday free and what to learn something new. What could I do?
+
+## Test A
+```
+Fun question. A free Saturday is perfect for something you can start and get a small win from the same day. Here's what I'd point you toward.
+
+**My pick: pick something with a fast feedback loop** — where you can go from zero to "hey, I made a thing" in a few hours. That momentum is what makes a new skill stick past day one. A few concrete options:
+
+- **Cook one ambitious dish** — fresh pasta, a proper risotto, or homemade bread. Tactile, rewarding, and you eat the result.
+- **Learn the basics of a musical instrument** — 3–4 hours on a keyboard or guitar gets you a real chord progression or simple song.
+- **Build a tiny thing with code/AI** — e.g. a small personal website or a little automation. Low setup, visible payoff, and I can walk you through it live.
+- **A hands-on craft** — watercolor, hand-lettering, or basic photo editing. Cheap to start, immediately visible progress.
+
+To point you at the *right* one instead of a random list — what's the pull for you this Saturday?
+
+- **Creative/artistic** (music, drawing, writing)
+- **Hands-on/physical** (cooking, a craft, something tactile)
+- **Techie** (coding, automation, a tool you've wanted to try)
+- **Mind/knowledge** (a language, chess, a topic you're curious about)
+
+Tell me the direction and I'll give you a specific Saturday plan — including free resources to start with.
+```
+
+## Test B
+```
+A free Saturday is a great canvas. Here are some directions depending on what kind of "new" you're in the mood for — hands-on, cerebral, physical, or creative:
+
+**Make something with your hands**
+- **Cooking a cuisine you've never attempted** — pick one dish (fresh pasta, a proper Thai curry, sourdough starter kickoff) and go deep. Immediate, tasty payoff.
+- **A craft with a starter kit** — hand-lettering/calligraphy, woodworking a small object, embroidery, or leatherwork. Low barrier, satisfying result by dinnertime.
+
+**Learn a skill that compounds**
+- **A programming project** — if you've never coded, something like a "build your first web page" or a small automation in Python. If you already code, try a language or paradigm outside your comfort zone (Rust, functional programming, a game in Godot).
+- **An instrument or a song** — a single day is enough to get a recognizable song out of a piano, ukulele, or harmonica.
+
+**Move your body / go outside**
+- **Bouldering** at an indoor gym — great intro-friendly, social, and a full-body puzzle.
+- **A "learn to X" class** — pottery, dance, a knife-skills cooking class, archery. Saturdays are when these run.
+
+**Feed your head**
+- **A structured mini-course** — pick one topic (astronomy, negotiation, basic electronics, chess openings) and knock out a focused set of lessons or a good documentary series, then *do* one small exercise so it sticks.
+
+A couple of questions that'd help me sharpen this:
+
+- Do you want something you can **finish in a day** with a tangible result, or the **start of an ongoing hobby**?
+- More **indoors/quiet** or **out-and-about/social**?
+- Any rough **budget** (free-with-what-I-have vs. happy to buy a kit or class)?
+
+Tell me the vibe and I'll build you an actual Saturday plan — timeline, what to get, and the best free resources to follow.
 ```
