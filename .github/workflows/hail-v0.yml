@@ -1,0 +1,61 @@
+name: HAIL v0
+
+on:
+  push:
+    branches:
+      - feat/hail-v0
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Restore
+        run: dotnet restore src/Hail/Hail.csproj
+
+      - name: Build
+        run: dotnet build src/Hail/Hail.csproj --no-restore --configuration Release
+
+      - name: Smoke test profile loading
+        run: dotnet run --project src/Hail --configuration Release --no-build -- profiles/example.yaml
+
+      - name: Assert recommend-first contract
+        shell: bash
+        run: |
+          output="$(dotnet run --project src/Hail --configuration Release --no-build -- profiles/example.yaml)"
+          echo "$output"
+          grep -Fq "give your recommended option first" <<< "$output"
+
+      - name: Generate Claude Code delivery artifact
+        run: dotnet run --project src/Hail --configuration Release --no-build -- profiles/example.yaml --output artifacts/claude-code.md
+
+      - name: Validate Claude Code delivery artifact
+        shell: bash
+        run: |
+          test -f artifacts/claude-code.md
+          grep -Fq "# HAIL Interaction Instructions" artifacts/claude-code.md
+          grep -Fq "give your recommended option first" artifacts/claude-code.md
+
+      - name: Validate safe Claude Code bootstrap
+        shell: bash
+        run: |
+          home="$RUNNER_TEMP/hail-home"
+          mkdir -p "$home/.claude"
+          printf '# Existing user instructions\nDo not remove me.\n' > "$home/.claude/CLAUDE.md"
+          dotnet run --project src/Hail --configuration Release --no-build -- profiles/example.yaml --install claude-code --home "$home"
+          dotnet run --project src/Hail --configuration Release --no-build -- profiles/example.yaml --install claude-code --home "$home"
+          test -f "$home/.hail/claude-code.md"
+          grep -Fq "# HAIL Interaction Instructions" "$home/.hail/claude-code.md"
+          grep -Fq "Do not remove me." "$home/.claude/CLAUDE.md"
+          test "$(grep -Fc '@~/.hail/claude-code.md' "$home/.claude/CLAUDE.md")" -eq 1

@@ -1,0 +1,8 @@
+version: 0.1
+
+profile:
+  verbosity: detailed
+  decision_mode: options
+  max_options: 6
+  task_chunking: off
+  tangent_policy: follow
