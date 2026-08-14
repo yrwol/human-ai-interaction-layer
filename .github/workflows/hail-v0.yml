@@ -99,4 +99,22 @@ jobs:
           grep -Fq '"name": "hail"' integrations/claude/.claude-plugin/plugin.json
           grep -Fq 'name: hail' integrations/claude/skills/hail/SKILL.md
           grep -Fq '~/.hail/profile.yaml' integrations/claude/skills/hail/SKILL.md
-          grep -Fq '<!-- HAIL:START -->' integrations/claude/skills/hail/SKILL.md
+          grep -Fq 'explicit HAIL' integrations/claude/skills/hail/SKILL.md
+
+  native-codex-shape:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate Codex skill shape
+        shell: bash
+        run: |
+          test -f integrations/codex/skills/hail/SKILL.md
+          test -f integrations/codex/README.md
+          grep -Fq 'name: hail' integrations/codex/skills/hail/SKILL.md
+          grep -Fq '~/.hail/profile.yaml' integrations/codex/skills/hail/SKILL.md
+          grep -Fq '$CODEX_HOME/AGENTS.md' integrations/codex/skills/hail/SKILL.md
+          grep -Fq '<!-- HAIL:START -->' integrations/codex/skills/hail/SKILL.md
+          grep -Fq 'Ordinary conversation' integrations/codex/skills/hail/SKILL.md
