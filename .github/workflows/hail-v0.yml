@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - feat/hail-v0
+      - feat/hail-codex-adapter
   pull_request:
     branches:
       - main
@@ -30,7 +31,7 @@ jobs:
       - name: Smoke test profile loading
         run: dotnet run --project src/Hail --configuration Release --no-build -- profiles/example.yaml
 
-      - name: Assert recommend-first contract
+      - name: Assert recommend-first Claude contract
         shell: bash
         run: |
           output="$(dotnet run --project src/Hail --configuration Release --no-build -- profiles/example.yaml)"
@@ -59,3 +60,27 @@ jobs:
           grep -Fq "# HAIL Interaction Instructions" "$home/.hail/claude-code.md"
           grep -Fq "Do not remove me." "$home/.claude/CLAUDE.md"
           test "$(grep -Fc '@~/.hail/claude-code.md' "$home/.claude/CLAUDE.md")" -eq 1
+
+      - name: Generate Codex delivery artifact
+        run: dotnet run --project src/Hail --configuration Release --no-build -- profiles/example.yaml --target codex --output artifacts/codex.md
+
+      - name: Validate Codex delivery artifact
+        shell: bash
+        run: |
+          test -f artifacts/codex.md
+          grep -Fq "# HAIL Interaction Instructions" artifacts/codex.md
+          grep -Fq "recommended option first" artifacts/codex.md
+
+      - name: Validate safe Codex bootstrap
+        shell: bash
+        run: |
+          home="$RUNNER_TEMP/hail-codex-home"
+          mkdir -p "$home/.codex"
+          printf '# Existing Codex instructions\nDo not remove me.\n' > "$home/.codex/AGENTS.md"
+          dotnet run --project src/Hail --configuration Release --no-build -- profiles/example.yaml --install codex --home "$home"
+          dotnet run --project src/Hail --configuration Release --no-build -- profiles/example.yaml --install codex --home "$home"
+          grep -Fq "Do not remove me." "$home/.codex/AGENTS.md"
+          grep -Fq '<!-- HAIL:START -->' "$home/.codex/AGENTS.md"
+          grep -Fq "# HAIL Interaction Instructions" "$home/.codex/AGENTS.md"
+          test "$(grep -Fc '<!-- HAIL:START -->' "$home/.codex/AGENTS.md")" -eq 1
+          test "$(grep -Fc '<!-- HAIL:END -->' "$home/.codex/AGENTS.md")" -eq 1
