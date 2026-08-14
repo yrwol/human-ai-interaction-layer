@@ -1,13 +1,22 @@
 ---
 name: hail
-description: Manage the user's HAIL interaction preferences. Use when the user wants to set up HAIL, see how HAIL is configured, change how Claude communicates or helps with decisions/tasks/tangents, or says things like "give me fewer choices", "be more concise", "recommend something", "give me one step at a time", or "keep me on track".
+description: Manage the user's persistent HAIL interaction profile. Use only when the user explicitly invokes HAIL (for example /hail:hail) or explicitly says they want to view, set up, or change their HAIL profile/preferences. Do not activate merely because the user gives an ordinary conversational instruction such as "be brief", "stop waiting on me", or "just pick one".
 ---
 
 # HAIL profile management
 
-You are the human-facing configuration experience for HAIL.
+You are the explicit, human-facing configuration experience for the user's **persistent** HAIL defaults.
 
-The user should not need to know HAIL's schema, YAML, instruction files, or implementation details. Translate natural-language needs into HAIL's semantic preferences, explain the behavioral change in plain language, and persist it when the intent is clear.
+## Persistence boundary
+
+Persistent HAIL configuration must be intentional.
+
+- Only modify the canonical HAIL profile when the user explicitly entered HAIL configuration or explicitly says they want to change HAIL/their persistent defaults.
+- Ordinary conversation is contextual. Statements such as "stop waiting on me", "just decide", "keep this short", or "I'm overwhelmed today" MUST NOT silently rewrite the persistent HAIL profile.
+- A contextual instruction may affect the current conversation or task according to normal harness behavior, but temporary/session overrides are outside this milestone and are not persisted by HAIL.
+- If it is genuinely unclear whether the user means a persistent HAIL change or a one-off request, preserve the profile and ask whether they want to change their HAIL default.
+
+The user should not need to know HAIL's schema, YAML, instruction files, or implementation details. Translate explicit HAIL configuration needs into semantic preferences and explain them in plain language.
 
 ## Canonical profile
 
@@ -35,19 +44,19 @@ Allowed values:
 - `step_pacing`: `continuous`, `check_in`, `wait_for_user`
 - `tangent_policy`: `follow`, `capture_and_return`, `redirect`
 
-Do not invent additional persistent fields during this milestone without a concrete user scenario demonstrating that the existing vocabulary cannot express the need.
+Do not invent additional persistent fields during this milestone without a concrete user scenario demonstrating that the existing vocabulary cannot express a persistent need.
 
-## Conversational behavior
+## HAIL configuration behavior
 
 - Speak in terms of what the user experiences, not schema names, unless they ask for technical details.
 - Never infer a diagnosis or neurotype.
-- Prefer mapping an explicit user need directly instead of forcing the user through a questionnaire.
+- Prefer mapping an explicit need directly instead of forcing the user through a questionnaire.
 - If the request clearly maps to one value, apply it without unnecessary confirmation.
 - If two mappings are materially plausible, recommend one and ask only the minimum clarification needed.
-- If the user says "show my HAIL profile", summarize it in plain language first. Show raw YAML only if requested.
-- If the user asks to reset HAIL, restore the defaults shown above after confirming they mean the whole profile rather than one preference.
+- For `show`, summarize the profile in plain language first. Show raw YAML only if requested.
+- For `reset`, confirm whether they mean the whole profile or only one preference before changing anything.
 
-Examples:
+Examples **inside explicit HAIL configuration**:
 
 - "Stop giving me so many choices" → lower `max_options`; if no number is given, recommend 2 or 3 based on context.
 - "Just tell me what you think I should do" → `decision_mode: recommend_first`.
@@ -66,12 +75,12 @@ Examples:
 1. Read `~/.hail/profile.yaml` if it exists.
 2. If it does not exist:
    - for a read-only request, explain that HAIL has not been configured yet;
-   - for a change/setup request, start from the v0.1 defaults and apply the user's requested changes.
-3. When reading an older valid profile without `step_pacing`, treat it as `continuous` unless the user's current request clearly specifies another pacing behavior.
+   - for an explicit setup/change request, start from the v0.1 defaults and apply the user's requested changes.
+3. When reading an older valid profile without `step_pacing`, treat it as `continuous` unless the current explicit HAIL request specifies another pacing behavior.
 4. Preserve valid preferences the user did not ask to change.
 5. Validate all values against the schema above.
-6. Write the complete canonical profile back to `~/.hail/profile.yaml`.
-7. Compile the profile into `~/.hail/claude-code.md`. This file is HAIL-owned and may be replaced completely on every update.
+6. Write the complete canonical profile back to `~/.hail/profile.yaml` only for an explicit persistent change.
+7. Compile the profile into `~/.hail/claude-code.md`. This file is HAIL-owned and may be replaced completely on every persistent update.
 8. Ensure `~/.claude/CLAUDE.md` contains exactly one standalone import line: `@~/.hail/claude-code.md`. Preserve all unrelated content in `CLAUDE.md` exactly.
 9. Tell the user what changed in behavioral terms. Do not narrate file operations unless they ask.
 
@@ -130,7 +139,7 @@ Use these mappings exactly for this experiment.
 
 ## Projection and import safety
 
-`~/.hail/claude-code.md` is generated HAIL output, not user-authored configuration. Replace it completely whenever the profile changes. This intentionally removes stale or contradictory instructions left by older HAIL versions.
+`~/.hail/claude-code.md` is generated HAIL output, not user-authored configuration. Replace it completely whenever the persistent profile changes. This intentionally removes stale or contradictory instructions left by older HAIL versions.
 
 When updating `~/.claude/CLAUDE.md`:
 
