@@ -12,5 +12,6 @@ public sealed class InteractionPreferences
     public string DecisionMode { get; set; } = string.Empty;
     public int MaxOptions { get; set; }
     public string TaskChunking { get; set; } = string.Empty;
+    public string StepPacing { get; set; } = "continuous";
     public string TangentPolicy { get; set; } = string.Empty;
 }
