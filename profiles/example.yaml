@@ -4,4 +4,5 @@ profile:
   decision_mode: recommend_first
   max_options: 3
   task_chunking: adaptive
+  step_pacing: continuous
   tangent_policy: capture_and_return
