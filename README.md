@@ -14,7 +14,7 @@ The specification has been split so current truth is easier to find:
 - [`spec/product.md`](spec/product.md) — current product definition and architecture boundary
 - [`spec/semantics.md`](spec/semantics.md) — current validated semantic profile
 - [`spec/interaction-taxonomy.md`](spec/interaction-taxonomy.md) — broader catalog of candidate interaction dimensions
-- [`spec/roadmap.md`](spec/roadmap.md) — completed work, deferred validation, next candidate experiments, and parked areas
+- [`spec/roadmap.md`](spec/roadmap.md) — completed work, next candidate experiments, and parked areas
 
 The original [`spec/draft.md`](spec/draft.md) remains useful historical context, but it is no longer the authoritative source for current schema, architecture, or milestone order.
 
@@ -60,7 +60,7 @@ Detailed behavioral evidence lives under [`evals/results/`](evals/results/).
 - Static semantic profile → Claude: **PASS**
 - Same semantic profile → Codex: **PASS for portability evidence**
 - Claude native persistent profile management: **PASS / manually validated**
-- Codex native persistent profile management: **implemented; explicit manual behavioral validation deferred**
+- Codex native persistent profile management: **PASS / manually validated**
 
 The current project checkpoint is **documentation reconciliation** before choosing the next implementation experiment. See [`spec/roadmap.md`](spec/roadmap.md).
 
@@ -106,9 +106,9 @@ $hail reset
 
 The Codex skill uses the same canonical `~/.hail/profile.yaml` and manages only HAIL's marked block in `$CODEX_HOME/AGENTS.md` (normally `~/.codex/AGENTS.md`).
 
-The implementation exists, but its full real-session behavioral test is intentionally recorded as **deferred**, not silently treated as passed.
+The native Codex path has been manually validated for profile inspection, natural-language change, fresh-session pacing behavior, tangent composition, contextual requests that do not mutate persistent defaults, and reset.
 
-See [`integrations/codex/README.md`](integrations/codex/README.md).
+See [`integrations/codex/README.md`](integrations/codex/README.md) and [`evals/results/milestone-4-codex-native-raw.md`](evals/results/milestone-4-codex-native-raw.md).
 
 ## Projection synchronization is intentionally unsolved
 
@@ -116,7 +116,7 @@ The semantic profile is shared, but harness-specific projections are currently r
 
 If Codex changes the canonical profile, a previously generated Claude projection may remain stale until Claude's HAIL integration runs again.
 
-This is a real question, but HAIL will not add a daemon, shared runtime, cloud service, or MCP layer until evidence shows that simpler native behavior is insufficient.
+This is a real question, but HAIL will not add a daemon, shared runtime, cloud service, or MCP layer until evidence shows that simpler native refresh behavior is insufficient.
 
 ## Reference implementation
 
