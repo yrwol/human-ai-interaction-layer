@@ -88,24 +88,20 @@ Validated:
 
 Raw evidence lives in [`../evals/results/milestone-4-codex-native-raw.md`](../evals/results/milestone-4-codex-native-raw.md).
 
-## Portability question: projection staleness
+## Optional enhancement: multi-harness projection refresh
 
 The semantic profile is shared across harnesses, but each harness currently regenerates only its own projection.
 
-Example:
+For a user who actively uses multiple harnesses, that can create a temporary stale projection after the canonical profile is changed elsewhere. For example:
 
 1. User changes `step_pacing` through `$hail` in Codex.
 2. `~/.hail/profile.yaml` changes.
 3. Codex `AGENTS.md` is regenerated.
-4. Claude's existing `~/.hail/claude-code.md` projection may still express the old value.
+4. Claude's existing `~/.hail/claude-code.md` projection may still express the old value until refreshed.
 
-This is a real architectural question, but the Codex experiment does not show that synchronization infrastructure is required.
+This does **not** affect the validity of the Codex experiment and is **not a requirement for shipping HAIL**. Many users may use only one harness, and semantic portability does not require all harness projections to be continuously synchronized.
 
-The unresolved question is narrower:
-
-> When should each harness refresh its disposable projection from the canonical semantic profile?
-
-First determine whether the stale-projection window creates meaningful user friction and whether a simple harness-native refresh-at-use strategy is sufficient. Do not jump directly to a daemon, shared runtime, cloud service, or MCP synchronization layer.
+If multi-harness usage later demonstrates meaningful friction, the preferred first direction is a simple refresh-at-use strategy from the canonical profile. Do not jump directly to a daemon, shared runtime, cloud service, or MCP synchronization layer.
 
 ## Exit conditions
 
@@ -119,4 +115,4 @@ The original exit conditions are now satisfied by manual testing:
 6. demonstrate changed behavior in a fresh interaction — **validated**; and
 7. preserve the rule that ordinary conversation does not silently mutate persistent preferences — **validated**.
 
-Milestone 4 is complete. Cross-harness projection refresh remains a separate evidence question, not a failed exit condition.
+Milestone 4 is complete. Multi-harness projection refresh is parked as a possible future convenience enhancement, not an exit condition or release blocker.
