@@ -50,25 +50,26 @@ Validated behaviors include:
 
 Historical working notes: [`milestone-3-working-notes.md`](milestone-3-working-notes.md).
 
-## Implemented, validation deferred
-
 ### Codex native persistent profile management
 
-Status: **implemented; explicit manual behavioral validation deferred**
+Status: **complete / manually validated**
 
-The `$hail` skill port uses the same canonical semantic profile and Codex-native `AGENTS.md` projection.
+Established that the same explicit persistent HAIL profile-management experience works in Codex using the shared semantic profile and Codex-native `AGENTS.md` projection.
 
-Open validation questions include:
+Validated behaviors include:
 
-- behavior after a fresh Codex interaction;
-- change/reset experience;
-- preservation of unrelated Codex instructions;
-- whether ordinary conversation leaves persistent preferences unchanged; and
-- whether cross-harness projection staleness creates meaningful user friction.
+- `$hail` inspection of the existing shared profile;
+- natural-language persistent change;
+- profile change to `task_chunking: always` + `step_pacing: wait_for_user`;
+- changed behavior in a fresh Codex interaction;
+- pacing + tangent-policy composition;
+- ordinary conversational adaptation without persistent mutation;
+- `$hail show` confirming the persistent profile remained unchanged by contextual requests; and
+- reset to v0.1 defaults.
+
+Cross-harness projection staleness remains an unresolved observation rather than a blocker: each harness currently refreshes only its own generated projection. Do not add synchronization infrastructure until evidence shows that stale projections create meaningful user friction.
 
 Historical working notes: [`milestone-4-working-notes.md`](milestone-4-working-notes.md).
-
-Deferred validation is not the same as a failed experiment. Do not block unrelated conceptual work merely because this manual test has not been run.
 
 ## Current project checkpoint
 
