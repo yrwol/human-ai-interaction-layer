@@ -8,13 +8,13 @@ The product is the semantic model + harness integrations. The .NET implementatio
 
 ## Current active milestone
 
-Milestone 3 proved explicit persistent HAIL profile management natively inside Claude.
+Milestone 3 proved explicit persistent HAIL profile management natively inside Claude. Milestone 4 ported that management surface to Codex; explicit Codex manual testing remains useful evidence but is not blocking the next experiment.
 
-The active experiment is now the Codex port under `integrations/codex/`:
+The active experiment is now **temporary/contextual overrides**:
 
-`explicit $hail configuration → natural-language preference → shared persistent HAIL semantic profile → native Codex AGENTS.md projection`
+`persistent HAIL defaults → explicit temporary override → current interaction behavior → expiration → persistent defaults restored`
 
-The goal is to learn whether profile management itself is portable without changing the human-owned semantic profile or introducing shared runtime infrastructure.
+The first target scenario is a user whose persistent profile says to wait between steps, then explicitly says something equivalent to "for this task, stop waiting on me." HAIL should adapt the current task without rewriting the persistent profile.
 
 No `dotnet run` dependency is allowed in this product path.
 
@@ -22,21 +22,22 @@ No `dotnet run` dependency is allowed in this product path.
 
 Keep changes small and evidence-driven.
 
-Do not add MCP, a shared runtime, desktop UI, cloud sync, diagnosis presets, or broad abstractions unless a concrete experiment demonstrates a need.
+Do not add MCP, a shared runtime, desktop UI, cloud sync, diagnosis presets, automatic emotional-state detection, or broad abstractions unless a concrete experiment demonstrates a need.
 
 Prefer harness-native capabilities when they can preserve HAIL semantics and user ownership without extra plumbing.
 
-Temporary/session/task-specific adaptation is parked. Do not build it opportunistically into persistent profile management.
+Do not turn this milestone into a general adaptive-state engine. Begin with explicit temporary overrides only.
 
-Cross-harness projection synchronization is also intentionally unsolved. Record whether stale projections create a real user problem before designing synchronization infrastructure.
+Cross-harness projection synchronization remains intentionally unsolved. Record whether stale projections create a real user problem before designing synchronization infrastructure.
 
 ## Design rules
 
-- The profile is semantic and vendor-neutral.
+- The persistent profile is semantic, vendor-neutral, human-owned, and unchanged by temporary overrides.
 - Harness integrations own harness-specific wording, persistence mechanics, and delivery behavior.
-- The canonical profile is the source of truth; generated harness instructions are disposable projections.
-- **Persistent profile mutation requires explicit HAIL intent.** Ordinary conversational instructions must not silently rewrite persistent defaults.
-- Contextual statements such as `stop waiting on me`, `just decide`, or `I'm overwhelmed today` may influence the current interaction through normal harness behavior, but are not persistent HAIL changes unless the user explicitly says so.
+- The canonical profile is the source of truth for persistent defaults; generated harness instructions are disposable projections.
+- **Persistent profile mutation requires explicit persistent HAIL intent.** Ordinary conversational instructions must not silently rewrite persistent defaults.
+- Temporary overrides must have an observable scope/expiration boundary.
+- Contextual statements such as `stop waiting on me`, `just decide`, or `I'm overwhelmed today` must not be promoted to permanent profile changes without explicit persistent intent.
 - Normal users should not need to see or edit YAML unless they explicitly want to.
 - Human preference data remains user-owned and should not need to be committed into project repositories.
 - Existing harness configuration must be preserved.
@@ -52,18 +53,19 @@ Native integration changes must be validated independently of the reference comp
 
 Behavioral experiments and evidence belong in `evals/`.
 
-For persistent profile management, validate configuration behavior and resulting behavior in a fresh interaction.
+For temporary overrides, validate both the changed current behavior and that the persistent profile remains unchanged after the override expires.
 
 ## Important files
 
 - `spec/draft.md` — broader product and architecture direction
 - `spec/milestone-1-addendum.md` — first-harness learnings
 - `spec/milestone-2-addendum.md` — portability learnings
-- `spec/milestone-3-working-notes.md` — Claude native-management decisions and parked temporary-state questions
+- `spec/milestone-3-working-notes.md` — Claude native-management decisions
 - `spec/milestone-4-working-notes.md` — Codex profile-management port
+- `spec/milestone-5-working-notes.md` — active contextual-override experiment
 - `profiles/example.yaml` — reference semantic profile representation
 - `integrations/claude/` — native Claude persistent profile management
-- `integrations/codex/` — active native Codex persistent profile-management experiment
+- `integrations/codex/` — native Codex persistent profile management
 - `reference/dotnet/` — reference compiler and previous bootstrap implementations
 - `evals/` — behavioral expectations and evidence
 
