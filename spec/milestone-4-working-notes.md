@@ -1,4 +1,8 @@
-# Milestone 4 working notes — native Codex profile management
+# Milestone 4 — Native Codex profile management
+
+**Status: implemented; explicit manual behavioral validation deferred.**
+
+This document records the Codex-native profile-management port. Current project priority is tracked in [`roadmap.md`](roadmap.md).
 
 ## Hypothesis
 
@@ -20,7 +24,7 @@ Ordinary conversation is contextual behavior and must not silently mutate the pe
 
 ## Shared semantics
 
-Milestone 4 uses the same canonical profile introduced and extended through earlier milestones:
+The port uses the same canonical profile as Claude:
 
 ```yaml
 version: 0.1
@@ -34,6 +38,8 @@ profile:
 ```
 
 Do not add Codex-specific fields to the semantic profile.
+
+The authoritative semantic definitions live in [`semantics.md`](semantics.md).
 
 ## Native Codex delivery
 
@@ -57,7 +63,21 @@ $CODEX_HOME/AGENTS.md
 
 normally `~/.codex/AGENTS.md`.
 
-## New portability question: projection staleness
+## Implementation state
+
+The native skill, profile-management flow, Codex projection logic, repository documentation, and test scaffolding are implemented.
+
+Manual behavioral validation was intentionally deferred rather than treated as complete evidence.
+
+Still unvalidated manually:
+
+1. explicit `$hail` configuration in a real Codex session;
+2. profile change/reset behavior end-to-end;
+3. resulting behavior in a fresh interaction;
+4. preservation of unrelated real-world `AGENTS.md` content; and
+5. the ordinary-conversation persistence boundary in Codex.
+
+## Portability question: projection staleness
 
 The semantic profile is shared across harnesses, but each harness currently regenerates only its own projection.
 
@@ -68,13 +88,13 @@ Example:
 3. Codex `AGENTS.md` is regenerated.
 4. Claude's existing `~/.hail/claude-code.md` projection may still express the old value.
 
-This is a real architectural question, but Milestone 4 must not jump directly to a daemon, shared runtime, cloud service, or MCP synchronization layer.
+This is a real architectural question, but it does not justify jumping directly to a daemon, shared runtime, cloud service, or MCP synchronization layer.
 
 First determine whether the stale-projection window creates a meaningful user problem and whether a simpler harness-native refresh mechanism is sufficient.
 
-## Exit conditions
+## Original exit conditions
 
-Milestone 4 passes when Codex can:
+The experiment would fully pass when Codex can demonstrate that it can:
 
 1. explicitly enter HAIL configuration;
 2. inspect the same canonical profile used by Claude;
@@ -84,4 +104,4 @@ Milestone 4 passes when Codex can:
 6. demonstrate changed behavior in a fresh interaction; and
 7. preserve the rule that ordinary conversation does not silently mutate persistent preferences.
 
-Record cross-harness projection behavior as evidence even if it remains unresolved.
+Until that explicit test is run, treat this as **implemented with validation deferred**, not as either pass or failure.
