@@ -6,11 +6,17 @@
 
 HAIL is an experimental, human-first interaction layer for expressing how a person wants AI systems to collaborate with them, then applying those preferences through the mechanisms native to each AI harness.
 
-Milestone 1 proved that a small semantic profile can change Claude behavior. Milestone 2 proved that the same profile remains meaningful across Claude and Codex even when enforcement strength differs by harness. Milestone 3 proved that persistent profile management can happen natively inside Claude without YAML editing or a HAIL executable.
+## Start here
 
-The current experiment asks:
+The specification has been split so current truth is easier to find:
 
-> **Can the same explicit persistent profile-management experience be ported to Codex without changing the human-owned semantic profile?**
+- [`spec/README.md`](spec/README.md) — map of the specification and which documents are authoritative
+- [`spec/product.md`](spec/product.md) — current product definition and architecture boundary
+- [`spec/semantics.md`](spec/semantics.md) — current validated semantic profile
+- [`spec/interaction-taxonomy.md`](spec/interaction-taxonomy.md) — broader catalog of candidate interaction dimensions
+- [`spec/roadmap.md`](spec/roadmap.md) — completed work, deferred validation, next candidate experiments, and parked areas
+
+The original [`spec/draft.md`](spec/draft.md) remains useful historical context, but it is no longer the authoritative source for current schema, architecture, or milestone order.
 
 ## Product direction
 
@@ -24,9 +30,9 @@ harness-native integration
 default adaptive AI behavior
 ```
 
-Ordinary conversation is **not** persistent configuration. A user saying “stop waiting on me” during a task may reasonably mean “for this task,” not “change my default forever.” HAIL therefore does not silently mutate persistent preferences from ordinary conversational instructions.
+Ordinary conversation is **not** persistent configuration. A statement such as “stop waiting on me” during a task may reasonably be contextual. HAIL therefore does not silently mutate persistent preferences from ordinary conversational instructions.
 
-Temporary/session/task-specific adaptation is a separate future problem and remains intentionally parked.
+Persistent profile and temporary interaction state are separate concepts.
 
 ## Current semantic profile
 
@@ -43,15 +49,26 @@ profile:
   tangent_policy: capture_and_return
 ```
 
-`task_chunking` controls how work is divided. `step_pacing` controls how quickly HAIL moves through those pieces, including whether it should wait for the user before continuing.
+See [`spec/semantics.md`](spec/semantics.md) for the behavioral contract and evidence status of each field.
 
-YAML is the current reference representation. Normal users should not need to see or edit it.
+The larger original interaction taxonomy has **not** been discarded. It now lives in [`spec/interaction-taxonomy.md`](spec/interaction-taxonomy.md), where candidate dimensions can remain visible without being mistaken for implemented schema.
+
+## Evidence so far
+
+Detailed behavioral evidence lives under [`evals/results/`](evals/results/).
+
+- Static semantic profile → Claude: **PASS**
+- Same semantic profile → Codex: **PASS for portability evidence**
+- Claude native persistent profile management: **PASS / manually validated**
+- Codex native persistent profile management: **implemented; explicit manual behavioral validation deferred**
+
+The current project checkpoint is **documentation reconciliation** before choosing the next implementation experiment. See [`spec/roadmap.md`](spec/roadmap.md).
 
 ## Native Claude integration
 
 The Claude implementation lives at [`integrations/claude/`](integrations/claude/).
 
-Persistent configuration starts through the explicit HAIL skill, for example:
+Persistent configuration starts through explicit HAIL interaction:
 
 ```text
 /hail:hail
@@ -61,9 +78,9 @@ Persistent configuration starts through the explicit HAIL skill, for example:
 /hail:hail reset
 ```
 
-Inside explicit HAIL configuration, the skill translates natural-language needs into the semantic profile, persists the profile at `~/.hail/profile.yaml`, regenerates HAIL's Claude projection at `~/.hail/claude-code.md`, and preserves the single import in `~/.claude/CLAUDE.md`.
+The skill reads/writes the canonical `~/.hail/profile.yaml`, regenerates HAIL's Claude projection at `~/.hail/claude-code.md`, and preserves the single HAIL import in `~/.claude/CLAUDE.md`.
 
-The native path does **not** invoke the .NET reference implementation.
+Normal use does **not** invoke the .NET reference implementation.
 
 ### Claude developer test
 
@@ -71,15 +88,13 @@ The native path does **not** invoke the .NET reference implementation.
 claude --plugin-dir ./integrations/claude
 ```
 
-Then invoke `/hail:hail` and configure or inspect the profile. After a change, use `/clear` and test normal behavior to verify persistence.
+Then invoke `/hail:hail`.
 
 ## Native Codex integration
 
 The Codex port lives at [`integrations/codex/`](integrations/codex/).
 
-Codex supports reusable skills, and skill invocation is explicit with `$skill-name`. HAIL therefore uses `$hail` as the persistent-configuration boundary.
-
-Examples:
+Its explicit persistent-configuration entry point is `$hail`:
 
 ```text
 $hail
@@ -89,104 +104,52 @@ $hail change
 $hail reset
 ```
 
-The interaction remains conversational after invocation. The Codex skill reads and writes the **same** canonical `~/.hail/profile.yaml`, then manages only HAIL's marked block in the user-level `$CODEX_HOME/AGENTS.md` (normally `~/.codex/AGENTS.md`).
+The Codex skill uses the same canonical `~/.hail/profile.yaml` and manages only HAIL's marked block in `$CODEX_HOME/AGENTS.md` (normally `~/.codex/AGENTS.md`).
 
-### Codex local test
+The implementation exists, but its full real-session behavioral test is intentionally recorded as **deferred**, not silently treated as passed.
 
-Install the repository skill at:
+See [`integrations/codex/README.md`](integrations/codex/README.md).
 
-```text
-~/.codex/skills/hail/SKILL.md
-```
+## Projection synchronization is intentionally unsolved
 
-Then start a fresh Codex session and invoke `$hail`.
+The semantic profile is shared, but harness-specific projections are currently refreshed by their own integrations.
 
-See [`integrations/codex/README.md`](integrations/codex/README.md) for the current test procedure.
+If Codex changes the canonical profile, a previously generated Claude projection may remain stale until Claude's HAIL integration runs again.
 
-### Projection synchronization is intentionally unsolved
-
-The canonical semantic profile is shared, but harness-specific projections are regenerated by their own integrations.
-
-If `$hail change` modifies `~/.hail/profile.yaml` in Codex, Codex's `AGENTS.md` is refreshed immediately. A previously generated Claude projection is not automatically refreshed until Claude's HAIL integration runs again.
-
-This is now a portability question backed by a concrete implementation. Do not add a shared runtime, daemon, or cloud sync merely to hide it before testing whether it matters in practice.
-
-## Persistent vs contextual behavior
-
-```text
-explicit HAIL configuration
-"Stop waiting between steps by default."
-        ↓
-persistent profile change
-
-ordinary task conversation
-"Stop waiting on me."
-        ↓
-contextual request only
-        ↓
-HAIL profile remains unchanged
-```
-
-If users later need reliable “today only,” session, task, or overload modes, that should be designed explicitly rather than smuggled into persistent profile management.
+This is a real question, but HAIL will not add a daemon, shared runtime, cloud service, or MCP layer until evidence shows that simpler native behavior is insufficient.
 
 ## Reference implementation
 
 The original .NET compiler lives under [`reference/dotnet/`](reference/dotnet/).
 
-It remains useful as reference/conformance tooling for parsing the reference profile, deterministic Claude/Codex compilation, preserving Milestone 1 and 2 bootstrap tests, and comparing native implementations against previously validated behavior.
-
-It is **not** the intended normal-user experience, and new product capabilities should not depend on `dotnet run` unless a later experiment demonstrates a real need for shared runtime code.
-
-## Evidence so far
-
-Detailed behavioral evidence lives under [`evals/results/`](evals/results/).
-
-- Milestone 1 — static profile → Claude: **PASS**
-- Milestone 2 — same profile → Codex: **PASS for portability evidence**
-- Milestone 3 — explicit native persistent profile management in Claude: **PASS**
-- Milestone 4 — port explicit persistent profile management to Codex: **in progress**
-
-Milestone 3 demonstrated profile setup, inspection, change, reset, migration from old generated instructions, persistence across `/clear`, step pacing, and tangent/pacing composition without invoking the reference compiler.
-
-It also established a product rule: persistent changes require explicit HAIL intent; ordinary conversational adaptation must not silently redefine the user's defaults.
+It remains useful as reference/conformance tooling for deterministic compilation and historical tests. It is **not** the intended normal-user product architecture.
 
 ## Repository shape
 
 ```text
-integrations/         product-facing harness-native experiments
-  claude/             explicit Claude persistent profile management
-  codex/              explicit Codex persistent profile management
+integrations/         harness-native product experiments
+  claude/             native Claude persistent profile management
+  codex/              native Codex persistent profile management
 reference/
   dotnet/             reference compiler/conformance tooling
 profiles/             reference semantic profile examples
-evals/                behavioral scenarios, guides, and evidence
-spec/                 product/specification work
-.github/workflows/    validation for reference + native integration shape
-AGENTS.md              harness-neutral contributor/agent guidance
+evals/                behavioral scenarios and evidence
+spec/                 product truth, semantics, taxonomy, roadmap, historical decisions
+.github/workflows/    repository validation
+AGENTS.md              contributor/agent guidance
 CLAUDE.md              Claude project guidance
 ```
 
 ## Current design rules
 
 - Keep human intent vendor-neutral.
+- Needs over diagnoses.
 - Prefer harness-native capabilities when they are sufficient.
 - Persistent preference mutation requires explicit HAIL intent.
-- Ordinary conversational adaptation must not silently rewrite the persistent profile.
-- Do not mutate user preferences to compensate for weak harness enforcement.
+- Ordinary conversational adaptation must not silently rewrite persistent defaults.
+- Profile is not temporary state.
+- Treat generated harness artifacts as disposable projections of the human-owned semantic profile.
+- Do not mutate user intent to compensate for weak harness enforcement.
 - Do not expose implementation plumbing to normal users.
-- Do not add MCP, a shared runtime, diagnosis presets, cloud sync, or a UI until a concrete validated need requires them.
-- Treat temporary/session/task-specific behavior as a separate design problem from persistent defaults.
-- Treat the semantic profile as canonical and harness artifacts as disposable projections.
-
-## Current Milestone 4 exit condition
-
-The Codex port succeeds when a user can:
-
-1. intentionally enter HAIL configuration with `$hail`;
-2. inspect the same canonical profile used by Claude;
-3. change or reset persistent preferences conversationally;
-4. update Codex behavior through native `AGENTS.md` delivery without invoking the reference compiler;
-5. preserve unrelated Codex instructions; and
-6. observe the changed behavior in a fresh Codex interaction.
-
-The experiment should also record whether cross-harness projection staleness is a meaningful user problem before HAIL designs synchronization infrastructure.
+- Add semantic fields only after a real scenario proves the current vocabulary insufficient.
+- Do not add MCP, shared runtime, cloud sync, diagnosis presets, or polished UI until a concrete experiment requires them.
