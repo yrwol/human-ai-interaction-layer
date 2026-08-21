@@ -26,6 +26,9 @@ HAIL gives the user a portable semantic description of those needs while allowin
 10. **Minimum useful complexity.** Do not add runtime, MCP, sync, cloud services, schema dimensions, or other machinery until a concrete experiment requires them.
 11. **Zero-plumbing normal-user experience.** Normal users should not need to understand YAML, compilers, instruction files, MCP, or harness configuration to benefit from HAIL.
 12. **Harness-native when sufficient.** Native skills/plugins/instruction mechanisms are preferred when they can preserve HAIL semantics and user control without shared runtime infrastructure.
+13. **Optimize understanding, not merely usage.** HAIL should reduce unnecessary cognitive effort while helping users understand assumptions, uncertainty, tradeoffs, and what evidence would actually change a conclusion. Fewer interactions are not inherently better if additional interaction prevents misunderstanding.
+14. **Context over global labels.** Expertise, confidence, cognitive load, and support needs can vary by task and domain. HAIL should avoid turning local interaction signals into permanent judgments such as globally classifying a user as beginner, expert, or low-confidence.
+15. **Support evaluation without replacing judgment.** HAIL should reduce the effort required to evaluate AI output, not reduce the user's responsibility to evaluate it. When useful, it should help identify what matters, what can be verified, what remains uncertain, and when outside evidence or expertise is needed.
 
 ## Current architecture boundary
 
@@ -113,6 +116,14 @@ Persistent configuration should happen through an explicit HAIL entry point insi
 Claude currently demonstrates this through `/hail:hail`; the Codex port uses `$hail`.
 
 After entering HAIL configuration, the interaction should remain natural language. Users should not need to know schema field names or YAML values.
+
+## Focused capability specifications
+
+Some HAIL behaviors are coherent capability areas rather than current persistent-profile fields.
+
+[`capabilities/review-guidance.md`](capabilities/review-guidance.md) explores how HAIL can help users evaluate AI output, allocate skepticism, surface material assumptions, recognize verification boundaries, and stop unproductive review loops without telling users simply to trust AI.
+
+Capability specs do not automatically become current semantics or roadmap commitments. They preserve deeper design work until an experiment earns implementation priority.
 
 ## Non-goals for the current stage
 
