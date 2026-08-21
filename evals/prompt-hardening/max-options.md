@@ -187,7 +187,57 @@ Alternatives:
 Want me to go deeper on one of these — e.g. sketch out the actual stat/formula design or how it'd hook into an existing game system you're building?
 ```
 
+## Findings from this iteration
 
+### What worked
+
+- **Explicit override behaved correctly.** When the user explicitly requested 10 names, Claude returned 10. This supports treating `max_options` as a default interaction preference rather than a hard global prohibition.
+- **Decision-shaped output behaved correctly.** In the horse-training scenario, Claude produced one recommendation plus two alternatives, staying within the configured cap of 3 meaningful choices.
+- **Nested-choice leakage was not observed in Scenario 3.** The stronger wording appears directionally useful for preventing "bonus" or nested alternatives from silently expanding the choice set.
+
+### What still failed
+
+- **Open-ended brainstorming still exceeded the cap.** The breed-ideas prompt produced seven primary breed suggestions despite `max_options: 3` and despite the stronger candidate wording.
+- When asked why, Claude explicitly recognized that the response violated the configured preference. This is important evidence: the instruction was present and understandable after the fact, but was not reliably applied during generation.
+- When asked how to enforce it, Claude again recognized that the profile and compiled instruction were already correct. This points to an enforcement/classification problem rather than a configuration or semantic-schema problem.
+
+### Interpretation
+
+The current phrase **"when presenting alternatives"** appears too narrow.
+
+Claude may classify prompts such as:
+
+```text
+Give me ideas for horse breeds...
+```
+
+as brainstorming/content generation rather than as presentation of alternatives. That allows a choice-like response to escape the `max_options` rule even though the resulting items function as user-facing options.
+
+The likely missing projection concept is:
+
+```text
+max_options
+!= only explicitly framed alternatives
+
+max_options
+= user-facing choice-like output
+```
+
+This should include ideas, suggestions, recommendations, possibilities, candidates, examples intended for selection, and similar open-ended brainstorming when those outputs create a choice set for the user.
+
+### What not to do yet
+
+Do not add mechanical bullet-counting or hook-based enforcement from this result alone.
+
+The preference should constrain **meaningful user choices**, not arbitrary list length. A response containing three horse stats and three implementation steps is not necessarily six options. Mechanical list counting would therefore enforce the wrong abstraction and create false positives.
+
+### Current conclusion
+
+`max_options` still appears to be a valid semantic field. The evidence currently points to **projection wording/enforcement weakness**, not a flaw in the semantic concept itself.
+
+Next test: strengthen the projection wording so open-ended brainstorming is explicitly treated as choice-like output, then rerun Scenario 1 first. If Scenario 1 passes, rerun the full scenario set to check for regressions or over-application.
+
+See [`max-options-candidate-b.md`](max-options-candidate-b.md) for the proposed next wording.
 
 ## Boundary to watch
 
@@ -217,7 +267,7 @@ Use [`template.md`](template.md) structure for each candidate iteration.
 
 This is the claude-code.md used for both sets of data:
 
-```test
+```text
 # HAIL Interaction Instructions
 
 Adapt how you collaborate with this user using the following interaction preferences.
@@ -242,4 +292,3 @@ Adapt how you collaborate with this user using the following interaction prefere
 - When presenting or executing steps, continue naturally unless the user asks you to pause.
 - When the user introduces a tangent during an active task, acknowledge or capture it without losing the original goal. Do not expand the tangent unless the user deliberately switches tasks.
 ```
-
