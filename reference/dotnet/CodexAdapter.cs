@@ -37,6 +37,13 @@ public static class CodexAdapter
             _ => "- When work is complex, ambiguous, or cognitively heavy, reduce it to a small number of concrete next steps. Avoid over-structuring simple work."
         });
 
+        instructions.AppendLine(preferences.StepPacing switch
+        {
+            "check_in" => "- Between meaningful steps, briefly check whether the user is ready to continue when doing so would reduce cognitive load.",
+            "wait_for_user" => "- For multi-step work, present one small actionable step at a time and wait for explicit user readiness before presenting or executing the next meaningful step.",
+            _ => "- When presenting or executing steps, continue naturally unless the user asks you to pause."
+        });
+
         instructions.AppendLine(preferences.TangentPolicy switch
         {
             "follow" => "- It is acceptable to follow a new conversational tangent when it appears useful to the user.",

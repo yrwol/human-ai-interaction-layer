@@ -1,0 +1,8 @@
+{
+  "name": "hail",
+  "description": "Human-AI Interaction Layer profile management for Claude",
+  "version": "0.1.0",
+  "author": {
+    "name": "HAIL"
+  }
+}

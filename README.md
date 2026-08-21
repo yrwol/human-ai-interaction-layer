@@ -4,183 +4,189 @@
 
 > AI should HAIL to you, not the other way around.
 
-HAIL is an experimental, human-first interaction layer for expressing how a person wants AI systems to collaborate with them, then translating those preferences into harness-specific instructions.
+HAIL is an experimental, human-first interaction layer for expressing how a person wants AI systems to collaborate with them, then applying those preferences through the mechanisms native to each AI harness.
 
-The current proof looks like this:
+Milestone 1 proved that a small semantic profile can change Claude behavior. Milestone 2 proved that the same profile remains meaningful across Claude and Codex even when enforcement strength differs by harness. Milestone 3 proved that persistent profile management can happen natively inside Claude without YAML editing or a HAIL executable.
+
+The current experiment asks:
+
+> **Can the same explicit persistent profile-management experience be ported to Codex without changing the human-owned semantic profile?**
+
+## Product direction
 
 ```text
-human-owned profile
-       ↓
-semantic HAIL model
-       ↓
-harness adapter
-       ↓
-harness-specific interaction instructions
-       ↓
-AI harness
+explicit HAIL configuration
+          ↓
+persistent semantic HAIL profile
+          ↓
+harness-native integration
+          ↓
+default adaptive AI behavior
 ```
 
-Milestone 1 validated the idea against Claude. Milestone 2 is testing portability by applying the **same semantic profiles and behavioral scenarios to Codex**.
+Ordinary conversation is **not** persistent configuration. A user saying “stop waiting on me” during a task may reasonably mean “for this task,” not “change my default forever.” HAIL therefore does not silently mutate persistent preferences from ordinary conversational instructions.
 
-## Current profile
+Temporary/session/task-specific adaptation is a separate future problem and remains intentionally parked.
 
-HAIL currently supports five interaction preferences:
+## Current semantic profile
+
+HAIL currently supports six persistent preferences:
 
 ```yaml
 version: 0.1
-
 profile:
   verbosity: balanced
   decision_mode: recommend_first
   max_options: 3
   task_chunking: adaptive
+  step_pacing: continuous
   tangent_policy: capture_and_return
 ```
 
-The profile remains vendor-neutral. Claude- and Codex-specific wording belongs in their adapters.
+`task_chunking` controls how work is divided. `step_pacing` controls how quickly HAIL moves through those pieces, including whether it should wait for the user before continuing.
 
-## Requirements for the reference implementation
+YAML is the current reference representation. Normal users should not need to see or edit it.
 
-- .NET 10 SDK
-- the target AI harness only if you want to manually test behavior
+## Native Claude integration
 
-The .NET project is currently a **reference compiler/test harness**, not a statement that normal HAIL users should eventually install or operate a standalone executable.
+The Claude implementation lives at [`integrations/claude/`](integrations/claude/).
 
-## Use HAIL
-
-Claude remains the default target:
-
-```bash
-dotnet run --project src/Hail -- profiles/example.yaml
-```
-
-Compile explicitly for Codex:
-
-```bash
-dotnet run --project src/Hail -- profiles/example.yaml --target codex
-```
-
-Generate an artifact for either harness:
-
-```bash
-dotnet run --project src/Hail -- profiles/example.yaml \
-  --target codex \
-  --output artifacts/codex.md
-```
-
-### Install for Claude Code
-
-```bash
-dotnet run --project src/Hail -- profiles/example.yaml \
-  --install claude-code
-```
-
-HAIL writes the generated contract to `~/.hail/claude-code.md` and adds a single import to `~/.claude/CLAUDE.md` without replacing unrelated user instructions.
-
-### Install for Codex
-
-```bash
-dotnet run --project src/Hail -- profiles/example.yaml \
-  --install codex
-```
-
-HAIL manages only a marked block inside the user-level Codex `AGENTS.md`, preserving unrelated instructions:
+Persistent configuration starts through the explicit HAIL skill, for example:
 
 ```text
-<!-- HAIL:START -->
-...
-<!-- HAIL:END -->
+/hail:hail
+/hail:hail show
+/hail:hail setup
+/hail:hail change
+/hail:hail reset
 ```
 
-Reinstalling replaces the HAIL block rather than duplicating it.
+Inside explicit HAIL configuration, the skill translates natural-language needs into the semantic profile, persists the profile at `~/.hail/profile.yaml`, regenerates HAIL's Claude projection at `~/.hail/claude-code.md`, and preserves the single import in `~/.claude/CLAUDE.md`.
 
-## Milestone 2: test Codex portability
+The native path does **not** invoke the .NET reference implementation.
 
-The goal is **not** to decide whether Codex gives better answers than Claude. The question is whether the same HAIL semantics cause the same directional interaction changes in a second harness.
-
-Use the existing comparison profiles:
-
-- [`profiles/test-a.yaml`](profiles/test-a.yaml): recommendation-first, fewer options, adaptive chunking, capture-and-return
-- [`profiles/test-b.yaml`](profiles/test-b.yaml): options-first, more options, no automatic chunking, follow tangents
-
-### 1. Apply Profile A to Codex
+### Claude developer test
 
 ```bash
-dotnet run --project src/Hail -- profiles/test-a.yaml \
-  --install codex
+claude --plugin-dir ./integrations/claude
 ```
 
-Start a fresh Codex session.
+Then invoke `/hail:hail` and configure or inspect the profile. After a change, use `/clear` and test normal behavior to verify persistence.
 
-### 2. Run the five evaluation scenarios
+## Native Codex integration
 
-Use the exact prompts and procedure in [`evals/manual-testing.md`](evals/manual-testing.md).
+The Codex port lives at [`integrations/codex/`](integrations/codex/).
 
-Paste the complete responses into:
+Codex supports reusable skills, and skill invocation is explicit with `$skill-name`. HAIL therefore uses `$hail` as the persistent-configuration boundary.
 
-[`evals/results/milestone-2-codex-raw.md`](evals/results/milestone-2-codex-raw.md)
+Examples:
 
-### 3. Apply Profile B and repeat
-
-```bash
-dotnet run --project src/Hail -- profiles/test-b.yaml \
-  --install codex
+```text
+$hail
+$hail show
+$hail setup
+$hail change
+$hail reset
 ```
 
-Start another fresh Codex session and run the **same prompts in the same order**.
+The interaction remains conversational after invocation. The Codex skill reads and writes the **same** canonical `~/.hail/profile.yaml`, then manages only HAIL's marked block in the user-level `$CODEX_HOME/AGENTS.md` (normally `~/.codex/AGENTS.md`).
 
-### 4. Compare two things
+### Codex local test
 
-For each semantic dimension, record:
+Install the repository skill at:
 
-1. Did Codex move from Profile A toward Profile B in the intended direction?
-2. Was Codex's enforcement stronger, similar, or weaker than Claude's Milestone 1 result?
+```text
+~/.codex/skills/hail/SKILL.md
+```
 
-Milestone 1 findings and raw Claude responses are preserved under [`evals/results/`](evals/results/).
+Then start a fresh Codex session and invoke `$hail`.
 
-## Automated checks
+See [`integrations/codex/README.md`](integrations/codex/README.md) for the current test procedure.
 
-GitHub Actions validates the reference pipeline, including:
+### Projection synchronization is intentionally unsolved
 
-- .NET 10 restore/build;
-- profile loading;
-- Claude and Codex compilation;
-- harness-specific artifact generation;
-- safe/idempotent Claude installation; and
-- safe/idempotent Codex installation without overwriting unrelated `AGENTS.md` content.
+The canonical semantic profile is shared, but harness-specific projections are regenerated by their own integrations.
 
-The behavioral fixtures under [`evals/`](evals/) describe intended behavior. CI is not currently calling the AI harnesses and grading their responses.
+If `$hail change` modifies `~/.hail/profile.yaml` in Codex, Codex's `AGENTS.md` is refreshed immediately. A previously generated Claude projection is not automatically refreshed until Claude's HAIL integration runs again.
+
+This is now a portability question backed by a concrete implementation. Do not add a shared runtime, daemon, or cloud sync merely to hide it before testing whether it matters in practice.
+
+## Persistent vs contextual behavior
+
+```text
+explicit HAIL configuration
+"Stop waiting between steps by default."
+        ↓
+persistent profile change
+
+ordinary task conversation
+"Stop waiting on me."
+        ↓
+contextual request only
+        ↓
+HAIL profile remains unchanged
+```
+
+If users later need reliable “today only,” session, task, or overload modes, that should be designed explicitly rather than smuggled into persistent profile management.
+
+## Reference implementation
+
+The original .NET compiler lives under [`reference/dotnet/`](reference/dotnet/).
+
+It remains useful as reference/conformance tooling for parsing the reference profile, deterministic Claude/Codex compilation, preserving Milestone 1 and 2 bootstrap tests, and comparing native implementations against previously validated behavior.
+
+It is **not** the intended normal-user experience, and new product capabilities should not depend on `dotnet run` unless a later experiment demonstrates a real need for shared runtime code.
+
+## Evidence so far
+
+Detailed behavioral evidence lives under [`evals/results/`](evals/results/).
+
+- Milestone 1 — static profile → Claude: **PASS**
+- Milestone 2 — same profile → Codex: **PASS for portability evidence**
+- Milestone 3 — explicit native persistent profile management in Claude: **PASS**
+- Milestone 4 — port explicit persistent profile management to Codex: **in progress**
+
+Milestone 3 demonstrated profile setup, inspection, change, reset, migration from old generated instructions, persistence across `/clear`, step pacing, and tangent/pacing composition without invoking the reference compiler.
+
+It also established a product rule: persistent changes require explicit HAIL intent; ordinary conversational adaptation must not silently redefine the user's defaults.
 
 ## Repository shape
 
 ```text
-.github/workflows/   CI for the reference implementation
-profiles/            vendor-neutral semantic profiles
-evals/               behavioral scenarios, test guide, and results
-spec/                product/specification work
-src/Hail/            reference parser, model, adapters, and bootstrap code
-AGENTS.md             harness-neutral contributor/agent guidance
-CLAUDE.md             Claude project guidance
+integrations/         product-facing harness-native experiments
+  claude/             explicit Claude persistent profile management
+  codex/              explicit Codex persistent profile management
+reference/
+  dotnet/             reference compiler/conformance tooling
+profiles/             reference semantic profile examples
+evals/                behavioral scenarios, guides, and evidence
+spec/                 product/specification work
+.github/workflows/    validation for reference + native integration shape
+AGENTS.md              harness-neutral contributor/agent guidance
+CLAUDE.md              Claude project guidance
 ```
 
-## Current design rule
+## Current design rules
 
-Keep the boundary intact:
+- Keep human intent vendor-neutral.
+- Prefer harness-native capabilities when they are sufficient.
+- Persistent preference mutation requires explicit HAIL intent.
+- Ordinary conversational adaptation must not silently rewrite the persistent profile.
+- Do not mutate user preferences to compensate for weak harness enforcement.
+- Do not expose implementation plumbing to normal users.
+- Do not add MCP, a shared runtime, diagnosis presets, cloud sync, or a UI until a concrete validated need requires them.
+- Treat temporary/session/task-specific behavior as a separate design problem from persistent defaults.
+- Treat the semantic profile as canonical and harness artifacts as disposable projections.
 
-```text
-human intent                   harness implementation
------------                    ----------------------
-recommend first       ───────▶  Claude wording
-                      └───────▶  Codex wording
+## Current Milestone 4 exit condition
 
-limit choices         ───────▶  harness-specific enforcement
-preserve active goal  ───────▶  harness-specific delivery
-```
+The Codex port succeeds when a user can:
 
-Do not change the semantic profile just because one harness needs different wording to express the same intent.
+1. intentionally enter HAIL configuration with `$hail`;
+2. inspect the same canonical profile used by Claude;
+3. change or reset persistent preferences conversationally;
+4. update Codex behavior through native `AGENTS.md` delivery without invoking the reference compiler;
+5. preserve unrelated Codex instructions; and
+6. observe the changed behavior in a fresh Codex interaction.
 
-## Intentionally not solved yet
-
-HAIL does not currently attempt dynamic state detection, automatic preference learning, MCP/runtime integration, marketplaces, cloud profile sync, polished onboarding, or a profile-builder UI.
-
-Those remain evidence-driven future work. Normal users should ultimately not need to understand YAML, instruction files, compilers, runtimes, or harness configuration to benefit from HAIL.
+The experiment should also record whether cross-harness projection staleness is a meaningful user problem before HAIL designs synchronization infrastructure.
