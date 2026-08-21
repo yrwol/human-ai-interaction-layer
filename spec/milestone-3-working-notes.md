@@ -1,8 +1,10 @@
-# Milestone 3 — Native persistent profile management (working notes)
+# Milestone 3 — Native persistent profile management
 
-Milestone 3 is validating HAIL configuration inside a harness without requiring users to edit YAML or run the reference compiler.
+**Status: complete / manually validated.**
 
-## Working product decision
+This document records the Claude-native persistent profile-management experiment. Current product truth now lives in [`product.md`](product.md), [`semantics.md`](semantics.md), and [`roadmap.md`](roadmap.md).
+
+## Product decision
 
 **[DECIDED] Persistent profile mutation requires explicit HAIL intent.**
 
@@ -12,13 +14,13 @@ Examples:
 
 - During normal work, `stop waiting on me` is interpreted as a request for the current context/task. It does not persist `step_pacing: continuous`.
 - Inside explicit HAIL configuration, `stop waiting between steps by default` may persist a new `step_pacing` value.
-- `I'm overwhelmed today and need things dumbed down` raises a potentially useful temporary/session adaptation scenario, but persistence duration, scope, expiry, and precedence are not defined yet and are intentionally parked.
+- `I'm overwhelmed today and need things dumbed down` raises a potentially useful temporary/session adaptation scenario, but persistence duration, scope, expiry, and precedence are not defined yet and remain parked.
 
 This boundary favors user agency over automatic preference inference.
 
 ## Explicit Claude entry point
 
-For the current Claude experiment, persistent management begins through the HAIL skill, for example:
+Persistent management begins through the HAIL skill, for example:
 
 ```text
 /hail:hail
@@ -30,11 +32,9 @@ For the current Claude experiment, persistent management begins through the HAIL
 
 The interaction after invocation remains natural language. The user does not need to know schema names or YAML values.
 
-Separate implementations for each sub-action are not required yet; the single HAIL skill can interpret the requested operation.
-
 ## New semantic dimension validated by testing
 
-The native experiment demonstrated that `task_chunking` alone cannot represent a user's request to receive one small step and then pause.
+The experiment demonstrated that `task_chunking` alone cannot represent a user's request to receive one small step and then pause.
 
 `step_pacing` therefore captures a separate persistent concern:
 
@@ -44,7 +44,7 @@ The native experiment demonstrated that `task_chunking` alone cannot represent a
 
 `task_chunking` describes **how work is divided**. `step_pacing` describes **how progression through those pieces is paced**.
 
-## Native Claude findings so far
+## Validated findings
 
 **[VALIDATED]** An explicit conversational HAIL interaction can create or update the canonical semantic profile without the user editing YAML.
 
@@ -56,25 +56,25 @@ The native experiment demonstrated that `task_chunking` alone cannot represent a
 
 **[VALIDATED]** `step_pacing: wait_for_user` composed successfully with `tangent_policy: capture_and_return`: Claude answered a tangent briefly, returned to the exact pending planning decision, and continued waiting for the user.
 
+**[VALIDATED]** `show`, `change`, and whole-profile `reset` worked conversationally and remained persistent across `/clear`.
+
 **[FIXED]** Migration from the older reference-generated Claude projection initially preserved contradictory old instructions. The native integration now treats `~/.hail/claude-code.md` as HAIL-owned generated output and replaces it completely from the canonical profile.
 
 ## Parked: temporary/contextual adaptation
 
 Testing also demonstrated a legitimate distinction between persistent defaults and current-task instructions.
 
-A future milestone may explore overlays such as session-, task-, or day-scoped behavior, but this is not part of the current persistent profile-management milestone.
-
-Questions that must be answered before building temporary overlays include:
+Future state/overlay work must answer questions such as:
 
 - what scopes exist (turn, task, conversation, day, explicit-until-cleared);
 - what survives `/clear` or a new session;
 - how temporary values override persistent defaults;
-- whether HAIL ever infers a temporary state versus requiring explicit user intent;
-- how and when an override expires; and
-- how the user inspects or clears active overrides.
+- whether HAIL ever infers temporary state versus requiring explicit user intent;
+- how and when state expires; and
+- how the user inspects or clears it.
 
 Do not implement this layer opportunistically inside persistent profile management.
 
-## Current exit condition
+## Outcome
 
-Milestone 3 is complete when persistent HAIL configuration is intentionally invoked, human-friendly, mutable, inspectable, and effective across a fresh conversation without requiring the reference compiler.
+The experiment passed its exit condition: persistent HAIL configuration is intentionally invoked, human-friendly, mutable, inspectable, and effective across a fresh conversation without requiring the reference compiler.
