@@ -37,7 +37,7 @@ Historical milestone documents are evidence records, not competing current specs
 - Codex native persistent profile management: complete / manually validated.
 - Temporary interaction state: not yet implemented.
 
-Cross-harness projection refresh remains intentionally unresolved; do not treat that as a failure of the Codex native-management milestone.
+Multi-harness projection refresh is a parked optional enhancement, not a shipping requirement or a milestone blocker.
 
 No `dotnet run` dependency is allowed in normal-user product paths.
 
@@ -49,7 +49,7 @@ Do not add MCP, a shared runtime, desktop UI, cloud sync, diagnosis presets, aut
 
 Prefer harness-native capabilities when they can preserve HAIL semantics and user ownership without extra plumbing.
 
-Cross-harness projection synchronization remains intentionally unsolved. Record whether stale projections create a real user problem before designing synchronization infrastructure.
+Do not treat cross-harness projection synchronization as required product plumbing. Many users may use only one harness. If multi-harness users later show meaningful friction from stale projections, prefer the smallest refresh-at-use mechanism before considering synchronization infrastructure.
 
 ## Design rules
 
@@ -65,6 +65,7 @@ Cross-harness projection synchronization remains intentionally unsolved. Record 
 - Weak behavior enforcement in one harness is an adapter/compatibility concern, not a reason to mutate human intent.
 - Add a new persistent semantic field only when a concrete persistent user need cannot be expressed by the existing vocabulary.
 - Do not promote taxonomy candidates into schema without evidence.
+- Multi-harness synchronization is an optional enhancement, not a portability requirement.
 
 ## Validation
 
@@ -74,7 +75,7 @@ Native integration changes must be validated independently of the reference comp
 
 Behavioral experiments and evidence belong in `evals/`.
 
-Completed native-management experiments should point to their raw behavioral evidence. Unresolved follow-up questions such as projection refresh should remain explicitly separate from milestone pass/fail status.
+Completed native-management experiments should point to their raw behavioral evidence. Parked enhancements such as multi-harness projection refresh should remain explicitly separate from milestone pass/fail status.
 
 ## Important files
 
