@@ -6,17 +6,38 @@ HAIL is a human-first, vendor-neutral interaction layer. A human-owned semantic 
 
 The product is the semantic model + harness integrations. The .NET implementation under `reference/dotnet/` is reference/conformance tooling, not the user experience.
 
-## Current active milestone
+## Current project checkpoint
 
-Milestone 3 proved explicit persistent HAIL profile management natively inside Claude. Milestone 4 ported that management surface to Codex; explicit Codex manual testing remains useful evidence but is not blocking the next experiment.
+The active work is **documentation reconciliation** after native profile-management work.
 
-The active experiment is now **temporary/contextual overrides**:
+Do not start a new product feature until the repository clearly distinguishes:
 
-`persistent HAIL defaults → explicit temporary override → current interaction behavior → expiration → persistent defaults restored`
+- current product truth;
+- current validated semantic model;
+- broader interaction taxonomy/reference ideas;
+- historical experiment evidence; and
+- current roadmap/parked work.
 
-The first target scenario is a user whose persistent profile says to wait between steps, then explicitly says something equivalent to "for this task, stop waiting on me." HAIL should adapt the current task without rewriting the persistent profile.
+Start with `spec/README.md`.
 
-No `dotnet run` dependency is allowed in this product path.
+Current authoritative docs:
+
+- `spec/product.md` — durable product definition and architecture boundary;
+- `spec/semantics.md` — current validated persistent semantic model;
+- `spec/interaction-taxonomy.md` — broader candidate interaction dimensions;
+- `spec/roadmap.md` — current project state and next candidate experiments.
+
+Historical milestone documents are evidence records, not competing current specs.
+
+## Current implementation state
+
+- Static Claude behavior proof: complete.
+- Claude→Codex semantic portability proof: complete.
+- Claude native persistent profile management: complete / manually validated.
+- Codex native persistent profile management: implemented; explicit manual behavioral validation deferred.
+- Temporary interaction state: not yet implemented.
+
+No `dotnet run` dependency is allowed in normal-user product paths.
 
 ## Scope discipline
 
@@ -26,24 +47,22 @@ Do not add MCP, a shared runtime, desktop UI, cloud sync, diagnosis presets, aut
 
 Prefer harness-native capabilities when they can preserve HAIL semantics and user ownership without extra plumbing.
 
-Do not turn this milestone into a general adaptive-state engine. Begin with explicit temporary overrides only.
-
 Cross-harness projection synchronization remains intentionally unsolved. Record whether stale projections create a real user problem before designing synchronization infrastructure.
 
 ## Design rules
 
-- The persistent profile is semantic, vendor-neutral, human-owned, and unchanged by temporary overrides.
+- The persistent profile is semantic, vendor-neutral, and human-owned.
 - Harness integrations own harness-specific wording, persistence mechanics, and delivery behavior.
 - The canonical profile is the source of truth for persistent defaults; generated harness instructions are disposable projections.
 - **Persistent profile mutation requires explicit persistent HAIL intent.** Ordinary conversational instructions must not silently rewrite persistent defaults.
-- Temporary overrides must have an observable scope/expiration boundary.
-- Contextual statements such as `stop waiting on me`, `just decide`, or `I'm overwhelmed today` must not be promoted to permanent profile changes without explicit persistent intent.
+- Persistent profile and temporary interaction state are separate concepts.
 - Normal users should not need to see or edit YAML unless they explicitly want to.
 - Human preference data remains user-owned and should not need to be committed into project repositories.
 - Existing harness configuration must be preserved.
 - Preferences map to observable behavior, not diagnosis labels or vague personality categories.
 - Weak behavior enforcement in one harness is an adapter/compatibility concern, not a reason to mutate human intent.
 - Add a new persistent semantic field only when a concrete persistent user need cannot be expressed by the existing vocabulary.
+- Do not promote taxonomy candidates into schema without evidence.
 
 ## Validation
 
@@ -53,21 +72,27 @@ Native integration changes must be validated independently of the reference comp
 
 Behavioral experiments and evidence belong in `evals/`.
 
-For temporary overrides, validate both the changed current behavior and that the persistent profile remains unchanged after the override expires.
+Deferred manual validation must be labeled as deferred rather than silently treated as pass/fail.
 
 ## Important files
 
-- `spec/draft.md` — broader product and architecture direction
+- `spec/README.md` — specification map and authority rules
+- `spec/product.md` — current product specification
+- `spec/semantics.md` — current validated semantic model
+- `spec/interaction-taxonomy.md` — broad interaction-dimension reference
+- `spec/roadmap.md` — current roadmap/checkpoint
+- `spec/draft.md` — original legacy working spec; useful historical context, not current authority
 - `spec/milestone-1-addendum.md` — first-harness learnings
 - `spec/milestone-2-addendum.md` — portability learnings
-- `spec/milestone-3-working-notes.md` — Claude native-management decisions
-- `spec/milestone-4-working-notes.md` — Codex profile-management port
-- `spec/milestone-5-working-notes.md` — active contextual-override experiment
+- `spec/milestone-3-working-notes.md` — completed Claude native-management evidence
+- `spec/milestone-4-working-notes.md` — Codex management port; validation deferred
 - `profiles/example.yaml` — reference semantic profile representation
 - `integrations/claude/` — native Claude persistent profile management
 - `integrations/codex/` — native Codex persistent profile management
-- `reference/dotnet/` — reference compiler and previous bootstrap implementations
+- `reference/dotnet/` — reference compiler/conformance tooling
 - `evals/` — behavioral expectations and evidence
+
+`spec/draft-guidance.md`, where present after branch reconciliation with `main`, is separate focused specification work and should not be repurposed as the core roadmap/schema source.
 
 ## Working style
 
