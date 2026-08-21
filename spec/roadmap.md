@@ -67,7 +67,7 @@ Validated behaviors include:
 - `$hail show` confirming the persistent profile remained unchanged by contextual requests; and
 - reset to v0.1 defaults.
 
-Cross-harness projection staleness remains an unresolved observation rather than a blocker: each harness currently refreshes only its own generated projection. Do not add synchronization infrastructure until evidence shows that stale projections create meaningful user friction.
+Cross-harness projection synchronization is **not a shipping requirement**. Users may use only one harness, and the validated product model does not require active synchronization between harness-specific projections. A smoother multi-harness refresh experience may be explored later as an optional enhancement if real usage shows it is valuable.
 
 Historical working notes: [`milestone-4-working-notes.md`](milestone-4-working-notes.md).
 
@@ -123,7 +123,7 @@ Relevant unresolved design questions:
 
 A shared runtime is not automatically the next step after temporary state.
 
-Explore it only if a validated capability cannot be delivered adequately with harness-native mechanisms—for example, if state must reliably synchronize across harnesses and simpler refresh mechanisms prove insufficient.
+Explore it only if a validated capability cannot be delivered adequately with harness-native mechanisms. Multi-harness projection synchronization alone is not a requirement for shipping HAIL and should not be used as justification for a shared runtime without demonstrated user need.
 
 ### Real-user onboarding
 
@@ -141,6 +141,20 @@ Potential experiments:
 ### Distribution
 
 Only after the interaction model and management experience are sufficiently stable should the project optimize marketplace/plugin packaging, installers, hosted sync, or broader distribution.
+
+### Multi-harness profile refresh
+
+Status: **parked optional enhancement**
+
+For users who actively use multiple HAIL-enabled harnesses, a future enhancement may reduce stale generated projections after the canonical profile changes elsewhere.
+
+Possible low-complexity direction:
+
+> Refresh the harness-local disposable projection from the canonical profile at an appropriate point of use.
+
+This is an enhancement to multi-harness convenience, not a requirement for semantic portability, single-harness use, milestone completion, or shipping.
+
+Do not introduce a daemon, shared runtime, cloud service, or MCP synchronization layer unless later evidence demonstrates that simpler refresh behavior is insufficient.
 
 ## Parked / evidence required
 
