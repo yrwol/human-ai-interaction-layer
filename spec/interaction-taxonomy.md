@@ -70,22 +70,27 @@ It is intentionally larger than the current schema.
 | `check_understanding` | never / adaptive / often | candidate |
 | `analogy_use` | low / medium / high | candidate |
 
-## Review confidence and AI literacy
+## Review confidence and evaluation support
 
-HAIL also has focused specification work around helping users evaluate AI output, surface important assumptions, calibrate skepticism, and recognize when further questioning is no longer useful. See `draft-guidance.md` when available on the target branch.
+HAIL has a focused capability specification for helping users evaluate AI output responsibly without transferring judgment to the AI. See [`capabilities/review-guidance.md`](capabilities/review-guidance.md).
 
-Potential concepts from that work include:
+Relevant candidate dimensions and concepts include:
 
-- surfacing material assumptions;
-- suggesting one high-value verification action;
-- confidence/uncertainty visibility;
-- independent review;
-- verification-loop detection;
-- domain-local scaffolding;
-- calibration prompts;
-- escalation to authoritative evidence or human expertise.
+| Dimension / concept | Intent | Status |
+|---|---|---|
+| `confidence_visibility` | surface meaningful uncertainty rather than opaque certainty | candidate |
+| `challenge_user_assumptions` | make important assumptions easier to inspect/challenge | candidate |
+| `surface_material_assumptions` | expose assumptions that materially affect the answer | conceptual |
+| `verification_support` | suggest a high-value verification action when useful | conceptual |
+| `review_loop_detection` | identify when repeated questioning is no longer adding evidence | conceptual |
+| `domain_local_scaffolding` | adapt review help to demonstrated familiarity in the current task/domain | conceptual |
+| `calibration_prompts` | offer lightweight checks when they reduce future friction | conceptual |
+| `verification_boundary` | distinguish “I need more explanation” from “this requires outside expertise/evidence” | conceptual |
+| `independent_review_context` | share facts while preserving independent reasoning where anchoring matters | conceptual |
 
-Status: **feature-spec / conceptual**, not current persistent-profile schema.
+The capability also uses **Explore → Validate → Stop** as a conceptual model for task-local review state. These are not persistent profile values.
+
+Status: **focused capability / conceptual**, not current persistent-profile schema.
 
 ## Temporary interaction state
 
