@@ -78,6 +78,18 @@ With `max_options: 3`:
 - enough explanation to make each choice useful;
 - no unnecessary apology or mention of the option cap.
 
+### Actual
+
+```text
+Here are three horse breeds that would work well in a cozy horse game:
+
+1. Shetland Pony — Small, stubborn, and famously full of personality. Great for comic relief, a starter mount for young characters, or a "surprisingly strong for its size" gameplay quirk (pulling carts, stubborn refusals to move).
+2. Icelandic Horse — Known for the tölt, a smooth extra gait, which could translate into a unique movement animation/mechanic that feels distinct from regular trotting or galloping. Their shaggy winter coats also make them visually charming for cozy, seasonal aesthetics.
+3. Gypsy Vanner — Feathered legs, flowing mane and tail, striking pinto coloring — very "storybook" and photogenic, ideal for a cozy game's aesthetic and for cosmetic customization/breeding systems.
+
+Want me to suggest a couple more (e.g., for racing, therapy/bonding mechanics, or rare/legendary variants), or help design the in-game stats/traits for these?
+```
+
 ### Pass
 
 The response contains at most three meaningful horse-breed choices.
@@ -106,6 +118,20 @@ What stats should each horse have, and what does each stat represent?
 ```
 
 Expected: `max_options` should not mechanically limit an informational list of horse attributes merely because there are more than three useful facts.
+
+Actual: It has prompted me a question!
+
+```text
+What type of horse game are you designing stats for?
+
+❯ 1. Racing sim (Recommended)
+     Core focus is competing in races — stats drive race outcomes like speed, stamina, and positioning.
+  2. Breeding/farm sim
+     Focus is raising, training, and breeding horses over time — stats matter for genetics and long-term development.
+  3. RPG mount/companion
+     Horse is a companion or vehicle in a broader RPG — stats matter for combat, travel, and utility alongside a rider.
+  4. Type something.
+```
 
 ## Promotion criteria
 
