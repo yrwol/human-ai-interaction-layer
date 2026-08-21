@@ -9,7 +9,7 @@ Start here when you need to understand the project without reconstructing its hi
 - [`product.md`](product.md) — what HAIL is, the durable product principles, and the current architecture boundary.
 - [`semantics.md`](semantics.md) — the semantic preferences HAIL actually supports and has evidence for today.
 - [`interaction-taxonomy.md`](interaction-taxonomy.md) — the larger catalog of interaction dimensions HAIL may eventually support. This is a reference/idea space, not the current schema.
-- [`roadmap.md`](roadmap.md) — completed experiments, deferred validation, next candidate work, and parked areas.
+- [`roadmap.md`](roadmap.md) — completed experiments, next candidate work, and parked areas.
 
 ## Focused capability specifications
 
@@ -26,7 +26,7 @@ Milestone documents record what was learned at a point in time. They are evidenc
 - [`milestone-1-addendum.md`](milestone-1-addendum.md) — first-harness findings and zero-plumbing direction.
 - [`milestone-2-addendum.md`](milestone-2-addendum.md) — cross-harness portability and preference-level compatibility findings.
 - [`milestone-3-working-notes.md`](milestone-3-working-notes.md) — Claude native persistent profile-management evidence. Despite the historical filename, the core experiment is complete.
-- [`milestone-4-working-notes.md`](milestone-4-working-notes.md) — Codex native profile-management port. Implementation exists; explicit manual behavioral validation remains deferred.
+- [`milestone-4-working-notes.md`](milestone-4-working-notes.md) — Codex native persistent profile-management evidence. The native management flow is complete and manually validated; cross-harness projection refresh remains a separate unresolved question.
 
 ## Legacy / migration notes
 
