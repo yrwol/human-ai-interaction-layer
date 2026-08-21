@@ -110,13 +110,13 @@ The native Codex path has been manually validated for profile inspection, natura
 
 See [`integrations/codex/README.md`](integrations/codex/README.md) and [`evals/results/milestone-4-codex-native-raw.md`](evals/results/milestone-4-codex-native-raw.md).
 
-## Projection synchronization is intentionally unsolved
+## Multi-harness refresh is optional
 
-The semantic profile is shared, but harness-specific projections are currently refreshed by their own integrations.
+HAIL does not require a user to use multiple harnesses. Each harness can independently apply the same canonical semantic profile.
 
-If Codex changes the canonical profile, a previously generated Claude projection may remain stale until Claude's HAIL integration runs again.
+If a user does use multiple harnesses, one harness may temporarily have an older generated projection after the canonical profile is changed elsewhere. Improving that refresh experience is a **parked enhancement**, not a requirement for shipping or for HAIL's portability model.
 
-This is a real question, but HAIL will not add a daemon, shared runtime, cloud service, or MCP layer until evidence shows that simpler native refresh behavior is insufficient.
+Prefer simple refresh-at-use behavior if this becomes worth improving. Do not add a daemon, shared runtime, cloud service, or MCP synchronization layer without demonstrated user need.
 
 ## Reference implementation
 
@@ -152,4 +152,5 @@ CLAUDE.md              Claude project guidance
 - Do not mutate user intent to compensate for weak harness enforcement.
 - Do not expose implementation plumbing to normal users.
 - Add semantic fields only after a real scenario proves the current vocabulary insufficient.
+- Do not make multi-harness synchronization a shipping requirement.
 - Do not add MCP, shared runtime, cloud sync, diagnosis presets, or polished UI until a concrete experiment requires them.
