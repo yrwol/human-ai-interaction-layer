@@ -1,5 +1,7 @@
 # HAIL — Review Guidance & Cognitive Load Specification
 
+> Focused capability specification. This document preserves deeper design work for review confidence and cognitive-load reduction. It is not the current persistent semantic schema and does not imply roadmap priority.
+
 ## Purpose
 
 HAIL should help users understand **when to question AI output, what to question, and when additional questioning has stopped producing useful information**.
@@ -141,6 +143,8 @@ rather than a permanent judgment about the user.
 
 HAIL can conceptualize review as three states.
 
+These are **task-local review states**, not persistent profile values.
+
 ## Explore
 
 The user does not yet understand the problem or output well enough to evaluate it.
@@ -153,6 +157,12 @@ HAIL should help expose:
 - alternatives
 - missing information
 - relevant questions
+
+Example:
+
+> “The decision here mainly depends on whether you need guaranteed delivery. Want me to explain why that changes the architecture?”
+
+---
 
 ## Validate
 
@@ -169,6 +179,12 @@ HAIL should shift toward:
 - edge cases
 - evidence
 
+Example:
+
+> “You understand the approach. The highest-value validation now would be testing what happens if the process crashes between the database write and message publication.”
+
+---
+
 ## Stop
 
 Additional questioning is no longer meaningfully changing the user's understanding or confidence.
@@ -180,7 +196,9 @@ HAIL should surface:
 - whether that uncertainty is resolvable
 - what new evidence would actually move the problem forward
 
-These are **task-local review states**, not persistent profile values.
+Example:
+
+> “I think we're entering a verification loop. We've independently checked A, B, and C and keep reaching the same result. The unresolved uncertainty is D, which requires production telemetry rather than additional reasoning.”
 
 ---
 
@@ -199,7 +217,19 @@ Signals may include:
 
 HAIL should **not abruptly stop the discussion**.
 
-Instead, it should make the loop visible and identify what evidence would actually move the problem forward.
+Instead, it should make the loop visible.
+
+Example:
+
+> “We've approached this three different ways and the conclusion hasn't changed. I think further rephrasing is unlikely to help unless we introduce new evidence.”
+
+Then identify the next useful action:
+
+> “The thing that would actually resolve this is checking the vendor documentation.”
+
+or:
+
+> “At this point, a security specialist would provide more value than another AI review.”
 
 ---
 
@@ -211,15 +241,55 @@ It should teach them to allocate skepticism effectively.
 
 > **Spend review effort where errors matter most.**
 
-Review effort should increase with consequence of error, uncertainty, unfamiliarity, and reversibility difficulty. It can decrease with strong tests, authoritative grounding, mature automation, familiar domains, reversible decisions, and independent confirmation.
+A useful conceptual model:
+
+**Review effort should increase with:**
+
+- consequence of error
+- uncertainty
+- unfamiliarity
+- reversibility difficulty
+
+**Review effort can decrease with:**
+
+- strong tests
+- authoritative grounding
+- mature automation
+- familiar domains
+- reversible decisions
+- independent confirmation
+
+This does not need to be exposed as a literal formula to users.
 
 ---
 
 # Cognitive Load Reduction
 
-Without HAIL, a user may have to determine what seems wrong, how to challenge it, and whether the challenge resolved the issue.
+Without HAIL:
 
-With HAIL, the system should help expose the most important assumption or verification target so the user has a concrete cognitive foothold.
+> “Something seems wrong.”
+
+The user must figure out:
+
+> “What seems wrong?”
+
+then:
+
+> “How do I ask about it?”
+
+then:
+
+> “Did that resolve it?”
+
+With HAIL:
+
+> “This answer depends heavily on assumption X. That's the best place to challenge it.”
+
+The user can respond:
+
+> “Yeah, X isn't true.”
+
+One short correction may replace multiple turns of negotiation.
 
 ---
 
@@ -227,9 +297,39 @@ With HAIL, the system should help expose the most important assumption or verifi
 
 HAIL should provide lightweight opportunities for users to correct AI behavior.
 
-Examples include checking understanding, assumptions, depth, challenge level, confidence, direction, or communication fit.
+Examples:
 
-These should **not** appear as a fixed survey after every message. HAIL should surface 1–2 prompts only when they meaningfully reduce likely future friction.
+### Understanding
+
+> “I interpreted your goal as X. Is that right?”
+
+### Assumptions
+
+> “I inferred Y from your description. Correct me if that's wrong.”
+
+### Depth
+
+> “Want the reasoning, or is the recommendation enough?”
+
+### Challenge
+
+> “Want me to pressure-test this?”
+
+### Confidence
+
+> “The part I'd be least confident in is X.”
+
+### Direction
+
+> “Should I optimize for simplicity or long-term flexibility?”
+
+### Communication
+
+> “Was that more detail than you needed?”
+
+These should **not** appear as a fixed survey after every message.
+
+HAIL should surface 1–2 prompts only when they meaningfully reduce likely future friction.
 
 ---
 
@@ -237,15 +337,57 @@ These should **not** appear as a fixed survey after every message. HAIL should s
 
 HAIL should gradually reduce review assistance as the user demonstrates confidence within a domain.
 
+## Early interaction
+
+HAIL:
+
+> “Here are the two assumptions I would verify first.”
+
+## Developing interaction
+
+User:
+
+> “I think assumption #2 is wrong.”
+
+HAIL:
+
+> “If #2 is wrong, the recommendation changes substantially. Let's test that path.”
+
+## Established confidence
+
+User:
+
+> “Pressure-test this architecture.”
+
+HAIL should stop teaching basic review concepts and simply perform adversarial review.
+
 The goal is:
 
 > **scaffold → calibrate → get out of the way**
 
+---
+
+# Building User Confidence
+
 Confidence should emerge from competence and transparency, not reassurance.
+
+HAIL should reinforce useful behavior when appropriate.
+
+Example:
+
+> “That was the right thing to challenge—the recommendation depended heavily on that assumption.”
+
+Avoid meaningless praise such as:
+
+> “Great question!”
+
+The purpose is to help the user recognize **why their review behavior was valuable**.
 
 ---
 
 # Recognizing Verification Boundaries
+
+A critical review skill is understanding when the user cannot reasonably validate something themselves.
 
 HAIL should help distinguish:
 
@@ -254,6 +396,10 @@ HAIL should help distinguish:
 from:
 
 > “I cannot responsibly verify this without specialized expertise.”
+
+Example:
+
+> “We can inspect the general architecture, but validating the cryptographic construction itself requires expertise beyond what this conversational review can establish.”
 
 Knowing when to escalate is part of AI literacy.
 
@@ -277,7 +423,9 @@ Important:
 
 > **Independent review should not automatically inherit the original reasoning.**
 
-Shared facts may be useful. Shared conclusions may create anchoring.
+Shared facts may be useful.
+
+Shared conclusions may create anchoring.
 
 ---
 
@@ -315,9 +463,40 @@ This preserves different perspectives while preventing participants from acciden
 
 This capability primarily targets **human-facing AI**.
 
-Automation should optimize more aggressively for predictability, structure, schemas, validation, monitoring, constrained actions, and deterministic behavior where possible.
+## Automation AI
 
-Human-facing AI must adapt across expertise, confidence, learning style, communication style, ambiguity tolerance, cognitive load, risk tolerance, and desired depth.
+Automation should optimize for:
+
+- predictability
+- structure
+- schemas
+- validation
+- deterministic behavior where possible
+- monitoring
+- failure handling
+- constrained actions
+
+Trust is largely established during system design.
+
+---
+
+## Human-Facing AI
+
+Human interaction must support a much broader spectrum.
+
+Users differ in:
+
+- expertise
+- confidence
+- learning style
+- communication style
+- emotional response to uncertainty
+- tolerance for ambiguity
+- cognitive load
+- risk tolerance
+- desired depth
+
+Therefore:
 
 > **Automation interfaces can be standardized aggressively. Human interaction should operate within guardrails but remain highly adaptive.**
 
@@ -325,9 +504,28 @@ Human-facing AI must adapt across expertise, confidence, learning style, communi
 
 # Emotional and Social Factors
 
-Evaluation is not purely intellectual. A person may fail to challenge output because they feel intimidated, embarrassed, uncertain, overwhelmed, rushed, or afraid of appearing inexperienced.
+Evaluation is not purely intellectual.
 
-HAIL should make disagreement psychologically inexpensive and avoid framing disagreement as user failure.
+A person may fail to challenge output because they feel:
+
+- intimidated
+- embarrassed
+- uncertain
+- overwhelmed
+- rushed
+- afraid of appearing inexperienced
+
+HAIL should make disagreement psychologically inexpensive.
+
+Useful language:
+
+> “There are a couple reasonable ways to interpret this.”
+
+> “This conclusion depends on an assumption you may want to challenge.”
+
+> “If you're unsure where to start, I'd check X first.”
+
+Avoid framing disagreement as user failure.
 
 ---
 
@@ -385,13 +583,34 @@ Keep the first implementation intentionally small.
 
 ## Phase 1 — Prompt-Level Behavior
 
-Surface important assumptions, suggest one high-value verification step when useful, expose verification-loop boundaries, and avoid telling users simply to trust the output.
+Add instructions to generated HAIL profiles such as:
+
+> When an answer materially depends on assumptions, surface the most important assumption.
+
+> When the user appears uncertain how to evaluate an answer, suggest one concrete verification step.
+
+> When repeated questioning is no longer introducing new information, identify the remaining uncertainty and what new evidence would be required.
+
+> Do not tell the user to trust the output. Help them understand how confidence can be established.
+
+---
 
 ## Phase 2 — Calibration Prompts
 
-Introduce context-sensitive micro-prompts and measure whether they reduce corrective turns, repeated questions, misunderstood requirements, and unnecessary explanations.
+Introduce context-sensitive micro-prompts.
+
+Measure whether they reduce:
+
+- corrective turns
+- repeated questions
+- misunderstood requirements
+- unnecessary explanations
+
+---
 
 ## Phase 3 — Review Loop Detection
+
+Track semantic repetition within a conversation.
 
 When appropriate:
 
@@ -399,6 +618,8 @@ When appropriate:
 2. identify unresolved uncertainty
 3. explain what evidence would advance the problem
 4. offer a stopping point
+
+---
 
 ## Phase 4 — Domain-Local Adaptation
 
@@ -410,19 +631,89 @@ Persistence should remain explicit rather than silently changing the user's long
 
 # Evaluation Questions
 
-When testing this capability, evaluate cognitive load, understanding, confidence, stopping behavior, and adaptation quality.
+When testing this feature, ask:
 
-Questions include:
+### Cognitive Load
 
+- Did the user need fewer corrective prompts?
 - Did HAIL identify the important uncertainty before the user had to?
 - Did the interaction reduce repetitive back-and-forth?
+
+### Understanding
+
 - Could the user explain why the output was considered reliable or uncertain?
+- Did the user know what assumption mattered most?
 - Did the user recognize when outside expertise was required?
+
+### Confidence
+
 - Did confidence increase because of evidence rather than reassurance?
-- Did HAIL recognize unproductive verification loops without prematurely ending productive exploration?
+- Did users become more willing to challenge AI?
+- Did users learn useful review behaviors over repeated interactions?
+
+### Stopping Behavior
+
+- Did HAIL recognize unproductive verification loops?
+- Did it avoid prematurely ending productive exploration?
+- Did it identify what new evidence would actually advance the problem?
+
+### Adaptation
+
 - Did experienced users feel patronized?
 - Did inexperienced users receive enough scaffolding?
 - Did assistance adjust appropriately across different domains?
+
+---
+
+# Example Interaction
+
+### User
+
+> Should I use this architecture?
+
+### AI without HAIL
+
+> Yes. This architecture is scalable and provides good separation of concerns...
+
+### HAIL-enabled AI
+
+> I would use it, but the recommendation depends heavily on one assumption: that eventual consistency is acceptable here.
+
+> If you're unsure whether that's true, that's the first thing I'd verify.
+
+### User
+
+> I actually need the update to be immediate.
+
+### HAIL-enabled AI
+
+> Then I'd change the recommendation. That requirement removes the main reason I preferred the original design.
+
+This avoids requiring the user to independently discover which part of the AI's reasoning was wrong.
+
+---
+
+# Example Verification Loop
+
+### User
+
+> But are you sure?
+
+### AI
+
+> Based on A, B, and C, yes.
+
+### User
+
+> Could there still be another issue?
+
+### AI
+
+> We've now checked the implementation logic, documentation, and an independent alternative approach, and all three support the same conclusion.
+
+> The remaining uncertainty is how this behaves under your production load. More reasoning won't resolve that; a load test would.
+
+This gives the user permission to stop without pretending uncertainty has disappeared.
 
 ---
 
@@ -436,9 +727,17 @@ HAIL should instead ask:
 
 > **How do we minimize unnecessary cognitive effort while maximizing understanding?**
 
-The objective is not fewer interactions at all costs. Some interaction prevents much larger misunderstandings.
+The objective is not fewer interactions at all costs.
 
-The goal is to remove **unproductive** cognitive work: figuring out what to challenge, repeatedly requesting reassurance, reconstructing hidden assumptions, wondering whether enough verification has occurred, and continuing discussion after new information has stopped appearing.
+Some interaction prevents much larger misunderstandings.
+
+The goal is to remove **unproductive** cognitive work:
+
+- figuring out what to challenge
+- repeatedly requesting reassurance
+- reconstructing hidden assumptions
+- wondering whether enough verification has occurred
+- continuing discussion after new information has stopped appearing
 
 ---
 
