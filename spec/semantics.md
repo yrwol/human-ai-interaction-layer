@@ -6,6 +6,8 @@ It is intentionally much smaller than the broader [`interaction-taxonomy.md`](in
 
 ## Current profile
 
+The canonical example profile lives at [`profiles/example.yaml`](../profiles/example.yaml).
+
 ```yaml
 version: 0.1
 profile:
