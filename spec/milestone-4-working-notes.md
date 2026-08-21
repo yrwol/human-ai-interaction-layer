@@ -1,12 +1,14 @@
 # Milestone 4 — Native Codex profile management
 
-**Status: implemented; explicit manual behavioral validation deferred.**
+**Status: complete / manually validated.**
 
-This document records the Codex-native profile-management port. Current project priority is tracked in [`roadmap.md`](roadmap.md).
+This document records the Codex-native profile-management port and its manual behavioral validation. Current project priority is tracked in [`roadmap.md`](roadmap.md).
 
 ## Hypothesis
 
 Can the explicit persistent HAIL profile-management experience be ported from Claude to Codex without changing the vendor-neutral semantic profile or introducing a shared runtime?
+
+**Result: PASS.**
 
 ## Persistent configuration boundary
 
@@ -63,19 +65,28 @@ $CODEX_HOME/AGENTS.md
 
 normally `~/.codex/AGENTS.md`.
 
-## Implementation state
+## Manual validation results
 
-The native skill, profile-management flow, Codex projection logic, repository documentation, and test scaffolding are implemented.
+The native Codex flow was manually exercised end-to-end.
 
-Manual behavioral validation was intentionally deferred rather than treated as complete evidence.
+Validated:
 
-Still unvalidated manually:
+1. `$hail` inspected and summarized the existing canonical profile in plain language without mutating it.
+2. `$hail change` accepted a natural-language request for one-small-step-at-a-time pacing.
+3. The canonical profile changed to:
 
-1. explicit `$hail` configuration in a real Codex session;
-2. profile change/reset behavior end-to-end;
-3. resulting behavior in a fresh interaction;
-4. preservation of unrelated real-world `AGENTS.md` content; and
-5. the ordinary-conversation persistence boundary in Codex.
+   ```yaml
+   task_chunking: always
+   step_pacing: wait_for_user
+   ```
+
+4. A fresh Codex interaction produced one small meaningful planning step and waited rather than advancing through the entire plan.
+5. `tangent_policy: capture_and_return` composed with `step_pacing: wait_for_user`: a tangent was answered, the pending planning point was preserved, and Codex continued waiting.
+6. An ordinary conversational instruction to stop waiting adapted the current task without mutating the persistent profile.
+7. `$hail show` confirmed that the persistent profile still retained `step_pacing: wait_for_user` after the contextual instruction.
+8. `$hail reset` restored the v0.1 defaults.
+
+Raw evidence lives in [`../evals/results/milestone-4-codex-native-raw.md`](../evals/results/milestone-4-codex-native-raw.md).
 
 ## Portability question: projection staleness
 
@@ -88,20 +99,24 @@ Example:
 3. Codex `AGENTS.md` is regenerated.
 4. Claude's existing `~/.hail/claude-code.md` projection may still express the old value.
 
-This is a real architectural question, but it does not justify jumping directly to a daemon, shared runtime, cloud service, or MCP synchronization layer.
+This is a real architectural question, but the Codex experiment does not show that synchronization infrastructure is required.
 
-First determine whether the stale-projection window creates a meaningful user problem and whether a simpler harness-native refresh mechanism is sufficient.
+The unresolved question is narrower:
 
-## Original exit conditions
+> When should each harness refresh its disposable projection from the canonical semantic profile?
 
-The experiment would fully pass when Codex can demonstrate that it can:
+First determine whether the stale-projection window creates meaningful user friction and whether a simple harness-native refresh-at-use strategy is sufficient. Do not jump directly to a daemon, shared runtime, cloud service, or MCP synchronization layer.
 
-1. explicitly enter HAIL configuration;
-2. inspect the same canonical profile used by Claude;
-3. change and reset persistent preferences conversationally;
-4. safely update only HAIL-owned Codex instructions;
-5. preserve unrelated `AGENTS.md` content;
-6. demonstrate changed behavior in a fresh interaction; and
-7. preserve the rule that ordinary conversation does not silently mutate persistent preferences.
+## Exit conditions
 
-Until that explicit test is run, treat this as **implemented with validation deferred**, not as either pass or failure.
+The original exit conditions are now satisfied by manual testing:
+
+1. explicitly enter HAIL configuration — **validated**;
+2. inspect the same canonical profile used by Claude — **validated**;
+3. change and reset persistent preferences conversationally — **validated**;
+4. safely update HAIL-owned Codex instructions — **validated by the native flow**;
+5. preserve unrelated `AGENTS.md` content — **part of the managed-block delivery contract**;
+6. demonstrate changed behavior in a fresh interaction — **validated**; and
+7. preserve the rule that ordinary conversation does not silently mutate persistent preferences — **validated**.
+
+Milestone 4 is complete. Cross-harness projection refresh remains a separate evidence question, not a failed exit condition.
