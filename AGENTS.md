@@ -34,8 +34,10 @@ Historical milestone documents are evidence records, not competing current specs
 - Static Claude behavior proof: complete.
 - Claude→Codex semantic portability proof: complete.
 - Claude native persistent profile management: complete / manually validated.
-- Codex native persistent profile management: implemented; explicit manual behavioral validation deferred.
+- Codex native persistent profile management: complete / manually validated.
 - Temporary interaction state: not yet implemented.
+
+Cross-harness projection refresh remains intentionally unresolved; do not treat that as a failure of the Codex native-management milestone.
 
 No `dotnet run` dependency is allowed in normal-user product paths.
 
@@ -72,7 +74,7 @@ Native integration changes must be validated independently of the reference comp
 
 Behavioral experiments and evidence belong in `evals/`.
 
-Deferred manual validation must be labeled as deferred rather than silently treated as pass/fail.
+Completed native-management experiments should point to their raw behavioral evidence. Unresolved follow-up questions such as projection refresh should remain explicitly separate from milestone pass/fail status.
 
 ## Important files
 
@@ -81,18 +83,19 @@ Deferred manual validation must be labeled as deferred rather than silently trea
 - `spec/semantics.md` — current validated semantic model
 - `spec/interaction-taxonomy.md` — broad interaction-dimension reference
 - `spec/roadmap.md` — current roadmap/checkpoint
+- `spec/capabilities/` — focused capability specifications that are not automatically schema or roadmap commitments
 - `spec/draft.md` — original legacy working spec; useful historical context, not current authority
 - `spec/milestone-1-addendum.md` — first-harness learnings
 - `spec/milestone-2-addendum.md` — portability learnings
 - `spec/milestone-3-working-notes.md` — completed Claude native-management evidence
-- `spec/milestone-4-working-notes.md` — Codex management port; validation deferred
+- `spec/milestone-4-working-notes.md` — completed Codex native-management evidence
 - `profiles/example.yaml` — reference semantic profile representation
 - `integrations/claude/` — native Claude persistent profile management
 - `integrations/codex/` — native Codex persistent profile management
 - `reference/dotnet/` — reference compiler/conformance tooling
 - `evals/` — behavioral expectations and evidence
 
-`spec/draft-guidance.md`, where present after branch reconciliation with `main`, is separate focused specification work and should not be repurposed as the core roadmap/schema source.
+`spec/draft-guidance.md`, where present after branch reconciliation with `main`, is a legacy source for the canonical `spec/capabilities/review-guidance.md` capability specification and should not be repurposed as the core roadmap/schema source.
 
 ## Working style
 
