@@ -5,4 +5,5 @@ profile:
   decision_mode: options
   max_options: 6
   task_chunking: off
+  step_pacing: continuous
   tangent_policy: follow

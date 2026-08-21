@@ -2,53 +2,70 @@
 
 ## Project purpose
 
-HAIL is a human-first, vendor-neutral interaction layer. A human-owned semantic profile describes how a person wants AI to work with them. Harness adapters translate that profile into vendor-specific instructions.
+HAIL is a human-first, vendor-neutral interaction layer. A human-owned semantic profile describes how a person wants AI to work with them. Harness integrations translate and apply that profile using the mechanisms native to each harness.
 
-The current v0 target is Claude Code. Do not let Claude-specific implementation details leak into the semantic profile.
+The product is the semantic model + harness integrations. The .NET implementation under `reference/dotnet/` is reference/conformance tooling, not the user experience.
 
 ## Current active milestone
 
-Prove that the same semantic preferences produce observable behavior changes in a real AI harness.
+Milestone 3 proved explicit persistent HAIL profile management natively inside Claude.
 
-The static Claude Code path already consists of:
+The active experiment is now the Codex port under `integrations/codex/`:
 
-`profile.yaml → ProfileLoader → HailProfile → ClaudeCodeAdapter → generated instructions → Claude Code installation`
+`explicit $hail configuration → natural-language preference → shared persistent HAIL semantic profile → native Codex AGENTS.md projection`
+
+The goal is to learn whether profile management itself is portable without changing the human-owned semantic profile or introducing shared runtime infrastructure.
+
+No `dotnet run` dependency is allowed in this product path.
 
 ## Scope discipline
 
 Keep changes small and evidence-driven.
 
-Do not add MCP, runtime state detection, marketplaces, plugin systems, UI, cloud sync, preset libraries, or broad abstractions unless the current milestone requires them.
+Do not add MCP, a shared runtime, desktop UI, cloud sync, diagnosis presets, or broad abstractions unless a concrete experiment demonstrates a need.
 
-Do not create architectural folders or abstractions merely because they may be useful later. Add structure when a concrete file or second implementation requires it.
+Prefer harness-native capabilities when they can preserve HAIL semantics and user ownership without extra plumbing.
 
-Prefer one clear recommendation over presenting many architecture choices when the decision is reversible.
+Temporary/session/task-specific adaptation is parked. Do not build it opportunistically into persistent profile management.
+
+Cross-harness projection synchronization is also intentionally unsolved. Record whether stale projections create a real user problem before designing synchronization infrastructure.
 
 ## Design rules
 
 - The profile is semantic and vendor-neutral.
-- Adapters own harness-specific wording and delivery behavior.
-- Human preference data should remain user-owned and should not need to be committed into project repositories.
-- Installation must preserve existing harness configuration.
-- Repeated installation should be idempotent.
-- Preferences should map to observable behavior, not vague personality labels.
-- Behavior fixtures belong in `evals/` and should describe outcomes rather than implementation details.
+- Harness integrations own harness-specific wording, persistence mechanics, and delivery behavior.
+- The canonical profile is the source of truth; generated harness instructions are disposable projections.
+- **Persistent profile mutation requires explicit HAIL intent.** Ordinary conversational instructions must not silently rewrite persistent defaults.
+- Contextual statements such as `stop waiting on me`, `just decide`, or `I'm overwhelmed today` may influence the current interaction through normal harness behavior, but are not persistent HAIL changes unless the user explicitly says so.
+- Normal users should not need to see or edit YAML unless they explicitly want to.
+- Human preference data remains user-owned and should not need to be committed into project repositories.
+- Existing harness configuration must be preserved.
+- Preferences map to observable behavior, not diagnosis labels or vague personality categories.
+- Weak behavior enforcement in one harness is an adapter/compatibility concern, not a reason to mutate human intent.
+- Add a new persistent semantic field only when a concrete persistent user need cannot be expressed by the existing vocabulary.
 
 ## Validation
 
-For implementation changes, run or rely on the `HAIL v0` GitHub Actions workflow. At minimum, changes should continue to build on .NET 10 and preserve the existing profile/compiler/install smoke tests.
+The reference .NET implementation should continue to build and preserve its existing smoke tests under `reference/dotnet/`.
 
-When adding a preference, add an observable behavioral expectation for it.
+Native integration changes must be validated independently of the reference compiler.
+
+Behavioral experiments and evidence belong in `evals/`.
+
+For persistent profile management, validate configuration behavior and resulting behavior in a fresh interaction.
 
 ## Important files
 
 - `spec/draft.md` — broader product and architecture direction
-- `profiles/example.yaml` — current minimal semantic profile
-- `src/Hail/InteractionProfile.cs` — semantic profile model
-- `src/Hail/ProfileLoader.cs` — YAML loading
-- `src/Hail/ClaudeCodeAdapter.cs` — Claude-specific translation
-- `src/Hail/ClaudeCodeInstaller.cs` — safe Claude Code delivery/bootstrap
-- `evals/` — behavioral expectations
+- `spec/milestone-1-addendum.md` — first-harness learnings
+- `spec/milestone-2-addendum.md` — portability learnings
+- `spec/milestone-3-working-notes.md` — Claude native-management decisions and parked temporary-state questions
+- `spec/milestone-4-working-notes.md` — Codex profile-management port
+- `profiles/example.yaml` — reference semantic profile representation
+- `integrations/claude/` — native Claude persistent profile management
+- `integrations/codex/` — active native Codex persistent profile-management experiment
+- `reference/dotnet/` — reference compiler and previous bootstrap implementations
+- `evals/` — behavioral expectations and evidence
 
 ## Working style
 

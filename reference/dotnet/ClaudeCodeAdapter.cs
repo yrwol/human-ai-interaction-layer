@@ -37,6 +37,13 @@ public static class ClaudeCodeAdapter
             _ => "- When a task is complex, ambiguous, or likely to create cognitive overload, break it into a small number of concrete next steps. Do not over-structure simple work."
         });
 
+        instructions.AppendLine(preferences.StepPacing switch
+        {
+            "check_in" => "- Between meaningful steps, briefly check whether the user is ready to continue when doing so would reduce cognitive load.",
+            "wait_for_user" => "- For multi-step work, give the user one small actionable step at a time. Stop after that step and wait for the user to explicitly indicate they are ready before giving or executing the next step.",
+            _ => "- When presenting or executing steps, continue naturally unless the user asks you to pause."
+        });
+
         instructions.AppendLine(preferences.TangentPolicy switch
         {
             "follow" => "- It is acceptable to follow conversational tangents when they appear useful to the user.",
