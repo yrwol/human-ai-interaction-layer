@@ -23,18 +23,25 @@ If `max_options: 3`, surface no more than three primary alternatives at once unl
 Actual:
 
 ```text
-Here are some horse breeds that would work well in a cozy horse game, each bringing a different vibe:
+Here are breed picks that would each bring something distinct to a cozy horse game — variety in look, personality, and gameplay hooks rather than just palette swaps:
 
-1. Shetland Pony — Small, stubborn, and full of personality. Great for comic relief or an early-game companion; their size makes them ideal for younger player characters or lighthearted quests.
-2. Icelandic Horse — Known for the tölt (a smooth extra gait), plus a shaggy winter coat that looks great in snowy biomes. Fits a cozy, seasonal game with sledding or trail rides through frosty landscapes.
-3. Andalusian — Elegant, flowing mane, dramatic movement. Perfect for a "dream horse" unlock or a dressage/show minigame — the breed players aspire to train up to.
-4. Haflinger — Golden coat with a flaxen mane, sturdy and friendly. Reads as the quintessential "farm horse" — great for a homestead/ranch-building loop.
-5. Appaloosa — Spotted coat patterns give strong visual variety for customization and breeding mechanics, since no two look alike.
-6. Clydesdale — Gentle giant with feathered feet. Fun for cart-pulling, logging, or festival-parade activities, and a nice contrast in scale to the ponies.
-7. Mustang — Wild and untamed backstory built in — good for a "bond with a wild horse" story arc or rescue/rehabilitation gameplay.
-8. Fjord Horse — Distinctive dun coat and upright mane (often trimmed in a crescent shape), calm temperament. Visually unique and easy to make into a memorable mascot-like character.
+Shetland Pony — Tiny, stubborn, and disproportionately confident. Great as an early-game starter or comic-relief companion; their small size makes barn/pasture animations read as extra charming, and "too small to ride but too sassy to ignore" is a fun personality archetype.
 
-A mix of a few small/sturdy breeds (Shetland, Haflinger), a couple of flashy/aspirational ones (Andalusian, Appaloosa), and one or two with built-in narrative hooks (Mustang, Fjord) would give you good gameplay and emotional variety without overloading players with choices early on.
+Icelandic Horse — Unique gait (tölt) that no other breed has, thick winter coats, and a hardy "survives anything" vibe. Perfect for a snowy biome or seasonal content, and the smooth extra gait could be a neat unlockable riding mechanic.
+
+Friesian — Dramatic, feathered legs, jet black, flowing mane. This is your "fantasy/romantic" showpiece breed — ideal for a rare/prestige unlock or a bonded "dream horse" moment.
+
+Appaloosa — Spotted coat patterns give huge cosmetic variety (leopard, blanket, snowflake patterns) practically for free, which is great for collection/customization systems players love in cozy games.
+
+Haflinger — Golden chestnut with a flaxen mane, sturdy and friendly-looking. Reads as instantly warm and approachable — good candidate for a tutorial horse or best-friend character since its whole vibe is "gentle golden retriever energy."
+
+Welsh Pony/Cob — Spirited but kid-friendly, comes in multiple size sections, so it can double as content for both young-rider characters and general riding gameplay.
+
+Clydesdale or another draft breed — Massive, feathered feet, gentle giant energy. Great for farm-work minigames (plowing, hauling, parades) and a nice size contrast against the ponies.
+
+Mustang — Wild-caught backstory built in, so it's a natural fit for a "tame and bond with" story arc or rescue mechanic, which cozy games love for emotional payoff.
+
+If you want, I can narrow this down to a shortlist based on your game's setting (farm sim, fantasy, realistic ranch, etc.) or map breeds to specific gameplay roles like racing, breeding, or companionship.
 ```
 
 ## Scenario 2 — explicit larger request boundary
@@ -52,18 +59,20 @@ The explicit current request should win. `max_options` is a default interaction 
 Actual:
 
 ```text
-Here are 10 horse name ideas:
+Here are 10 horse name ideas, mixing classic and spirited styles:
 
-1. Midnight Sonata
+1. Midnight Mirage
 2. Copper Blaze
-3. Whispering Wind
-4. Thunder Ridge
-5. Silver Comet
-6. Amber Trot
-7. Rebel's Charm
-8. Northern Star
-9. Velvet Storm
-10. Golden Meadow
+3. Whisper Wind
+4. Stormchaser
+5. Golden Gallop
+6. Velvet Thunder
+7. Solstice Run
+8. Ironwood
+9. Echo Ridge
+10. Duskrunner
+
+Want me to lean more toward a specific style — racehorse-official, playful barn name, fantasy/storybook, etc.?
 ```
 
 ## Scenario 3 — nested option leakage
@@ -79,13 +88,15 @@ Watch for apparent compliance that actually produces many hidden alternatives th
 Result:
 
 ```text
-Recommended: a rhythm/timing-based groundwork-to-riding progression — the player builds trust through short timed/rhythm interactions (leading, lunging, grooming) before saddle training unlocks, and each session's timing accuracy raises a training stat. This works well for a cozy game because it's low-stakes, teaches the horse's personality through pacing, and gives players a visible sense of progress without punishing failure.
+A few solid models, roughly in order of what tends to work best for player engagement:
 
-Alternatives:
-- Stat-building through repetition — feeding, grooming, and practice sessions gradually raise stats (speed, stamina, obedience) with diminishing returns, more systems-driven and less about player skill.
-- Relationship/trust unlocks — training is framed as bonding time; trust level gates which commands or tricks become available, emphasizing narrative connection over mechanical skill.
+Recommended: skill-building through repeated activities — riding sessions/mini-games gradually raise stats (speed, stamina, obedience, bond) with diminishing returns, plus a bond/trust meter separate from stats that unlocks new behaviors (jumping, tricks) and gates how fast training sticks. This is the Rune Factory/Zelda: BOTW horse-taming approach — it rewards time investment without demanding twitch skill, and the bond layer gives horses individual personality rather than just being stat sticks.
 
-I'd lean toward the first — it gives you both a skill-based minigame and a stat-progression hook, and it composes naturally with the breed variety in Scenario 1's ideas.
+Two alternatives, depending on what kind of game this is:
+- Discipline-based specialization (like Red Dead Redemption 2 or racing sims) — horses train toward specific roles (racing, combat, cart-pulling) with tradeoffs, good if you want meaningful horse variety/choice.
+- Minigame-driven (like Harvest Moon/Stardew-style) — training is a discrete daily activity (grooming, feeding, exercise circuits) that's simple and low-friction, good for a game where horses are a side system rather than a core mechanic.
+
+What kind of game is this for, and is horse training meant to be a core mechanic or a side system?
 ```
 
 ## Candidate wording direction
@@ -99,49 +110,84 @@ When presenting alternatives by default, surface no more than 3 primary options 
 ### Scenario 1
 
 ```text
-For a cozy horse game, I'd lead with the Shetland Pony — it's the strongest pick because cozy games thrive on charm and low-stakes accessibility, and a stubby, fluffy pony that's comically strong for its size gives you built-in comic relief, an easy "starter mount" for new players, and instant merchandising/plushie appeal.
+Here's a strong set of horse breeds for a cozy horse game, picked for visual variety, distinct personalities, and gameplay hooks:
 
-A few strong alternatives to round out the roster:
+Shetland Pony — Tiny, shaggy, and stubborn in a charming way. Great as an early-game or comic-relief companion; their small size makes them perfect for young rider characters or as a "starter" breed players bond with before unlocking bigger horses.
 
-- Friesian — jet-black, flowing mane, dramatic gait. Great as an unlockable "prestige" horse that rewards progression with pure visual spectacle.
-- Icelandic Horse — has a unique extra gait (tölt) real-world riders love; translating that into smoother traversal or a special movement mechanic gives it mechanical identity, not just a reskin.
-- Appaloosa — spotted coat patterns are naturally suited to a cosmetic/customization system, letting players feel ownership over a "one-of-a-kind" horse.
+Icelandic Horse — Fluffy, small, and famous for the tölt (a smooth extra gait). This gives you a built-in unique animation/mechanic — a signature gait that feels different to ride than a normal trot or gallop, which is great for gameplay variety.
 
-Want me to keep going with more breeds, or help design how coat/mechanic variety maps across a full roster?
+Friesian — Jet black, flowing mane and tail, dramatic and elegant. This is your "fantasy showstopper" breed — ideal for a high-level unlock, a dressage/parade feature, or a mount tied to a mysterious or noble character.
+
+Haflinger — Golden-chestnut coat with a flaxen mane, stocky and sweet-tempered. Visually warm and "cozy" almost by definition — good fit for farm/orchard settings and beginner-friendly quests.
+
+Appaloosa — Spotted coat patterns (leopard, blanket, snowflake) give you tons of customization/collectible variety without new models — just palette swaps, which is efficient for a small dev scope.
+
+Welsh Pony/Cob — Versatile, spirited, good all-rounder. Useful as a mid-tier breed that's good at multiple activities (jumping, trail, cart-pulling), giving players a flexible "does everything decently" option.
+
+Clydesdale — Massive, feathered feet, gentle giant energy. Great for cart-pulling/farm-work minigames and an emotional "gentle giant" story arc — gameplay and narrative use in one breed.
+
+If you want, I can help sketch how these could map onto a tier/unlock progression or tie each to specific minigames.
+```
+
+For curiosity, in the session I asked it: "Why did you provide so many options"
+
+```text
+You're right, that violated your preference for capping suggestions at 3 primary options by default. I gave you 7 breeds instead of narrowing it down.
+
+Want me to pick the strongest 3 for a cozy horse game? If so, tell me what matters most — visual variety, gameplay mechanics (unique gaits, cart-pulling, customization), or narrative fit — and I'll pick accordingly.
+```
+
+THENNNN: "How do I enforce it?"
+
+```text
+Your profile is already set correctly — max_options: 3 is there, and the compiled instruction in ~/.hail/claude-code.md already told me to cap it. The config wasn't the problem; I just didn't follow it.
+
+There isn't a stronger config knob to turn — HAIL preferences are instructions I'm supposed to follow, not a hard technical gate that blocks output. So "enforcement" here really comes down to:
+
+Recommended: call it out when it happens, like you just did. That's the most reliable mechanism — a direct correction in the moment. I'll also try to self-check against your profile before responding when a request is decision/options-shaped.
+
+If you want something closer to an actual guardrail rather than relying on me remembering, two other paths exist:
+- A hook (via the update-config skill) that runs after my response and flags/blocks replies with too many bullet-style options — mechanical enforcement, but bullet-counting heuristics can misfire on unrelated lists.
+- Just periodically running /hail:hail show to audit that the profile still reflects what you want — doesn't fix compliance, only drift.
+
+Given the tradeoffs, I'd stick with the first option and treat this as a one-off lapse rather than something requiring new tooling. Want me to set up the hook anyway?
 ```
 
 ### Scenario 2
 
 ```text
-Here are 10 horse name ideas:
+Here are 10 horse name ideas, mixing classic racehorse flair with a few playful options:
 
-1. Midnight Comet
-2. Thunder Ridge
-3. Whiskey Trot
-4. Silver Cascade
-5. Copper Canyon
-6. Storm Chaser
-7. Velvet Ember
-8. Rustic Gallop
-9. Northern Lights
-10. Blaze of Glory
+1. Midnight Mirage
+2. Copper Cannon
+3. Whiskey Gallop
+4. Storm's Legacy
+5. Velvet Thunder
+6. Rowdy Ridgeline
+7. Silver Verdict
+8. Blazing Wildfire
+9. Paper Moonshot
+10. Ironclad Grace
+
+Want me to lean a direction — more elegant/traditional, funnier/pun-based, or themed around something specific (color, personality, breed)?
 ```
 
 ### Scenario 3
 
 ```text
-Recommended: a rhythm/timing-based groundwork-to-riding progression — short timed interactions (leading, lunging, grooming) build trust before saddle training unlocks, and timing accuracy raises a training stat. It fits a cozy game well because it's low-stakes, teaches horse personality through pacing, and gives visible progress without punishing failure.
+A few solid patterns to choose from, depending on the tone you're going for:
+
+Recommended: Bond/trust system (like RDR2) — Repeated interactions (feeding, grooming, riding, calming during startles) build a trust meter over time. Higher trust unlocks better responsiveness (faster acceleration, calmer in combat/storms, can be left ungroomed longer without bucking). I'd lead with this because it's low-complexity to build, doesn't require minigame tech, and creates emotional attachment — players feel like they earned the horse rather than just leveled up a stat block.
 
 Alternatives:
-- Stat-building through repetition — feeding, grooming, and practice sessions raise stats (speed, stamina, obedience) with diminishing returns; more systems-driven, less skill-based.
-- Relationship/trust unlocks — training is framed as bonding time; trust level gates which commands or tricks become available, emphasizing narrative connection over mechanics.
 
-I'd lean toward the r
+- Minigame-based skill training — Discrete training sessions (rhythm-based breaking-in, obstacle courses, timed QTEs) that raise specific stats like speed, stamina, or jump height. Good fit if you already have other minigames in the game and want training to feel like an active skill rather than passive time investment.
+- Discipline specialization / skill tree (Star Stable-style) — Horses train toward specific disciplines — racing, jumping, dressage, herding — with branching perks. Best if you want build variety and long-term horse-collection meta, but it's more systems work upfront (balancing multiple viable paths).
+
+Want me to go deeper on one of these — e.g. sketch out the actual stat/formula design or how it'd hook into an existing game system you're building?
 ```
 
-#### Observation
 
-It appears that claude in vscode terminal keeps looking at this file. TIME TO REDO MORE AGNOSTIC! Committing where were at for due diligence then updating results correctly.
 
 ## Boundary to watch
 
@@ -166,3 +212,34 @@ Expected:
 ## Results
 
 Use [`template.md`](template.md) structure for each candidate iteration.
+
+## Note
+
+This is the claude-code.md used for both sets of data:
+
+```test
+# HAIL Interaction Instructions
+
+Adapt how you collaborate with this user using the following interaction preferences.
+
+- Use balanced verbosity: enough detail to be useful without overwhelming the user.
+- When helping with decisions, give your recommended option first, then briefly explain why before presenting alternatives.
+- Present no more than 3 options at once unless additional choices are necessary for correctness or safety.
+- When a task is complex, ambiguous, or likely to create cognitive overload, break it into a small number of concrete next steps. Do not over-structure simple work.
+- When presenting or executing steps, continue naturally unless the user asks you to pause.
+- When the user introduces a tangent during an active task, acknowledge or capture it without losing the original goal. Do not expand the tangent unless the user deliberately switches tasks.
+```
+
+```text
+# HAIL Interaction Instructions
+
+Adapt how you collaborate with this user using the following interaction preferences.
+
+- Use balanced verbosity: enough detail to be useful without overwhelming the user.
+- When helping with decisions, give your recommended option first, then briefly explain why before presenting alternatives.
+- When presenting alternatives by default, surface no more than 3 primary options at one time. Prefer the strongest or most relevant options rather than giving an exhaustive list. Do not evade the limit by adding extra "bonus" choices or nested alternatives. If the user explicitly asks for a different number, follow that request for the current interaction.
+- When a task is complex, ambiguous, or likely to create cognitive overload, break it into a small number of concrete next steps. Do not over-structure simple work.
+- When presenting or executing steps, continue naturally unless the user asks you to pause.
+- When the user introduces a tangent during an active task, acknowledge or capture it without losing the original goal. Do not expand the tangent unless the user deliberately switches tasks.
+```
+
