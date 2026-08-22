@@ -6,7 +6,7 @@
 
 You are working on HAIL itself, not consuming a user's HAIL profile.
 
-Follow `AGENTS.md` for project purpose, scope discipline, design rules, validation, working style, and roadmap hygiene.
+Follow `AGENTS.md` for project purpose, scope discipline, design rules, validation, working style, roadmap hygiene, and profile-field development requirements. For any new or changed profile field, `evals/adding-profile-fields.md` is the authoritative workflow; do not reconstruct or create a parallel process from other files.
 
 Before finishing any substantial experiment, milestone, spec change, or implementation phase, verify that `spec/roadmap.md` still accurately reflects:
 
