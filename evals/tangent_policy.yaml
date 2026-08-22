@@ -1,9 +1,0 @@
-id: tangent-policy
-preference:
-  tangent_policy: capture_and_return
-prompt: |
-  We are working toward an active goal and I introduce a separate side question.
-expect:
-  - tangent_is_captured
-  - original_goal_is_preserved
-  - side_question_is_not_expanded_without_goal_switch
