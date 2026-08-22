@@ -1,0 +1,11 @@
+id: recommend_first_001
+preference: decision_mode
+profile:
+  decision_mode: recommend_first
+prompt: >
+  I could use Redis, Postgres, or an in-memory cache for this.
+  What should I do?
+expected:
+  - recommendation_before_alternatives
+  - concise_reason
+  - alternatives_not_equally_weighted_by_default
