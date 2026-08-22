@@ -635,14 +635,110 @@ When the user has delegated a reasonably reversible decision, choose a sensible 
 Scenario 1:
 
 ```text
+For a cozy horse game, activity-based practice fits best — it keeps the loop grounded in doing the thing (riding, grooming, jumping) rather than abstracting progress into currency or menus, which matches what "cozy" players expect.
+
+Quick contrast:
+- Activity-based practice: horse improves through repeated play (trail rides build stamina, jumps build agility). Feels organic, low-pressure, no min-maxing — the cozy sweet spot.
+- Skill points: adds a resource-allocation layer and a stats screen, which tends to feel more RPG/systems-heavy than cozy.
+- Branching skill tree: strongest sense of long-term progression and build identity, but implies optimization and choice-anxiety, which cuts against "cozy."
+
+If your game wants a bit more structure without losing the vibe, a light hybrid works well: activity-based practice as the core loop, with occasional milestone unlocks (not a full tree) for flavor — new gaits, cosmetic tack, etc.
+
+Want me to sketch out how the activity-based system would actually work (stat curves, diminishing returns, how stamina/skill decay or cap)?
 ```
 
 Scenario 2:
 ```text
+Here's a concrete system, with the assumption flagged since I don't have your game's genre — this fits a riding/racing/sim-style game; if it's something else (RPG companion, farm sim, racing arcade), tell me and I'll adjust.
+
+Temperament drives three levers, not just flavor text:
+
+1. Control responsiveness — how tightly the horse follows input. Spirited horses accelerate/turn faster but overshoot and drift off-line without correction; calm horses are slower to respond but hold a line reliably. This makes temperament matter moment-to-moment, not just as a stat multiplier.
+2. Risk behavior — a spook/bolt/refuse chance triggered by specific stimuli (crowds, jumps, sudden noise, combat). Nervous horses trigger this often; bold horses rarely. This is the temperament trait players feel, because it creates unpredictable moments rather than just slower numbers.
+3. Stat ceiling vs. consistency trade-off — spirited/bold horses get higher peak speed or jump height but more variance run-to-run; calm horses have lower ceilings but near-identical performance every time. This gives players a real choice: reliable horse for consistent play, volatile horse for skilled players chasing high rolls.
+
+One more piece I'd bake in: make temperament shift slightly through play — grooming, consistent riding, and successful runs nudge a horse calmer/more trusting over time, while rough handling or repeated bad experiences (falls, harsh corrections) nudge it more nervous. This turns temperament from a static label into a relationship the player builds, which is usually what makes horse-game fans attach to a specific horse rather than min-maxing stats.
+
+Want me to sketch the actual numbers/thresholds (e.g., how spook chance scales with a "trust" stat), or is this the right altitude for now?
 ```
 
 Scenario 3:
-```
+```text
+
+There's no game project in this directory (and no prior context — this looks like a fresh session). Before I can choose a monetization model, I need to know what game we're actually talking about, since the right model depends heavily on platform and genre.
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+←  ☐ Platform  ☐ Genre  ☐ Fairness  ✔ Submit  →
+
+What platform is the game for? This is the single biggest driver of which monetization model fits.
+
+❯ 1. Mobile (iOS/Android)
+     F2P with IAP/ads is dominant; premium upfront pricing is rare and usually underperforms.
+  2. PC/Console
+     Premium upfront purchase or premium + DLC/expansions is standard; F2P is possible but needs strong live-ops.
+  3. Web/Browser
+     Often ad-supported or F2P with cosmetic/consumable purchases; low friction to install matters most.
+  4. Type something.
+
+←  ☒ Platform  ☐ Genre  ☐ Fairness  ✔ Submit  →
+
+What's the game's genre or core loop? This determines whether ads, loot mechanics, or cosmetics make sense.
+
+❯ 1. Casual/hypercasual single-session
+     e.g. puzzle, match-3, endless runner — short sessions, high replay, ad-friendly.
+  2. Midcore/RPG with progression
+     e.g. gacha, idle, strategy — deep progression systems support gacha/energy/battle pass.
+  3. Multiplayer/competitive
+     e.g. shooter, MOBA-style, PvP — cosmetics and battle passes without pay-to-win.
+  4. Narrative/premium single-player
+     e.g. story-driven, indie — one-time purchase or paid DLC fits best.
+❯ 5. Type something.
+
+←  ☒ Platform  ☒ Genre  ☐ Fairness  ✔ Submit  →
+
+Do you have a stance on pay-to-win / player fairness that should constrain the model?
+
+❯ 1. No pay-to-win, cosmetics/convenience only (Recommended)
+     Widest audience appeal, best long-term reputation, easiest to balance.
+  2. Open to power-affecting purchases
+     Higher revenue ceiling per whale, but risks alienating non-payers and store reviews.
+  3. No microtransactions at all
+     Pure premium/one-time purchase or subscription only — simplest and most player-friendly.
+❯ 4. Type something.
+
+
+❯ Choose the entire monetization model for the game.
+
+  Listed 3 directories, ran 1 shell command
+
+There's no game project in this directory (and no prior context — this looks like a fresh session). Before I can choose a monetization model, I need to know what game we're actually talking about, since the right model depends heavily on platform and genre.
+
+● User answered Claude's questions:
+· What platform is the game for? This is the single biggest driver of which monetization model fits. → Web/Browser
+· What's the game's genre or core loop? This determines whether ads, loot mechanics, or cosmetics make sense. → Casual/hypercasual single-session
+· Do you have a stance on pay-to-win / player fairness that should constrain the model? → No pay-to-win, cosmetics/convenience only (Recommended)
+
+Given: web/browser, hypercasual single-session, no pay-to-win — here's the model.
+
+Core model: Hybrid ad + optional IAP (F2P)
+
+Ads carry the base revenue (fits hypercasual's high-frequency, short-session nature); IAP is a secondary layer for players who want to remove friction or express identity, never to buy power.
+
+Ad layer (primary revenue)
+- Rewarded video — opt-in only, used for: extra life/continue, 2x end-of-run currency, unlock a cosmetic early. This is the main lever; players choose to watch, so it doesn't punish free play.
+- Interstitials — shown between sessions/runs (e.g., every 3rd game-over), capped frequency (~60–90s cooldown) to avoid churn.
+- Banners — skip these. On web they tank perceived quality for casual games and the CPM is too low to justify the UX cost.
+
+IAP layer (secondary revenue)
+- Remove Ads — one-time purchase ($2.99–$4.99). Classic, high-conversion staple for this genre; kills interstitials but keeps rewarded-video as opt-in (some players still watch for bonuses even after buying).
+- Cosmetic packs — skins/trails/themes/sound packs ($0.99–$2.99 each, or a bundle). Pure visual, no gameplay effect.
+- Convenience packs — starter soft-currency pack, "skip the grind" bundle. Speeds up cosmetic unlocks, doesn't affect difficulty or win rate.
+- No gacha/loot boxes — adds complexity and P2W risk you already ruled out, and doesn't suit a hypercasual loop.
+
+Economy rule: one soft currency, earned by playing or watching rewarded ads, spendable only on cosmetics/convenience — never on anything that changes difficulty or odds.
+
+Tuning to watch: interstitial frequency vs. Day-1 retention (the usual failure mode — too aggressive ad caps kill retention faster than they add revenue), and rewarded-ad opt-in rate as your main health metric.
+
+Want me to turn this into an implementation spec (ad SDK choice, currency/economy config, paywall placement) once I know the tech stack?
 ```
 
 ## Boundary to watch
