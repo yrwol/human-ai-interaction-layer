@@ -6,7 +6,9 @@
 
 You are working on HAIL itself, not consuming a user's HAIL profile.
 
-Follow `AGENTS.md` for project purpose, scope discipline, design rules, validation, working style, and roadmap hygiene.
+Follow `AGENTS.md` for project purpose, scope discipline, design rules, validation, working style, roadmap hygiene, and the required profile-field development workflow.
+
+When adding or changing a profile field, do not infer the expected structure from memory or implement schema first. Follow `evals/adding-profile-fields.md`, create/update the field's `spec/capabilities/<field-name>.md` behavioral contract, use the templates under `evals/templates/`, and update all relevant semantic, evaluation, roadmap, example/schema, and integration documentation. A field is not supported merely because configuration or prompt projection exists.
 
 Before finishing any substantial experiment, milestone, spec change, or implementation phase, verify that `spec/roadmap.md` still accurately reflects:
 
