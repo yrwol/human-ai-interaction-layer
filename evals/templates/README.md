@@ -1,14 +1,12 @@
 # Profile field evaluation templates
 
-These templates preserve the development and evaluation shape used for HAIL profile fields so contributors and AI agents do not have to infer the standard from existing files.
+These templates provide reusable artifact structures for HAIL profile-field evaluation. They intentionally do **not** define the development sequence.
 
-When adding a field:
+The authoritative procedure for adding or changing a profile field is [`../adding-profile-fields.md`](../adding-profile-fields.md). If this directory and that guide ever appear to disagree about process, the guide is authoritative.
 
-1. create `spec/capabilities/<field-name>.md` from `spec/capabilities/template.md`;
-2. create the baseline `evals/<field_name>.yaml` from `profile-field.yaml`;
-3. run field-only contrast evaluation using the discipline in `../manual-testing.md`;
-4. add boundary and interaction coverage identified by the capability contract;
-5. create hardening coverage using `profile-field-hardening.md` and the existing `../prompt-hardening/template.md` conventions; and
-6. update semantics, roadmap/status, examples/schema, and relevant adapter/user documentation.
+## Templates
 
-Templates are starting structures, not substitutes for behavioral reasoning. Preserve the governing rule: HAIL evaluates behavior, not configuration.
+- [`profile-field.yaml`](profile-field.yaml) — starting structure for focused baseline and value-contrast evaluation.
+- [`profile-field-hardening.md`](profile-field-hardening.md) — field-specific hardening structure used alongside the existing [`../prompt-hardening/template.md`](../prompt-hardening/template.md) conventions.
+
+Templates are starting structures, not substitutes for behavioral reasoning or evidence. HAIL evaluates behavior, not configuration.
