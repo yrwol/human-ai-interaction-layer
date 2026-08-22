@@ -6,43 +6,66 @@ HAIL is a human-first, vendor-neutral interaction layer. A human-owned semantic 
 
 The product is the semantic model + harness integrations. The .NET implementation under `reference/dotnet/` is reference/conformance tooling, not the user experience.
 
-## Current active milestone
+## Current project checkpoint
 
-Milestone 3 proved explicit persistent HAIL profile management natively inside Claude.
+The active work is **documentation reconciliation** after native profile-management work.
 
-The active experiment is now the Codex port under `integrations/codex/`:
+Do not start a new product feature until the repository clearly distinguishes:
 
-`explicit $hail configuration → natural-language preference → shared persistent HAIL semantic profile → native Codex AGENTS.md projection`
+- current product truth;
+- current validated semantic model;
+- broader interaction taxonomy/reference ideas;
+- historical experiment evidence; and
+- current roadmap/parked work.
 
-The goal is to learn whether profile management itself is portable without changing the human-owned semantic profile or introducing shared runtime infrastructure.
+Start with `spec/README.md`.
 
-No `dotnet run` dependency is allowed in this product path.
+Current authoritative docs:
+
+- `spec/product.md` — durable product definition and architecture boundary;
+- `spec/semantics.md` — current validated persistent semantic model;
+- `spec/interaction-taxonomy.md` — broader candidate interaction dimensions;
+- `spec/roadmap.md` — current project state and next candidate experiments.
+
+Historical milestone documents are evidence records, not competing current specs.
+
+## Current implementation state
+
+- Static Claude behavior proof: complete.
+- Claude→Codex semantic portability proof: complete.
+- Claude native persistent profile management: complete / manually validated.
+- Codex native persistent profile management: complete / manually validated.
+- Temporary interaction state: not yet implemented.
+
+Multi-harness projection refresh is a parked optional enhancement, not a shipping requirement or a milestone blocker.
+
+No `dotnet run` dependency is allowed in normal-user product paths.
 
 ## Scope discipline
 
 Keep changes small and evidence-driven.
 
-Do not add MCP, a shared runtime, desktop UI, cloud sync, diagnosis presets, or broad abstractions unless a concrete experiment demonstrates a need.
+Do not add MCP, a shared runtime, desktop UI, cloud sync, diagnosis presets, automatic emotional-state detection, or broad abstractions unless a concrete experiment demonstrates a need.
 
 Prefer harness-native capabilities when they can preserve HAIL semantics and user ownership without extra plumbing.
 
-Temporary/session/task-specific adaptation is parked. Do not build it opportunistically into persistent profile management.
-
-Cross-harness projection synchronization is also intentionally unsolved. Record whether stale projections create a real user problem before designing synchronization infrastructure.
+Do not treat cross-harness projection synchronization as required product plumbing. Many users may use only one harness. If multi-harness users later show meaningful friction from stale projections, prefer the smallest refresh-at-use mechanism before considering synchronization infrastructure.
 
 ## Design rules
 
-- The profile is semantic and vendor-neutral.
+- The persistent profile is semantic, vendor-neutral, and human-owned.
 - Harness integrations own harness-specific wording, persistence mechanics, and delivery behavior.
-- The canonical profile is the source of truth; generated harness instructions are disposable projections.
-- **Persistent profile mutation requires explicit HAIL intent.** Ordinary conversational instructions must not silently rewrite persistent defaults.
-- Contextual statements such as `stop waiting on me`, `just decide`, or `I'm overwhelmed today` may influence the current interaction through normal harness behavior, but are not persistent HAIL changes unless the user explicitly says so.
+- The canonical profile is the source of truth for persistent defaults; generated harness instructions are disposable projections.
+- **Persistent profile mutation requires explicit persistent HAIL intent.** Ordinary conversational instructions must not silently rewrite persistent defaults.
+- Persistent profile and temporary interaction state are separate concepts.
 - Normal users should not need to see or edit YAML unless they explicitly want to.
 - Human preference data remains user-owned and should not need to be committed into project repositories.
 - Existing harness configuration must be preserved.
 - Preferences map to observable behavior, not diagnosis labels or vague personality categories.
 - Weak behavior enforcement in one harness is an adapter/compatibility concern, not a reason to mutate human intent.
 - Add a new persistent semantic field only when a concrete persistent user need cannot be expressed by the existing vocabulary.
+- Do not promote taxonomy candidates into schema without evidence.
+- Multi-harness synchronization is an optional enhancement, not a portability requirement.
 
 ## Validation
 
@@ -52,20 +75,28 @@ Native integration changes must be validated independently of the reference comp
 
 Behavioral experiments and evidence belong in `evals/`.
 
-For persistent profile management, validate configuration behavior and resulting behavior in a fresh interaction.
+Completed native-management experiments should point to their raw behavioral evidence. Parked enhancements such as multi-harness projection refresh should remain explicitly separate from milestone pass/fail status.
 
 ## Important files
 
-- `spec/draft.md` — broader product and architecture direction
+- `spec/README.md` — specification map and authority rules
+- `spec/product.md` — current product specification
+- `spec/semantics.md` — current validated semantic model
+- `spec/interaction-taxonomy.md` — broad interaction-dimension reference
+- `spec/roadmap.md` — current roadmap/checkpoint
+- `spec/capabilities/` — focused capability specifications that are not automatically schema or roadmap commitments
+- `spec/draft.md` — original legacy working spec; useful historical context, not current authority
 - `spec/milestone-1-addendum.md` — first-harness learnings
 - `spec/milestone-2-addendum.md` — portability learnings
-- `spec/milestone-3-working-notes.md` — Claude native-management decisions and parked temporary-state questions
-- `spec/milestone-4-working-notes.md` — Codex profile-management port
+- `spec/milestone-3-working-notes.md` — completed Claude native-management evidence
+- `spec/milestone-4-working-notes.md` — completed Codex native-management evidence
 - `profiles/example.yaml` — reference semantic profile representation
 - `integrations/claude/` — native Claude persistent profile management
-- `integrations/codex/` — active native Codex persistent profile-management experiment
-- `reference/dotnet/` — reference compiler and previous bootstrap implementations
+- `integrations/codex/` — native Codex persistent profile management
+- `reference/dotnet/` — reference compiler/conformance tooling
 - `evals/` — behavioral expectations and evidence
+
+`spec/draft-guidance.md`, where present after branch reconciliation with `main`, is a legacy source for the canonical `spec/capabilities/review-guidance.md` capability specification and should not be repurposed as the core roadmap/schema source.
 
 ## Working style
 

@@ -1,8 +1,14 @@
-# Milestone 4 working notes — native Codex profile management
+# Milestone 4 — Native Codex profile management
+
+**Status: complete / manually validated.**
+
+This document records the Codex-native profile-management port and its manual behavioral validation. Current project priority is tracked in [`roadmap.md`](roadmap.md).
 
 ## Hypothesis
 
 Can the explicit persistent HAIL profile-management experience be ported from Claude to Codex without changing the vendor-neutral semantic profile or introducing a shared runtime?
+
+**Result: PASS.**
 
 ## Persistent configuration boundary
 
@@ -20,7 +26,7 @@ Ordinary conversation is contextual behavior and must not silently mutate the pe
 
 ## Shared semantics
 
-Milestone 4 uses the same canonical profile introduced and extended through earlier milestones:
+The port uses the same canonical profile as Claude:
 
 ```yaml
 version: 0.1
@@ -34,6 +40,8 @@ profile:
 ```
 
 Do not add Codex-specific fields to the semantic profile.
+
+The authoritative semantic definitions live in [`semantics.md`](semantics.md).
 
 ## Native Codex delivery
 
@@ -57,31 +65,54 @@ $CODEX_HOME/AGENTS.md
 
 normally `~/.codex/AGENTS.md`.
 
-## New portability question: projection staleness
+## Manual validation results
+
+The native Codex flow was manually exercised end-to-end.
+
+Validated:
+
+1. `$hail` inspected and summarized the existing canonical profile in plain language without mutating it.
+2. `$hail change` accepted a natural-language request for one-small-step-at-a-time pacing.
+3. The canonical profile changed to:
+
+   ```yaml
+   task_chunking: always
+   step_pacing: wait_for_user
+   ```
+
+4. A fresh Codex interaction produced one small meaningful planning step and waited rather than advancing through the entire plan.
+5. `tangent_policy: capture_and_return` composed with `step_pacing: wait_for_user`: a tangent was answered, the pending planning point was preserved, and Codex continued waiting.
+6. An ordinary conversational instruction to stop waiting adapted the current task without mutating the persistent profile.
+7. `$hail show` confirmed that the persistent profile still retained `step_pacing: wait_for_user` after the contextual instruction.
+8. `$hail reset` restored the v0.1 defaults.
+
+Raw evidence lives in [`../evals/results/milestone-4-codex-native-raw.md`](../evals/results/milestone-4-codex-native-raw.md).
+
+## Optional enhancement: multi-harness projection refresh
 
 The semantic profile is shared across harnesses, but each harness currently regenerates only its own projection.
 
-Example:
+For a user who actively uses multiple harnesses, that can create a temporary stale projection after the canonical profile is changed elsewhere. For example:
 
 1. User changes `step_pacing` through `$hail` in Codex.
 2. `~/.hail/profile.yaml` changes.
 3. Codex `AGENTS.md` is regenerated.
-4. Claude's existing `~/.hail/claude-code.md` projection may still express the old value.
+4. Claude's existing `~/.hail/claude-code.md` projection may still express the old value until refreshed.
 
-This is a real architectural question, but Milestone 4 must not jump directly to a daemon, shared runtime, cloud service, or MCP synchronization layer.
+This does **not** affect the validity of the Codex experiment and is **not a requirement for shipping HAIL**. Many users may use only one harness, and semantic portability does not require all harness projections to be continuously synchronized.
 
-First determine whether the stale-projection window creates a meaningful user problem and whether a simpler harness-native refresh mechanism is sufficient.
+If multi-harness usage later demonstrates meaningful friction, the preferred first direction is a simple refresh-at-use strategy from the canonical profile. Do not jump directly to a daemon, shared runtime, cloud service, or MCP synchronization layer.
 
 ## Exit conditions
 
-Milestone 4 passes when Codex can:
+The original exit conditions are now satisfied by manual testing:
 
-1. explicitly enter HAIL configuration;
-2. inspect the same canonical profile used by Claude;
-3. change and reset persistent preferences conversationally;
-4. safely update only HAIL-owned Codex instructions;
-5. preserve unrelated `AGENTS.md` content;
-6. demonstrate changed behavior in a fresh interaction; and
-7. preserve the rule that ordinary conversation does not silently mutate persistent preferences.
+1. explicitly enter HAIL configuration — **validated**;
+2. inspect the same canonical profile used by Claude — **validated**;
+3. change and reset persistent preferences conversationally — **validated**;
+4. safely update HAIL-owned Codex instructions — **validated by the native flow**;
+5. preserve unrelated `AGENTS.md` content — **part of the managed-block delivery contract**;
+6. demonstrate changed behavior in a fresh interaction — **validated**; and
+7. preserve the rule that ordinary conversation does not silently mutate persistent preferences — **validated**.
 
-Record cross-harness projection behavior as evidence even if it remains unresolved.
+Milestone 4 is complete. Multi-harness projection refresh is parked as a possible future convenience enhancement, not an exit condition or release blocker.
