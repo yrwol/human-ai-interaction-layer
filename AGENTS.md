@@ -98,8 +98,8 @@ Native integration changes must be validated independently of the reference comp
 Use `evals/README.md` as the evaluation map:
 
 - current prompt-hardening definitions and current result records live under `evals/prompt-hardening/`;
-- superseded lightweight fixtures and the original A/B procedure live under `evals/historical/`;
-- `evals/results/` preserves historical milestone evidence and is not the destination for new prompt-hardening runs.
+- historical fixtures, the original A/B procedure, milestone summaries, raw transcripts, and portability evidence live together under `evals/historical/`;
+- do not recreate a generic root-level `evals/results/` directory for new work.
 
 Completed experiments should point to their raw behavioral evidence and record material test conditions such as harness, model, reasoning/effort mode, and whether the interaction was fresh when those conditions could affect interpretation.
 
@@ -125,8 +125,8 @@ Parked enhancements such as multi-harness projection refresh should remain expli
 - `reference/dotnet/` — reference compiler/conformance tooling
 - `evals/README.md` — current evaluation map
 - `evals/prompt-hardening/` — active hardening experiments and results
-- `evals/historical/` — superseded fixtures/procedures
-- `evals/results/` — historical milestone evidence
+- `evals/historical/` — archived milestone fixtures, procedures, and evidence
+- `evals/historical/results/` — historical milestone summaries and raw transcripts
 
 ## Working style
 
