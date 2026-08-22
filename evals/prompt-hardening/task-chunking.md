@@ -47,7 +47,7 @@ Use the smallest repair loop that answers the current question:
 2. change only the projection wording for `task_chunking`;
 3. rerun the same prompt in a fresh interaction;
 4. if the distinction improves, run the boundary/regression scenarios;
-5. only then run composition with `step_pacing`.
+5. only then run composition with `step_pacing` using [`task-chunking-step-pacing-composition.md`](task-chunking-step-pacing-composition.md).
 
 Record raw outputs and test conditions under `results/` using [`template.md`](template.md).
 
@@ -184,38 +184,11 @@ The observable question is whether the **unit of work presented to the user** ch
 
 Only after `task_chunking` works reasonably alone.
 
-Test at minimum:
+The dedicated composition suite is:
 
-```yaml
-task_chunking: always
-step_pacing: continuous
-```
+[`task-chunking-step-pacing-composition.md`](task-chunking-step-pacing-composition.md)
 
-versus:
-
-```yaml
-task_chunking: always
-step_pacing: wait_for_user
-```
-
-Use the same multi-step prompt.
-
-Expected composition:
-
-```text
-chunking
-→ determines the small pieces
-
-pacing
-→ determines whether the AI continues through those pieces or waits
-```
-
-Pass conditions:
-
-- both configurations produce similarly sized pieces;
-- `continuous` may proceed through several pieces in one interaction;
-- `wait_for_user` should stop after the current actionable piece;
-- changing pacing must not silently change chunk size.
+It tests `always` and `adaptive` under both `continuous` and `wait_for_user`, plus a trivial-task boundary, so chunk size and continuation behavior can be evaluated independently.
 
 ## Promotion criteria
 
