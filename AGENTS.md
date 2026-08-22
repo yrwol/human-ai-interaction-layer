@@ -89,6 +89,23 @@ Do not treat cross-harness projection synchronization as required product plumbi
 - Do not promote taxonomy candidates into schema without evidence.
 - Multi-harness synchronization is an optional enhancement, not a portability requirement.
 
+## Adding or changing profile fields
+
+Profile-field development has a required evidence structure. Do not add a field by editing schema/prompt code alone.
+
+For every new profile field:
+
+1. follow `evals/adding-profile-fields.md`;
+2. create `spec/capabilities/<field-name>.md` from `spec/capabilities/template.md` before treating the field as implemented;
+3. create focused baseline/contrast evaluation from `evals/templates/profile-field.yaml`;
+4. identify boundaries and interactions with existing fields and add composition evaluation where required;
+5. harden demonstrated behavior using the templates/conventions under `evals/` and `evals/prompt-hardening/`; and
+6. update all relevant durable documentation, including semantics, examples/schema, roadmap/status, and affected integrations.
+
+A capability document is the behavioral contract; evaluation is evidence that an implementation satisfies it. **Schema support is not HAIL support.** Do not mark a field supported or promote it into current validated semantics until the required evidence exists.
+
+When modifying the semantics of an existing field, use the same workflow: update its capability contract, determine which existing evaluations are invalidated, rerun/revise evidence, and update affected documentation.
+
 ## Validation
 
 The reference .NET implementation should continue to build and preserve its existing smoke tests under `reference/dotnet/`.
@@ -108,7 +125,8 @@ Parked enhancements such as multi-harness projection refresh should remain expli
 - `spec/semantics.md` — current validated semantic model
 - `spec/interaction-taxonomy.md` — broad interaction-dimension reference
 - `spec/roadmap.md` — living current roadmap/checkpoint; keep synchronized with material project progress
-- `spec/capabilities/` — focused capability specifications that are not automatically schema or roadmap commitments
+- `spec/capabilities/` — focused capability specifications and required behavioral contracts for profile fields
+- `spec/capabilities/template.md` — required starting structure for a new profile-field capability document
 - `spec/draft.md` — original legacy working spec; useful historical context, not current authority
 - `spec/milestone-1-addendum.md` — first-harness learnings
 - `spec/milestone-2-addendum.md` — portability learnings
@@ -119,6 +137,8 @@ Parked enhancements such as multi-harness projection refresh should remain expli
 - `integrations/codex/` — native Codex persistent profile management
 - `reference/dotnet/` — reference compiler/conformance tooling
 - `evals/` — behavioral expectations and evidence
+- `evals/adding-profile-fields.md` — required profile-field development/evaluation workflow
+- `evals/templates/` — reusable structures for baseline and hardening evaluation
 
 `spec/draft-guidance.md`, where present after branch reconciliation with `main`, is a legacy source for the canonical `spec/capabilities/review-guidance.md` capability specification and should not be repurposed as the core roadmap/schema source.
 
