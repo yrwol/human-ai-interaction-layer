@@ -28,7 +28,7 @@ Milestone documents record what was learned at a point in time. They are evidenc
 - [`milestone-3-working-notes.md`](milestone-3-working-notes.md) — Claude native persistent profile-management evidence. Despite the historical filename, the core experiment is complete.
 - [`milestone-4-working-notes.md`](milestone-4-working-notes.md) — Codex native persistent profile-management evidence. The native management flow is complete and manually validated; cross-harness projection refresh remains a separate unresolved question.
 
-Behavioral milestone transcripts and summaries are preserved under [`../evals/results/`](../evals/results/). Superseded lightweight eval fixtures and the original A/B procedure are under [`../evals/historical/`](../evals/historical/).
+Behavioral milestone fixtures, procedures, summaries, raw transcripts, and portability evidence are preserved together under [`../evals/historical/`](../evals/historical/). Current prompt-hardening work lives separately under [`../evals/prompt-hardening/`](../evals/prompt-hardening/).
 
 ## Legacy source documents
 
@@ -45,7 +45,7 @@ CURRENT TRUTH       product.md + semantics.md
 REFERENCE IDEAS     interaction-taxonomy.md
 CURRENT ROADMAP     roadmap.md
 CAPABILITY SPECS    capabilities/*
-HISTORICAL EVIDENCE milestone/addendum documents + evals/results
+HISTORICAL EVIDENCE milestone/addendum documents + evals/historical/*
 LEGACY CONTEXT      draft/* and superseded source docs
 ```
 
