@@ -71,29 +71,89 @@ Cross-harness projection synchronization is **not a shipping requirement**. User
 
 Historical working notes: [`milestone-4-working-notes.md`](milestone-4-working-notes.md).
 
+### Documentation reconciliation
+
+Status: **complete enough to support active development**
+
+The repository now distinguishes current product truth, validated semantics, broader taxonomy, capability explorations, and historical evidence clearly enough that contributors do not need to reconstruct the project chronologically before working on it.
+
+Documentation should continue to be reconciled when experiments produce meaningful evidence, but documentation cleanup is no longer the active product checkpoint.
+
 ## Current project checkpoint
 
-**Documentation reconciliation.**
+### Projection hardening of existing semantics
 
-Before selecting the next implementation experiment, ensure the repository clearly distinguishes:
+Status: **in progress**
 
-- current product truth;
-- current validated semantic model;
-- broader interaction taxonomy;
-- historical experiment evidence; and
-- future/parked ideas.
+The current question is:
 
-This checkpoint exists because the original `draft.md` and later milestone addenda accumulated overlapping roadmap and architecture language.
+> Can HAIL's existing semantic preferences be expressed strongly enough in each harness that neighboring values produce reliably recognizable collaboration behavior without changing the semantic schema?
 
-Exit condition:
+This phase treats projection wording as an implementation layer rather than as the semantic definition itself.
 
-> A contributor can determine what HAIL is today, what semantics are actually supported, what has been proven, and what is still a candidate without reconstructing chronological history.
+Current method:
 
-## Next candidate experiment
+```text
+semantic intent
+→ observable behavioral distinction
+→ targeted failure scenario
+→ smallest projection-wording change
+→ regression / boundary checks
+→ composition only after individual behavior is stable
+```
+
+Evidence should record the harness, model, effort/reasoning mode, profile values, session conditions, and exact projection wording. A successful result under one configuration is evidence for that configuration, not a universal model/harness claim.
+
+### Current strongest results
+
+`decision_mode` has reached a strong Claude hardening checkpoint under the recorded test conditions:
+
+```text
+options
+→ preserve user choice
+
+recommend_first
+→ express AI judgment first
+
+choose_by_default
+→ assume responsibility for a reversible working decision and carry it forward
+```
+
+`max_options` has improved from a narrow "alternatives" interpretation toward the intended semantic of limiting simultaneous **choice-like user burden**, including open-ended brainstorming that creates a set of candidates to evaluate.
+
+These results strengthen the existing semantic model; they do not justify new persistent fields.
+
+## Near-term work
+
+### Finish hardening current semantic set
+
+Continue one semantic at a time.
+
+Priority targets:
+
+1. `task_chunking` — prove the distinction between `off`, `adaptive`, and `always` while holding `step_pacing` constant.
+2. `verbosity` — prove that detail level changes without silently changing task chunking, option count, decision ownership, or pacing.
+3. cross-harness replay — exercise stable Claude candidates in Codex before introducing harness-specific wording.
+
+Use targeted repair first: rerun a known failure with one wording change, then run the broader regression/boundary suite only after the failure is fixed.
+
+### Composition tests
+
+Composition matters, but do not begin by tuning multiple semantics simultaneously.
+
+Use focused composition tests only after the participating individual semantics are reasonably reliable. This keeps failures attributable and prevents one preference from being "fixed" by accidentally changing another.
+
+Known useful boundaries include:
+
+- `max_options` × `decision_mode` × ambiguity;
+- `task_chunking` × `step_pacing`;
+- tangent handling while pacing is paused.
+
+## Next product-expansion candidate
 
 ### Temporary interaction state
 
-This remains the strongest next product experiment from the original HAIL model, but it should begin only after the documentation checkpoint is complete and the scope is deliberately chosen.
+Temporary state remains a strong future product experiment, but it is **not the immediate next step while projection hardening is still producing useful evidence**.
 
 Smallest useful question:
 
@@ -167,12 +227,15 @@ Do not introduce a daemon, shared runtime, cloud service, or MCP synchronization
 - automatic state/mood/neurotype inference;
 - autonomy as a new persistent semantic dimension;
 - capability manifests as a frozen protocol schema;
-- shared runtime/MCP without a concrete failing native experiment.
+- shared runtime/MCP without a concrete failing native experiment;
+- automated eval infrastructure without evidence that manual evaluation has become a bottleneck.
 
 ## Roadmap discipline
 
 - Prefer one active experimental question at a time.
 - New idea does not automatically become the next milestone.
 - Prefer behavioral experiments over architecture arguments.
+- Define the observable behavioral contract before tuning projection wording.
 - Add semantic fields only after concrete scenarios demonstrate a vocabulary gap.
+- Treat a projection failure as a projection problem unless evidence demonstrates a semantic gap.
 - Preserve historical evidence, but do not allow old milestone numbering to define current priority.
