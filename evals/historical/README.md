@@ -8,8 +8,9 @@ These files are intentionally **historical evidence**, not the current evaluatio
 
 - `fixtures/` — lightweight YAML scenarios used during early static-profile/reference testing and native profile-management experiments.
 - `manual-testing.md` — the original manual A/B procedure used for the first Claude/Codex portability experiments.
+- `results/` — milestone summaries, raw transcripts, and the Claude/Codex portability comparison produced by those experiments.
 
-The original milestone summaries and raw transcripts remain in [`../results/`](../results/) so their history and existing references remain stable.
+Keeping the procedure, fixtures, and resulting evidence together makes the historical boundary explicit and avoids making old milestone artifacts look like current prompt-hardening tests.
 
 ## Why these were moved
 
@@ -17,4 +18,4 @@ The early YAML fixtures were named around individual values or one-off scenarios
 
 Current behavioral development belongs in [`../prompt-hardening/`](../prompt-hardening/).
 
-Do not update these historical fixtures to match today's conventions unless correcting an archival error. Their value is that they preserve the experiment shape used at the time.
+Do not update these historical fixtures or result records to match today's conventions unless correcting an archival error. Their value is that they preserve the experiment shape and evidence produced at the time.
