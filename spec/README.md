@@ -17,6 +17,7 @@ Capability specs preserve deeper design work for coherent HAIL behavior areas wi
 
 - [`capabilities/review-guidance.md`](capabilities/review-guidance.md) — review confidence, intelligent skepticism, verification support, review-loop detection, domain-local scaffolding, and cognitive-load reduction while evaluating AI output.
 - [`capabilities/skill-based-capability-structure.md`](capabilities/skill-based-capability-structure.md) — make first-class skills the canonical boundary for discoverable HAIL capabilities; migrate persistent profile management into a `profile` skill, retain `/hail` as the discovery/router entrypoint, and define `review` and `compare` as separate skills rather than hidden subcommands.
+- [`capabilities/conversation-review.md`](capabilities/conversation-review.md) — define the retrospective process behind conversation review: normalize one conversation, detect interaction evidence, cluster friction and success signals, distinguish profile mismatch from projection failure or situational behavior, surface unmodeled interaction gaps, and recommend changes without automatic persistence.
 
 A capability spec may contribute durable product principles or taxonomy concepts while remaining separate from the current semantic model.
 
