@@ -142,6 +142,22 @@ For each preference:
 9. Repeat if useful.
 10. Port proven wording back into the harness integration only after the experiment is convincing.
 
+## Result-file convention
+
+Keep experiment definitions and observed evidence separate.
+
+```text
+<preference>.md
+→ semantic intent, scenarios, current candidate wording, boundaries, composition questions
+
+results/<preference>-<model>-<effort>.md
+→ test conditions, raw/representative outputs, assessments, candidate history, decision
+```
+
+Start each result record from [`template.md`](template.md). Record model and effort level explicitly whenever those settings can affect instruction-following strength.
+
+Do not append large raw test runs directly into the experiment definition file. A new harness, model, effort level, or materially different wording iteration should get a result record that can be compared without turning the definition into a chronological scratchpad.
+
 ## What this experiment is not
 
 Do not:
@@ -164,15 +180,16 @@ The first useful targets are based on earlier behavioral evidence:
 | `max_options` | Claude showed weaker enforcement |
 | `verbosity` | Weak-to-moderate and interpreted inconsistently |
 
-Start with `task_chunking` unless a fresh manual observation suggests another field is more urgent.
-
 ## Files
 
-- [`template.md`](template.md) — reusable experiment record for any semantic preference
-- [`task-chunking.md`](task-chunking.md) — starter sheet for `task_chunking`
-- [`decision-mode.md`](decision-mode.md) — starter sheet for `decision_mode`
-- [`max-options.md`](max-options.md) — starter sheet for `max_options`
-- [`verbosity.md`](verbosity.md) — starter sheet for `verbosity`
+- [`template.md`](template.md) — reusable experiment/result record structure
+- [`task-chunking.md`](task-chunking.md) — experiment definition for `task_chunking`
+- [`decision-mode.md`](decision-mode.md) — experiment definition for `decision_mode`
+- [`max-options.md`](max-options.md) — experiment definition for `max_options`
+- [`max-options-decision-mode-composition.md`](max-options-decision-mode-composition.md) — focused composition evaluation
+- [`verbosity.md`](verbosity.md) — experiment definition for `verbosity`
+- [`results/decision-mode-sonnet-5-high.md`](results/decision-mode-sonnet-5-high.md) — Claude Sonnet 5 / high-effort decision-mode evidence
+- [`results/max-options-sonnet-5-high.md`](results/max-options-sonnet-5-high.md) — Claude Sonnet 5 / high-effort max-options evidence
 
 ## Success criterion
 
