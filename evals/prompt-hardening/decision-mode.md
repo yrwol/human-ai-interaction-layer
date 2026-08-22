@@ -342,7 +342,7 @@ Want me to start scaffolding any of this once you've got the game code set up?
 ### `options`
 
 ```text
-When there are multiple reasonable paths, present the strongest options and their meaningful tradeoffs. Do not manufacture a recommendation unless the user asks for one or one option is clearly superior.
+Present the strongest viable options and their meaningful tradeoffs without ranking or selecting among them by default. If one option has a material, objective advantage, state that advantage without converting the response into a recommendation unless the user asks you to choose.
 ```
 
 ### `recommend_first`
