@@ -510,7 +510,118 @@ When a decision is needed, lead with the option you recommend and briefly explai
 
 #### Response:
 
+Scenario 1:
+
 ```text
+Activity-based practice is the strongest fit — recommend that as the core system.
+
+Why: Cozy games succeed by making progress feel like an extension of play, not a management task. If riding improves riding and grooming improves your bond, players stay immersed in "being with the horse" rather than context-switching into a menu to spend currency. Skill points and trees both introduce an abstraction layer (earn points → open menu → allocate) that reads as more RPG/simulation than cozy, and trees specifically invite min-maxing and decision paralysis — exactly the kind of friction cozy games try to remove.
+
+Where the other two still have a place:
+- Skill points work well as a light seasoning on top of activity-based training — e.g., milestone rewards (leveling up trust, completing a show) grant a point or two to nudge a stat, giving players a small sense of agency without turning training into bookkeeping.
+- Branching skill tree is worth it only if you want meaningful build specialization (dressage vs. jumping vs. trail) as a headline feature — but keep it shallow (a handful of nodes, not a deep tree) or it'll fight the genre's low-pressure tone.
+
+My suggestion: activity-based training as the loop, with occasional milestone points for small customization — skip the full tree unless build diversity is a pillar of the game.
+```
+
+Scenario 2:
+```text
+Here's the system I'd build: temperament creates a risk/reward tradeoff between control and performance ceiling, not a pure stat modifier.
+
+Core mechanic
+- Calm horses: predictable, low variance, easy to control under stress (gunfire, wildlife, weather) — but capped stamina/speed ceiling. The "reliable workhorse" pick.
+- Spirited/high-strung horses: higher top speed and stamina ceiling, but react unpredictably to stimuli until trust is built — spooking, bucking, veering off-path. The "high skill ceiling" pick that rewards mastery.
+
+This gives players a real choice at acquisition time instead of temperament just being flavor text.
+
+Bonding as the resolution mechanic
+Temperament shouldn't be static — it should be the starting difficulty of a bonding curve you invest in over time:
+- Low trust = temperament's downsides dominate (spookiness, resistance to commands).
+- High trust = downsides fade, upside stays. A fully-bonded spirited horse becomes both fast and reliable, which is what makes the early investment feel earned.
+- Calm horses bond faster but have less room to grow, so there's still a reason to choose the harder horse.
+
+Why this framing over alternatives
+- A pure "temperament = stat modifier" (nervous horse just has -X handling forever) makes the trait purely punitive with no payoff — players will always pick the calmest horse and the trait becomes dead weight.
+- A pure "temperament = flavor/animation only" wastes a mechanic players will expect to matter if you're bothering to display it.
+- The trust-curve version makes temperament a build decision (safe vs. investment) rather than a stat tax, which is more interesting and gives you a natural gameplay loop (taming/training) for free.
+
+If you tell me what genre this is (open-world action, sim/breeding game, racing) I can get more specific about numbers and triggers.
+```
+
+Scenario 3:
+```
+I don't have any context on the game itself yet — genre, platform, audience, or business goals all change what monetization model makes sense. Could you fill in a few basics?
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+←  ☐ Game type  ☐ Priority  ☐ Constraints  ✔ Submit  →
+
+What kind of game is this, and on what platform(s)?
+
+❯ 1. Mobile (iOS/Android)
+     Free-to-play conventions dominate; app store cuts and ad networks apply.
+  2. PC/Console
+     Storefront-driven (Steam, consoles); upfront-purchase or premium-DLC norms are stronger.
+  3. Web/Browser game
+     Low install friction, often ad-supported or subscription-based.
+  4. Other / not sure yet
+     Describe it and I'll work from that.
+❯ 5. Type something.
+
+←  ☒ Game type  ☐ Priority  ☐ Constraints  ✔ Submit  →
+
+What's the primary business goal for monetization?
+
+❯ 1. Maximize lifetime revenue per player
+     Favors F2P with deep IAP/live-ops systems; more design and ops overhead.
+  2. Maximize player count/reach first
+     Favors free or low-cost entry, lighter monetization, grow-then-monetize.
+  3. Simple, predictable revenue with minimal ongoing ops
+     Favors one-time purchase or simple subscription over live-service IAP.
+  4. Not sure — want your recommendation
+     I'll propose a model once I know the game type and audience.
+❯ 5. Type something.
+
+←  ☒ Game type  ☒ Priority  ☐ Constraints  ✔ Submit  →
+
+Any hard constraints or things you want to avoid?
+
+❯ 1. [ ] No pay-to-win mechanics
+  Rules out IAP that affects competitive balance.
+  2. [ ] No ads
+  Rules out ad-supported and hybrid ad models.
+  3. [ ] Must work without live backend/servers
+  Rules out subscriptions, battle passes, live-ops economies.
+  4. [ ] No constraints / open to anything
+  I'll optimize purely for the business goal above.
+  5. [ ] Type something
+❯    Submit
+
+User answered Claude's questions:
+· What kind of game is this, and on what platform(s)? → Web/Browser game
+· What's the primary business goal for monetization? → Maximize player count/reach first
+· Any hard constraints or things you want to avoid? → No pay-to-win mechanics
+
+Given a browser game optimized for reach, with pay-to-win off the table, here's the model I'd choose:
+
+Recommended model: Free-to-play, cosmetic/convenience monetization + optional rewarded ads
+
+Core structure:
+1. Free entry, no paywall — the entire game is playable free, no demo/trial gating. This is the biggest lever for reach on the web, where friction kills acquisition.
+2. Cosmetic IAP — skins, emotes, profile flair, board/level themes, etc. Zero gameplay impact, so it can't become pay-to-win by definition.
+3. Convenience purchases (careful tier only) — things like extra inventory slots, faster queue times, or cosmetic loadout slots. Avoid anything that touches core power (damage, speed, stats) — that's where "convenience" quietly becomes P2W.
+4. Rewarded video ads (opt-in only) — player chooses to watch for a small bonus (extra currency, cosmetic-track progress, a retry). No forced interstitials or banners that degrade the experience — those hurt retention, which works against your reach goal.
+5. Soft currency + hard currency split — soft currency earned by playing (drives retention loops), hard currency bought with real money or earned slowly/via rewarded ads (drives monetization without gating progress).
+
+Explicitly excluded:
+- Forced/interstitial ads
+- Pay-gated content, levels, or characters
+- Any stat/power purchase
+- Loot boxes with gameplay-relevant contents (regulatory risk + reputational risk, and borderline P2W even when "random cosmetics")
+
+Why this shape: since reach is the priority, anything that adds friction at the door (paywall, forced ads, aggressive monetization prompts) works against the primary goal. Cosmetic/convenience F2P is the standard playbook for exactly this situation — it's the model behind most successful reach-first browser and mobile-web titles (think .io games, Krunker, etc.) — because non-paying players are still valuable (network effects, virality, ad-opt-in revenue) rather than being dead weight.
+
+Sequencing suggestion: launch with just cosmetic IAP + rewarded ads (simple to build, no economy-balance risk). Only add a cosmetic-only season/battle pass once you have retention data showing players stick around long enough for a pass to make sense — building that prematurely is wasted engineering if day-7 retention isn't there yet.
+
+Want me to sketch the actual currency/economy numbers (prices, drop rates, ad reward sizes), or is this the level of detail you needed for now?
 ```
 
 ### `choose_by_default`
@@ -519,10 +630,19 @@ When a decision is needed, lead with the option you recommend and briefly explai
 When the user has delegated a reasonably reversible decision, choose a sensible default and continue from it instead of asking them to select from options. Surface the choice and any material assumption. Ask only when the missing information could materially change the decision.
 ```
 
-
 #### Response:
 
+Scenario 1:
+
 ```text
+```
+
+Scenario 2:
+```text
+```
+
+Scenario 3:
+```
 ```
 
 ## Boundary to watch
