@@ -95,7 +95,11 @@ The reference .NET implementation should continue to build and preserve its exis
 
 Native integration changes must be validated independently of the reference compiler.
 
-Behavioral experiments and evidence belong in `evals/`.
+Use `evals/README.md` as the evaluation map:
+
+- current prompt-hardening definitions and current result records live under `evals/prompt-hardening/`;
+- superseded lightweight fixtures and the original A/B procedure live under `evals/historical/`;
+- `evals/results/` preserves historical milestone evidence and is not the destination for new prompt-hardening runs.
 
 Completed experiments should point to their raw behavioral evidence and record material test conditions such as harness, model, reasoning/effort mode, and whether the interaction was fresh when those conditions could affect interpretation.
 
@@ -109,7 +113,8 @@ Parked enhancements such as multi-harness projection refresh should remain expli
 - `spec/interaction-taxonomy.md` — broad interaction-dimension reference
 - `spec/roadmap.md` — living current roadmap/checkpoint; keep synchronized with material project progress
 - `spec/capabilities/` — focused capability specifications that are not automatically schema or roadmap commitments
-- `spec/draft.md` — original legacy working spec; useful historical context, not current authority
+- `spec/draft/draft.md` — original legacy working spec; useful historical context, not current authority
+- `spec/draft/draft-guidance.md` — superseded source for the review-guidance capability spec
 - `spec/milestone-1-addendum.md` — first-harness learnings
 - `spec/milestone-2-addendum.md` — portability learnings
 - `spec/milestone-3-working-notes.md` — completed Claude native-management evidence
@@ -118,9 +123,10 @@ Parked enhancements such as multi-harness projection refresh should remain expli
 - `integrations/claude/` — native Claude persistent profile management
 - `integrations/codex/` — native Codex persistent profile management
 - `reference/dotnet/` — reference compiler/conformance tooling
-- `evals/` — behavioral expectations and evidence
-
-`spec/draft-guidance.md`, where present after branch reconciliation with `main`, is a legacy source for the canonical `spec/capabilities/review-guidance.md` capability specification and should not be repurposed as the core roadmap/schema source.
+- `evals/README.md` — current evaluation map
+- `evals/prompt-hardening/` — active hardening experiments and results
+- `evals/historical/` — superseded fixtures/procedures
+- `evals/results/` — historical milestone evidence
 
 ## Working style
 
