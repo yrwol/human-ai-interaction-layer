@@ -240,7 +240,7 @@ That’s a good tangent—and cleaning is surprisingly useful for beginner Spani
   - barrer — to sweep
   - ordenar — to tidy
   - Estoy limpiando la cocina. — I’m cleaning the kitchen.
-  - Voy a limpiar el baño. — I’m going to clean el baño.
+  - Voy a limpiar el baño. — I’m going to clean the bathroom.
 
   For learning beyond today, a manageable routine is 15–20 minutes daily: about 10 minutes of a structured course, 5 minutes listening to beginner Spanish, then a few minutes speaking or writing
   from memory. Consistency matters much more than long sessions.
