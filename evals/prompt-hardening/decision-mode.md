@@ -438,6 +438,70 @@ What I deliberately left out: loot boxes/gacha (regulatory risk in several marke
 Want me to turn this into a pricing/currency spec (price points, currency exchange rates, ad frequency caps) or start scaffolding it into the codebase?
 ```
 
+### `options` v2
+
+```text
+When presenting choices for the user to answer, including clarification questions, do not preselect, rank, or label an option as recommended unless the user asks for guidance. If one option has a material, objective advantage, state that advantage without converting the response into a recommendation unless the user asks you to choose.
+```
+
+Scenario 3:
+
+```text
+I don't see a specific game project in this directory, and monetization choice depends heavily on details only you have. A few questions to narrow it down:
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+←  ☐ Game & Platform  ☐ Business Goal  ☐ Existing Project  ✔ Submit  →
+
+What genre/type of game is this, and what platform is it launching on?
+
+❯ 1. Mobile game
+     iOS/Android — typically supports ads, IAP, and gacha-style mechanics well
+  2. PC/Console game
+     Steam, consoles, etc. — typically favors premium price or cosmetic DLC
+  3. Web/browser game
+     Ads and freemium models are common here
+❯ 4. Type something.
+
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+←  ☒ Game & Platform  ☐ Business Goal  ☐ Existing Project  ✔ Submit  →
+
+What's the primary business goal for monetization?
+
+❯ 1. Maximize revenue per player
+     Willing to use aggressive tactics like IAP, loot boxes, or ads if they perform well
+  2. Maximize player goodwill/retention
+     Prefer fair, non-exploitative models even if they leave revenue on the table
+  3. Simple, low-maintenance revenue
+     One-time purchase or minimal ads, avoid ongoing live-ops complexity
+❯ 4. Type something.
+
+Is there an existing game project (repo/design doc) I should look at, or is this a from-scratch decision?
+
+❯ 1. From scratch
+     No existing project yet — this is an early design decision
+  2. There's an existing project
+     You'll point me to the repo/folder/docs to review first
+❯ 3. Type something.
+
+User answered Claude's questions:
+· What genre/type of game is this, and what platform is it launching on? → Web/browser game
+· What's the primary business goal for monetization? → Maximize player goodwill/retention
+· Is there an existing game project (repo/design doc) I should look at, or is this a from-scratch decision? → From scratch
+
+Given a web-based game with retention/goodwill as the priority, here's the model:
+
+Free-to-play core + optional cosmetics + opt-in rewarded ads
+
+- Base game: fully free, no paywalls. All levels/content/progression available to everyone. Nothing gated behind payment.
+- Cosmetic-only purchases (skins, themes, avatar items, etc.) — cosmetics don't affect gameplay power, so paying players don't get an edge over non-paying ones. This is the single biggest lever for goodwill: nobody feels cheated by someone else's wallet.
+- Opt-in rewarded ads only — e.g., "watch a short ad for a bonus/extra life/currency." No forced interstitials, no ads interrupting play uninvited. Players who never watch an ad or pay a cent still get the full game.
+- One-time "support the game" purchase — a modest one-off payment (e.g., removes ads permanently, or a small badge) for players who want to contribute without buying anything mechanical.
+- Explicitly excluded: loot boxes/gacha, pay-to-win items, energy/lives systems that force payment to keep playing, forced interstitial ads. These are the mechanics most responsible for player resentment and are the opposite of what "maximize goodwill" calls for.
+
+This gives you three independent revenue streams (cosmetics, rewarded ads, one-time support) without any of them creating friction or unfairness in the core game loop.
+
+When you're ready to start building, let me know the game's structure (single-page app, backend needed for purchases/accounts, etc.) and I can help scaffold the project.
+```
+
 ### `recommend_first`
 
 ```text
