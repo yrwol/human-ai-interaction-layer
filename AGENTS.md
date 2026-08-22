@@ -8,15 +8,14 @@ The product is the semantic model + harness integrations. The .NET implementatio
 
 ## Current project checkpoint
 
-The active work is **documentation reconciliation** after native profile-management work.
+The active work is **projection hardening of the existing validated semantics**.
 
-Do not start a new product feature until the repository clearly distinguishes:
+Current priorities are tracked in `spec/roadmap.md`. At this checkpoint, the immediate sequence is:
 
-- current product truth;
-- current validated semantic model;
-- broader interaction taxonomy/reference ideas;
-- historical experiment evidence; and
-- current roadmap/parked work.
+1. harden and characterize existing semantics one at a time;
+2. keep experiment evidence separate from durable semantic definitions;
+3. replay stable candidates across harnesses before introducing harness-specific wording;
+4. avoid adding new semantics or infrastructure unless experiments demonstrate a real vocabulary or delivery gap.
 
 Start with `spec/README.md`.
 
@@ -29,13 +28,36 @@ Current authoritative docs:
 
 Historical milestone documents are evidence records, not competing current specs.
 
+## Roadmap hygiene
+
+`spec/roadmap.md` is a living project-status document, not a periodic cleanup artifact.
+
+Whenever work materially changes any of the following, review and update the roadmap in the same branch/change set:
+
+- a checkpoint becomes complete or is superseded;
+- an experiment reaches a meaningful conclusion;
+- a previously weak/unknown behavior becomes validated, rejected, or reclassified;
+- the active next experiment changes;
+- a roadmap candidate becomes parked, promoted, or deprioritized;
+- new evidence changes what is required before moving forward.
+
+Do not update the roadmap for trivial implementation details or every commit. Update it when the **project's current state, evidence, or next meaningful step** has changed.
+
+Before considering a milestone/checkpoint or substantial experiment complete, explicitly ask:
+
+> Does `spec/roadmap.md` still accurately describe what is complete, what is active now, and what comes next?
+
+If not, update it before finishing the work.
+
 ## Current implementation state
 
 - Static Claude behavior proof: complete.
 - Claude→Codex semantic portability proof: complete.
 - Claude native persistent profile management: complete / manually validated.
 - Codex native persistent profile management: complete / manually validated.
-- Temporary interaction state: not yet implemented.
+- Projection hardening: active; strongest current evidence is for `decision_mode` and `max_options` under documented Claude test conditions.
+- `task_chunking` and `verbosity`: next hardening targets.
+- Temporary interaction state: parked until the current hardening work earns completion and the roadmap deliberately promotes it.
 
 Multi-harness projection refresh is a parked optional enhancement, not a shipping requirement or a milestone blocker.
 
@@ -75,7 +97,9 @@ Native integration changes must be validated independently of the reference comp
 
 Behavioral experiments and evidence belong in `evals/`.
 
-Completed native-management experiments should point to their raw behavioral evidence. Parked enhancements such as multi-harness projection refresh should remain explicitly separate from milestone pass/fail status.
+Completed experiments should point to their raw behavioral evidence and record material test conditions such as harness, model, reasoning/effort mode, and whether the interaction was fresh when those conditions could affect interpretation.
+
+Parked enhancements such as multi-harness projection refresh should remain explicitly separate from milestone pass/fail status.
 
 ## Important files
 
@@ -83,7 +107,7 @@ Completed native-management experiments should point to their raw behavioral evi
 - `spec/product.md` — current product specification
 - `spec/semantics.md` — current validated semantic model
 - `spec/interaction-taxonomy.md` — broad interaction-dimension reference
-- `spec/roadmap.md` — current roadmap/checkpoint
+- `spec/roadmap.md` — living current roadmap/checkpoint; keep synchronized with material project progress
 - `spec/capabilities/` — focused capability specifications that are not automatically schema or roadmap commitments
 - `spec/draft.md` — original legacy working spec; useful historical context, not current authority
 - `spec/milestone-1-addendum.md` — first-harness learnings
