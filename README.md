@@ -58,8 +58,7 @@ The larger original interaction taxonomy has **not** been discarded. It now live
 Start with [`evals/README.md`](evals/README.md) for the evaluation map.
 
 - [`evals/prompt-hardening/`](evals/prompt-hardening/) — current semantic prompt-hardening experiments and current result records
-- [`evals/historical/`](evals/historical/) — superseded lightweight fixtures and the original manual A/B procedure
-- [`evals/results/`](evals/results/) — preserved historical milestone transcripts and summaries
+- [`evals/historical/`](evals/historical/) — historical fixtures, manual procedures, milestone summaries, raw transcripts, and portability evidence
 - [`evals/prompt-context-efficiency.md`](evals/prompt-context-efficiency.md) — standalone prompt-context efficiency experiment
 
 Completed evidence includes:
@@ -115,7 +114,7 @@ The Codex skill uses the same canonical `~/.hail/profile.yaml` and manages only 
 
 The native Codex path has been manually validated for profile inspection, natural-language change, fresh-session pacing behavior, tangent composition, contextual requests that do not mutate persistent defaults, and reset.
 
-See [`integrations/codex/README.md`](integrations/codex/README.md) and [`evals/results/milestone-4-codex-native-raw.md`](evals/results/milestone-4-codex-native-raw.md).
+See [`integrations/codex/README.md`](integrations/codex/README.md) and [`evals/historical/results/milestone-4-codex-native-raw.md`](evals/historical/results/milestone-4-codex-native-raw.md).
 
 ## Multi-harness refresh is optional
 
@@ -142,8 +141,8 @@ reference/
 profiles/             reference semantic profile examples
 evals/
   prompt-hardening/   active behavioral hardening experiments/results
-  historical/         superseded eval fixtures/procedures
-  results/            preserved milestone evidence
+  historical/         superseded eval fixtures/procedures + milestone evidence
+    results/           historical milestone summaries/raw transcripts
 spec/                 product truth, semantics, taxonomy, roadmap, historical decisions
   draft/              legacy source documents
 .github/workflows/    repository validation
