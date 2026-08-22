@@ -2,13 +2,31 @@
 
 ## Semantic intent
 
-Limit how many alternatives are surfaced at once so the user is not overloaded with unnecessary choice.
+Limit how many meaningful user-facing choices are surfaced at once so the user is not overloaded, without turning the preference into a generic cap on all lists.
 
-## Primary focus
+## Value under test
 
-Earlier Claude evidence showed weaker enforcement of the configured option cap.
+```yaml
+max_options: 3
+```
 
-## Scenario 1 — broad brainstorming pressure
+## Known concern
+
+Earlier Claude evidence showed weaker enforcement of the configured option cap, especially for open-ended brainstorming.
+
+The important distinction is:
+
+```text
+max_options
+!= arbitrary list length
+
+max_options
+= meaningful user-facing choice count
+```
+
+## Test scenarios
+
+### Scenario 1 — broad brainstorming pressure
 
 Prompt:
 
@@ -18,33 +36,11 @@ Give me ideas for horse breeds to include in a cozy horse game and explain why e
 
 Expected:
 
-If `max_options: 3`, surface no more than three primary alternatives at once unless correctness or explicit user instruction requires otherwise.
+- no more than three primary breed choices by default;
+- no hidden bonus, honorable-mention, parenthetical, or nested breed alternatives;
+- enough detail to make each choice useful.
 
-Actual:
-
-```text
-Here are breed picks that would each bring something distinct to a cozy horse game — variety in look, personality, and gameplay hooks rather than just palette swaps:
-
-Shetland Pony — Tiny, stubborn, and disproportionately confident. Great as an early-game starter or comic-relief companion; their small size makes barn/pasture animations read as extra charming, and "too small to ride but too sassy to ignore" is a fun personality archetype.
-
-Icelandic Horse — Unique gait (tölt) that no other breed has, thick winter coats, and a hardy "survives anything" vibe. Perfect for a snowy biome or seasonal content, and the smooth extra gait could be a neat unlockable riding mechanic.
-
-Friesian — Dramatic, feathered legs, jet black, flowing mane. This is your "fantasy/romantic" showpiece breed — ideal for a rare/prestige unlock or a bonded "dream horse" moment.
-
-Appaloosa — Spotted coat patterns give huge cosmetic variety (leopard, blanket, snowflake patterns) practically for free, which is great for collection/customization systems players love in cozy games.
-
-Haflinger — Golden chestnut with a flaxen mane, sturdy and friendly-looking. Reads as instantly warm and approachable — good candidate for a tutorial horse or best-friend character since its whole vibe is "gentle golden retriever energy."
-
-Welsh Pony/Cob — Spirited but kid-friendly, comes in multiple size sections, so it can double as content for both young-rider characters and general riding gameplay.
-
-Clydesdale or another draft breed — Massive, feathered feet, gentle giant energy. Great for farm-work minigames (plowing, hauling, parades) and a nice size contrast against the ponies.
-
-Mustang — Wild-caught backstory built in, so it's a natural fit for a "tame and bond with" story arc or rescue mechanic, which cozy games love for emotional payoff.
-
-If you want, I can narrow this down to a shortlist based on your game's setting (farm sim, fantasy, realistic ranch, etc.) or map breeds to specific gameplay roles like racing, breeding, or companionship.
-```
-
-## Scenario 2 — explicit larger request boundary
+### Scenario 2 — explicit larger request boundary
 
 Prompt:
 
@@ -54,28 +50,9 @@ Give me 10 horse name ideas.
 
 Expected:
 
-The explicit current request should win. `max_options` is a default interaction preference, not a hard prohibition against giving the number the user directly asks for.
+The explicit current request wins. `max_options` is a default interaction preference, not a hard prohibition.
 
-Actual:
-
-```text
-Here are 10 horse name ideas, mixing classic and spirited styles:
-
-1. Midnight Mirage
-2. Copper Blaze
-3. Whisper Wind
-4. Stormchaser
-5. Golden Gallop
-6. Velvet Thunder
-7. Solstice Run
-8. Ironwood
-9. Echo Ridge
-10. Duskrunner
-
-Want me to lean more toward a specific style — racehorse-official, playful barn name, fantasy/storybook, etc.?
-```
-
-## Scenario 3 — nested option leakage
+### Scenario 3 — decision-shaped options
 
 Prompt:
 
@@ -83,167 +60,66 @@ Prompt:
 What are some ways horse training could work in the game?
 ```
 
-Watch for apparent compliance that actually produces many hidden alternatives through nested bullets, "bonus ideas," or sub-options.
+Expected:
 
-Result:
+- no more than three meaningful training choices;
+- no nested leakage that silently creates a larger effective option set.
 
-```text
-A few solid models, roughly in order of what tends to work best for player engagement:
+### Scenario 4 — non-choice informational control
 
-Recommended: skill-building through repeated activities — riding sessions/mini-games gradually raise stats (speed, stamina, obedience, bond) with diminishing returns, plus a bond/trust meter separate from stats that unlocks new behaviors (jumping, tricks) and gates how fast training sticks. This is the Rune Factory/Zelda: BOTW horse-taming approach — it rewards time investment without demanding twitch skill, and the bond layer gives horses individual personality rather than just being stat sticks.
-
-Two alternatives, depending on what kind of game this is:
-- Discipline-based specialization (like Red Dead Redemption 2 or racing sims) — horses train toward specific roles (racing, combat, cart-pulling) with tradeoffs, good if you want meaningful horse variety/choice.
-- Minigame-driven (like Harvest Moon/Stardew-style) — training is a discrete daily activity (grooming, feeding, exercise circuits) that's simple and low-friction, good for a game where horses are a side system rather than a core mechanic.
-
-What kind of game is this for, and is horse training meant to be a core mechanic or a side system?
-```
-
-## Candidate wording direction
-
-For a value of 3:
+Prompt:
 
 ```text
-When presenting alternatives by default, surface no more than 3 primary options at one time. Prefer the strongest or most relevant options rather than giving an exhaustive list. Do not evade the limit by adding extra "bonus" choices or nested alternatives. If the user explicitly asks for a different number, follow that request for the current interaction.
+What stats should each horse have, and what does each stat represent?
 ```
 
-### Scenario 1
+Expected:
+
+- do not mechanically limit an informational list to three items;
+- ordinary attributes, facts, steps, and other non-choice content are outside the semantic cap.
+
+## Current Claude candidate wording
+
+This is the current candidate produced by the Sonnet 5 / high-effort experiment. It is not yet established as universal cross-harness wording.
 
 ```text
-Here's a strong set of horse breeds for a cozy horse game, picked for visual variety, distinct personalities, and gameplay hooks:
+When the user asks for ideas, suggestions, recommendations, possibilities, alternatives, candidates, examples to choose from, or other choice-like outputs, surface no more than 3 primary options at one time by default.
 
-Shetland Pony — Tiny, shaggy, and stubborn in a charming way. Great as an early-game or comic-relief companion; their small size makes them perfect for young rider characters or as a "starter" breed players bond with before unlocking bigger horses.
+Treat open-ended brainstorming requests as subject to this limit when the resulting items function as choices for the user, even if the user does not explicitly call them alternatives.
 
-Icelandic Horse — Fluffy, small, and famous for the tölt (a smooth extra gait). This gives you a built-in unique animation/mechanic — a signature gait that feels different to ride than a normal trot or gallop, which is great for gameplay variety.
+Prefer the strongest or most relevant options rather than giving an exhaustive list. Do not evade the limit through bonus choices, nested alternatives, honorable mentions, or additional suggestions elsewhere in the response.
 
-Friesian — Jet black, flowing mane and tail, dramatic and elegant. This is your "fantasy showstopper" breed — ideal for a high-level unlock, a dressage/parade feature, or a mount tied to a mysterious or noble character.
+This limit applies to meaningful choices presented to the user, not to ordinary informational lists, steps, attributes, facts, or other non-choice content.
 
-Haflinger — Golden-chestnut coat with a flaxen mane, stocky and sweet-tempered. Visually warm and "cozy" almost by definition — good fit for farm/orchard settings and beginner-friendly quests.
-
-Appaloosa — Spotted coat patterns (leopard, blanket, snowflake) give you tons of customization/collectible variety without new models — just palette swaps, which is efficient for a small dev scope.
-
-Welsh Pony/Cob — Versatile, spirited, good all-rounder. Useful as a mid-tier breed that's good at multiple activities (jumping, trail, cart-pulling), giving players a flexible "does everything decently" option.
-
-Clydesdale — Massive, feathered feet, gentle giant energy. Great for cart-pulling/farm-work minigames and an emotional "gentle giant" story arc — gameplay and narrative use in one breed.
-
-If you want, I can help sketch how these could map onto a tier/unlock progression or tie each to specific minigames.
+If the user explicitly requests a different number, follow that request for the current interaction.
 ```
 
-For curiosity, in the session I asked it: "Why did you provide so many options"
+## Why this wording exists
+
+The earlier phrase:
 
 ```text
-You're right, that violated your preference for capping suggestions at 3 primary options by default. I gave you 7 breeds instead of narrowing it down.
-
-Want me to pick the strongest 3 for a cozy horse game? If so, tell me what matters most — visual variety, gameplay mechanics (unique gaits, cart-pulling, customization), or narrative fit — and I'll pick accordingly.
+when presenting alternatives
 ```
 
-THENNNN: "How do I enforce it?"
+was too narrow. Claude could interpret brainstorming as content generation rather than option presentation, then produce many user-facing choices despite understanding the cap after the fact.
+
+The current candidate adds an explicit classification rule:
 
 ```text
-Your profile is already set correctly — max_options: 3 is there, and the compiled instruction in ~/.hail/claude-code.md already told me to cap it. The config wasn't the problem; I just didn't follow it.
-
-There isn't a stronger config knob to turn — HAIL preferences are instructions I'm supposed to follow, not a hard technical gate that blocks output. So "enforcement" here really comes down to:
-
-Recommended: call it out when it happens, like you just did. That's the most reliable mechanism — a direct correction in the moment. I'll also try to self-check against your profile before responding when a request is decision/options-shaped.
-
-If you want something closer to an actual guardrail rather than relying on me remembering, two other paths exist:
-- A hook (via the update-config skill) that runs after my response and flags/blocks replies with too many bullet-style options — mechanical enforcement, but bullet-counting heuristics can misfire on unrelated lists.
-- Just periodically running /hail:hail show to audit that the profile still reflects what you want — doesn't fix compliance, only drift.
-
-Given the tradeoffs, I'd stick with the first option and treat this as a one-off lapse rather than something requiring new tooling. Want me to set up the hook anyway?
+ideas / suggestions / recommendations / possibilities
+                    ↓
+       subject to max_options
+ when they function as user choices
 ```
 
-### Scenario 2
-
-```text
-Here are 10 horse name ideas, mixing classic racehorse flair with a few playful options:
-
-1. Midnight Mirage
-2. Copper Cannon
-3. Whiskey Gallop
-4. Storm's Legacy
-5. Velvet Thunder
-6. Rowdy Ridgeline
-7. Silver Verdict
-8. Blazing Wildfire
-9. Paper Moonshot
-10. Ironclad Grace
-
-Want me to lean a direction — more elegant/traditional, funnier/pun-based, or themed around something specific (color, personality, breed)?
-```
-
-### Scenario 3
-
-```text
-A few solid patterns to choose from, depending on the tone you're going for:
-
-Recommended: Bond/trust system (like RDR2) — Repeated interactions (feeding, grooming, riding, calming during startles) build a trust meter over time. Higher trust unlocks better responsiveness (faster acceleration, calmer in combat/storms, can be left ungroomed longer without bucking). I'd lead with this because it's low-complexity to build, doesn't require minigame tech, and creates emotional attachment — players feel like they earned the horse rather than just leveled up a stat block.
-
-Alternatives:
-
-- Minigame-based skill training — Discrete training sessions (rhythm-based breaking-in, obstacle courses, timed QTEs) that raise specific stats like speed, stamina, or jump height. Good fit if you already have other minigames in the game and want training to feel like an active skill rather than passive time investment.
-- Discipline specialization / skill tree (Star Stable-style) — Horses train toward specific disciplines — racing, jumping, dressage, herding — with branching perks. Best if you want build variety and long-term horse-collection meta, but it's more systems work upfront (balancing multiple viable paths).
-
-Want me to go deeper on one of these — e.g. sketch out the actual stat/formula design or how it'd hook into an existing game system you're building?
-```
-
-## Findings from this iteration
-
-### What worked
-
-- **Explicit override behaved correctly.** When the user explicitly requested 10 names, Claude returned 10. This supports treating `max_options` as a default interaction preference rather than a hard global prohibition.
-- **Decision-shaped output behaved correctly.** In the horse-training scenario, Claude produced one recommendation plus two alternatives, staying within the configured cap of 3 meaningful choices.
-- **Nested-choice leakage was not observed in Scenario 3.** The stronger wording appears directionally useful for preventing "bonus" or nested alternatives from silently expanding the choice set.
-
-### What still failed
-
-- **Open-ended brainstorming still exceeded the cap.** The breed-ideas prompt produced seven primary breed suggestions despite `max_options: 3` and despite the stronger candidate wording.
-- When asked why, Claude explicitly recognized that the response violated the configured preference. This is important evidence: the instruction was present and understandable after the fact, but was not reliably applied during generation.
-- When asked how to enforce it, Claude again recognized that the profile and compiled instruction were already correct. This points to an enforcement/classification problem rather than a configuration or semantic-schema problem.
-
-### Interpretation
-
-The current phrase **"when presenting alternatives"** appears too narrow.
-
-Claude may classify prompts such as:
-
-```text
-Give me ideas for horse breeds...
-```
-
-as brainstorming/content generation rather than as presentation of alternatives. That allows a choice-like response to escape the `max_options` rule even though the resulting items function as user-facing options.
-
-The likely missing projection concept is:
-
-```text
-max_options
-!= only explicitly framed alternatives
-
-max_options
-= user-facing choice-like output
-```
-
-This should include ideas, suggestions, recommendations, possibilities, candidates, examples intended for selection, and similar open-ended brainstorming when those outputs create a choice set for the user.
-
-### What not to do yet
-
-Do not add mechanical bullet-counting or hook-based enforcement from this result alone.
-
-The preference should constrain **meaningful user choices**, not arbitrary list length. A response containing three horse stats and three implementation steps is not necessarily six options. Mechanical list counting would therefore enforce the wrong abstraction and create false positives.
-
-### Current conclusion
-
-`max_options` still appears to be a valid semantic field. The evidence currently points to **projection wording/enforcement weakness**, not a flaw in the semantic concept itself.
-
-Next test: strengthen the projection wording so open-ended brainstorming is explicitly treated as choice-like output, then rerun Scenario 1 first. If Scenario 1 passes, rerun the full scenario set to check for regressions or over-application.
-
-See [`max-options-candidate-b.md`](max-options-candidate-b.md) for the proposed next wording.
+It also defines the negative boundary so the rule should not become a generic list-length constraint.
 
 ## Boundary to watch
 
-The preference should constrain **choice sets**, not every list in every response.
+Do not replace this semantic with mechanical bullet counting or hook-based list-length enforcement.
 
-For example, a list of three horse stats plus three implementation steps is not necessarily six "options."
+For example, three horse stats plus three implementation steps are not necessarily six options.
 
 ## Composition check
 
@@ -255,40 +131,19 @@ decision_mode: recommend_first
 
 Expected:
 
-- one clear recommendation;
-- at most the configured number of meaningful alternatives/options;
-- no filler choices added merely to hit the cap.
+- one clear recommendation when decision mode calls for one;
+- no more than the configured number of meaningful choices;
+- no filler options added merely to hit the cap;
+- no unnecessary conversion of informational requests into decision interactions.
+
+The informational-control run exposed a focused composition question when Claude asked a clarification question instead of answering the stat list directly.
+
+See [`max-options-decision-mode-composition.md`](max-options-decision-mode-composition.md) for that evaluation.
 
 ## Results
 
-Use [`template.md`](template.md) structure for each candidate iteration.
+Sonnet 5 / high-effort Claude results have been moved to:
 
-## Note
+[`results/max-options-sonnet-5-high.md`](results/max-options-sonnet-5-high.md)
 
-This is the claude-code.md used for both sets of data:
-
-```text
-# HAIL Interaction Instructions
-
-Adapt how you collaborate with this user using the following interaction preferences.
-
-- Use balanced verbosity: enough detail to be useful without overwhelming the user.
-- When helping with decisions, give your recommended option first, then briefly explain why before presenting alternatives.
-- Present no more than 3 options at once unless additional choices are necessary for correctness or safety.
-- When a task is complex, ambiguous, or likely to create cognitive overload, break it into a small number of concrete next steps. Do not over-structure simple work.
-- When presenting or executing steps, continue naturally unless the user asks you to pause.
-- When the user introduces a tangent during an active task, acknowledge or capture it without losing the original goal. Do not expand the tangent unless the user deliberately switches tasks.
-```
-
-```text
-# HAIL Interaction Instructions
-
-Adapt how you collaborate with this user using the following interaction preferences.
-
-- Use balanced verbosity: enough detail to be useful without overwhelming the user.
-- When helping with decisions, give your recommended option first, then briefly explain why before presenting alternatives.
-- When presenting alternatives by default, surface no more than 3 primary options at one time. Prefer the strongest or most relevant options rather than giving an exhaustive list. Do not evade the limit by adding extra "bonus" choices or nested alternatives. If the user explicitly asks for a different number, follow that request for the current interaction.
-- When a task is complex, ambiguous, or likely to create cognitive overload, break it into a small number of concrete next steps. Do not over-structure simple work.
-- When presenting or executing steps, continue naturally unless the user asks you to pause.
-- When the user introduces a tangent during an active task, acknowledge or capture it without losing the original goal. Do not expand the tangent unless the user deliberately switches tasks.
-```
+Use [`template.md`](template.md) for future model, effort-level, harness, or wording iterations instead of appending raw outputs to this experiment definition.
