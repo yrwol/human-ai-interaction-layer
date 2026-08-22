@@ -10,17 +10,15 @@ Current experiments are organized by semantic or focused composition boundary, w
 
 When developing current semantics, start there.
 
-## Historical fixtures
+## Historical evaluation evidence
 
-[`historical/`](historical/) contains the lightweight profile/scenario fixtures and manual A/B procedure used during HAIL's earlier static-profile and native-management milestones.
+[`historical/`](historical/) contains the earlier evaluation methodology and evidence from HAIL's static-profile, portability, and native-management milestones.
+
+- `historical/fixtures/` — lightweight YAML scenarios used during early testing;
+- `historical/manual-testing.md` — the original manual A/B procedure;
+- `historical/results/` — milestone summaries, raw transcripts, and the portability comparison.
 
 These files are preserved as evidence of how the project was tested at that stage. They are **not** authoritative current eval definitions and should not be used to infer today's semantic organization or prompt-hardening methodology.
-
-## Historical milestone results
-
-[`results/`](results/) contains the original milestone result summaries and raw transcripts from the early Claude/Codex portability and native-management experiments.
-
-These remain in place as historical evidence. New prompt-hardening results belong under `prompt-hardening/results/`, not here.
 
 ## Standalone experiments
 
@@ -33,9 +31,9 @@ current semantic/capability development
 → organize by semantic or focused behavioral boundary
 → evals/prompt-hardening/
 
-historical evidence
-→ preserve according to the experiment/milestone that produced it
-→ evals/historical/ and evals/results/
+historical milestone evaluation
+→ preserve the fixtures, procedure, and results together
+→ evals/historical/
 ```
 
-Do not add new root-level semantic fixture YAML files. If a current behavior needs evaluation, add or extend the relevant experiment under `prompt-hardening/`.
+Do not add new root-level semantic fixture YAML files or a generic root-level `results/` directory. Current hardening evidence belongs with its experiment under `prompt-hardening/results/`.
