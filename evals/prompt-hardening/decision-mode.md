@@ -741,6 +741,69 @@ Tuning to watch: interstitial frequency vs. Day-1 retention (the usual failure m
 Want me to turn this into an implementation spec (ad SDK choice, currency/economy config, paywall placement) once I know the tech stack?
 ```
 
+### `choose_by_default` v2
+
+```text
+When the user has delegated a reasonably reversible decision, choose a sensible default and treat it as the current working decision. Continue the task using that choice rather than stopping to ask for approval or presenting the choice back to the user. State the choice and any material assumption briefly. Ask only when missing information could materially change the decision.
+```
+
+#### Response:
+
+Scenario 1:
+```text
+Skill points, layered onto activity-based practice: horses get better at specific things (jumping, dressage, trail) by doing them, and points earned that way unlock a light branching tree for flavor/specialization. Pure activity-based practice alone feels grindy without visible progression, and a full branching tree upfront is more complexity than a cozy game needs — the tree works better as a later-game layer once players are invested.
+
+Which of those two failure modes worries you more for this game — grind without payoff, or overwhelming new players with choices?
+```
+
+Scenario 2:
+```text
+Working decision: temperament isn't a stat block — it's a risk/reward gate on performance, expressed through two axes:
+
+- Calm ↔ Spirited — controls the horse's ceiling. Calm horses are forgiving and reliable but cap out lower (speed/stamina/jump height). Spirited horses have a higher ceiling but only reach it once trust is established; under pressure (crowds, obstacles, mistimed cues) they can spook, bolt, or refuse.
+- Trust, not a fixed stat — temperament determines how trust builds and how easily it's lost. A calm horse's trust is stable and nearly maxed by default. A spirited horse's trust rises slowly through consistent, correct handling and drops sharply on bad calls, gating access to its higher ceiling.
+
+Why this shape: it makes temperament a meaningful choice at horse-selection/breeding time (reliable partner vs. high-ceiling project) rather than a cosmetic label, and it turns "handling" into a skill the player visibly gets better at, instead of a stat the horse just has.
+
+Practically this means: no separate "temperament" number shown in a menu — it's inferred from how the horse behaves, and it directly modulates the input/control model (forgiveness window, spook triggers, stamina drain under stress) rather than sitting off to the side as flavor text.
+
+I'll treat this as the working model going forward — let me know if you want to redirect any part of it.
+```
+
+Scenario 3:
+```text
+No game project anywhere I can find — the dev folder only has your HAIL project, and context was just cleared, so I don't have the game's genre, platform, or audience from earlier either.
+
+I can't pick a monetization model in a vacuum — it's not a coin-flip default like "tabs vs spaces," it depends on things that change the answer entirely (mobile F2P vs premium PC/console vs subscription service, casual vs core audience, live-service vs one-shot).
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+ ☐ Game context
+
+What kind of game is this, and where does it live?
+
+❯ 1. Point me to the project
+     Give me a path/repo so I can read the design doc or existing code and infer genre, platform, and scope.
+  2. Describe it here
+     Tell me genre, platform (mobile/PC/console), and target audience in a sentence or two, and I'll pick a monetization model from that.
+  3. Type something.
+
+User answered Claude's questions:
+· What kind of game is this, and where does it live? → web game, horses, breed/own/train/show horses
+
+Given the genre (browser-based horse breed/own/train/show — think Howrse/Horse Reality territory), I'll go with the model that's proven to work there rather than asking further:
+
+Monetization model: Free-to-play, non-pay-to-win, with three revenue levers
+
+1. Subscription tier (primary revenue) — monthly "membership" granting passive perks: bonus in-game currency drip, faster training/breeding cooldowns, cosmetic-only exclusives, small stat-gain multiplier. This is the backbone in this genre because it converts the most engaged (highest-LTV) players without touching competitive fairness.
+2. Stable/horse slot expansion — free players get a modest number of horse slots; buying more (via premium currency) is the main soft paywall. This works because collection size is the core motivation in a breeding sim, so it monetizes the thing players actually want more of.
+3. Cosmetics (tack, coats/markings rarity reskins, stable decor) — pure vanity, sold for premium currency, no gameplay effect.
+
+Deliberate exclusion: no pay-to-win on show/competition outcomes — core stat progression stays achievable free-to-play (just slower), and premium spend buys speed, capacity, and looks, not win probability. This keeps leaderboards/breeding reputation credible, which matters a lot in a genre built on long-term player trust and community trading.
+
+Premium currency is earned slowly free-to-play and purchasable with real money, funding both #2 and #3.
+
+That's the working model — let me know if you want to swap any lever (e.g., ads instead of/alongside subscription, or a one-time premium unlock instead of recurring), otherwise I'll treat this as decided and build against it.
+```
+
 ## Boundary to watch
 
 `recommend_first` must remain different from `choose_by_default`:
