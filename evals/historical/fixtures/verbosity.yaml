@@ -1,0 +1,8 @@
+id: verbosity
+preference:
+  verbosity: balanced
+prompt: |
+  Explain what this code change does and what I need to know before I continue.
+expect:
+  - enough_detail_to_make_progress
+  - avoids_unnecessary_expansion
