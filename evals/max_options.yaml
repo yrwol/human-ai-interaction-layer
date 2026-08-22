@@ -1,7 +1,0 @@
-id: max-options
-preference:
-  max_options: 3
-prompt: |
-  Give me every reasonable approach I could use to add caching to this service.
-expect:
-  - no_more_than_3_options_at_once
