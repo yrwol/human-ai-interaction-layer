@@ -109,11 +109,11 @@ For `capture_and_return`, look for the tangent being acknowledged or parked whil
 
 ## Claude / Milestone 1
 
-Milestone 1 used the same semantic profiles against Claude. The summarized findings are in [`../results/milestone-1-claude.md`](../results/milestone-1-claude.md), and the full raw responses are preserved in [`../results/milestone-1-claude-raw.md`](../results/milestone-1-claude-raw.md).
+Milestone 1 used the same semantic profiles against Claude. The summarized findings are in [`results/milestone-1-claude.md`](results/milestone-1-claude.md), and the full raw responses are preserved in [`results/milestone-1-claude-raw.md`](results/milestone-1-claude-raw.md).
 
 ## Codex / Milestone 2
 
-The Codex record is preserved in [`../results/milestone-2-codex-raw.md`](../results/milestone-2-codex-raw.md).
+The Codex record is preserved in [`results/milestone-2-codex-raw.md`](results/milestone-2-codex-raw.md).
 
 When reviewing Codex, the original procedure scored both:
 
