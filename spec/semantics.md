@@ -19,51 +19,74 @@ profile:
   tangent_policy: capture_and_return
 ```
 
+## Semantic contract rule
+
+A semantic preference should describe a **human-AI collaboration mechanic**, not merely an output style.
+
+Each value should be distinguishable through observable behavior while leaving neighboring dimensions unchanged. Projection wording may become more operational in a specific harness, but it must not silently change the human-owned semantic meaning.
+
 ## Semantics
 
 ### `verbosity`
 
-Controls response detail.
+Controls response detail, not task decomposition, option count, or pacing.
 
 Values:
 
-- `compact` — keep responses brief and focused on what is needed to make progress.
-- `balanced` — provide enough context to be useful without unnecessary expansion.
-- `detailed` — include more context, explanation, reasoning, and implementation detail when useful.
+- `compact` — keep responses brief and focused on the answer, recommendation, or next action; omit optional elaboration unless needed.
+- `balanced` — provide enough context, reasoning, and tradeoff detail to make the response useful without unnecessary expansion.
+- `detailed` — provide fuller reasoning, relevant examples, tradeoffs, and important edge cases when the task benefits from depth.
 
-Status: **validated across harness experiments**, with enforcement strength varying.
+Status: **validated across harness experiments**, with enforcement strength varying. Projection hardening remains in progress.
 
 ### `decision_mode`
 
-Controls how the AI helps when the user is choosing among options.
+Controls **who owns a decision and how strongly the AI acts on its judgment**.
 
 Values:
 
-- `options` — present the strongest viable choices without forcing a recommendation unless one is clearly warranted.
-- `recommend_first` — state the recommended option first, briefly explain why, then mention alternatives as needed.
-- `choose_by_default` — for reversible, low-risk decisions, choose a sensible default and proceed unless the choice carries material risk.
+- `options` — preserve user choice by presenting viable choices and meaningful tradeoffs without preselecting, ranking, or labeling a choice as recommended by default. Material objective advantages may be stated without converting them into a recommendation unless the user asks for guidance.
+- `recommend_first` — lead with the AI's recommended option and rationale; alternatives remain secondary context rather than an unranked menu.
+- `choose_by_default` — when the user has delegated a reasonably reversible decision, choose a sensible working default, state material assumptions, and continue using that choice without stopping for approval. Ask only when missing information could materially change the decision.
 
-Status: **validated**, with Claude historically differentiating this more strongly than Codex in the first portability test.
+Behavioral distinction:
+
+```text
+options
+→ user retains the choice
+
+recommend_first
+→ AI expresses judgment
+
+choose_by_default
+→ AI assumes responsibility for a reversible choice and carries it forward
+```
+
+Status: **validated**. Recent Claude prompt-hardening work produced strong differentiation under the recorded test conditions; cross-harness hardening evidence is still incomplete.
 
 ### `max_options`
 
-Controls the maximum number of options presented at once unless correctness or safety requires more.
+Controls **simultaneous user-facing choice load**, not arbitrary list length.
 
 Value: positive integer.
 
-Status: **validated**, with Codex historically enforcing the numeric distinction more strongly than Claude.
+The limit applies to meaningful choice-like output such as alternatives, suggestions, ideas, candidates, or recommendations when those items function as choices for the user. It does not mechanically cap ordinary informational lists, steps, attributes, facts, or other non-choice content.
+
+An explicit request for a different number may override the persistent default for the current interaction.
+
+Status: **validated**, with enforcement strength varying by harness. Recent prompt-hardening evidence supports treating open-ended brainstorming as choice-like when it creates a selection burden for the user.
 
 ### `task_chunking`
 
-Controls how work is divided into pieces.
+Controls how work is divided into pieces, not how quickly the AI moves through those pieces.
 
 Values:
 
-- `off` — do not automatically break work into smaller steps unless asked.
+- `off` — do not automatically break work into smaller steps unless asked or structure is necessary for correctness.
 - `adaptive` — break complex, ambiguous, or cognitively heavy work into a small number of concrete next steps; do not over-structure simple work.
-- `always` — break multi-step work into small, concrete, executable steps.
+- `always` — break multi-step work into small, concrete, executable pieces without over-fragmenting trivial one-step requests.
 
-Status: **validated**.
+Status: **validated**. Projection hardening remains in progress.
 
 ### `step_pacing`
 
@@ -91,7 +114,7 @@ Status: **validated** and directionally portable across Claude and Codex.
 
 ## Interaction between preferences
 
-Preferences are not expected to operate independently. Composition is part of behavior.
+Preferences are not expected to operate independently. Composition is part of behavior, but composition testing should follow individual semantic validation so failures can be attributed cleanly.
 
 Example validated combination:
 
@@ -108,6 +131,16 @@ Observed Claude behavior:
 3. answer a tangent briefly;
 4. return to the exact pending planning point;
 5. continue waiting rather than silently progressing.
+
+## Evaluation rule
+
+Prompt or projection hardening should evaluate three kinds of behavior:
+
+1. **positive behavior** — the preference actually changes behavior as intended;
+2. **boundary behavior** — the preference does not over-apply where it should not;
+3. **differentiation behavior** — neighboring values remain observably distinct.
+
+A successful projection change may clarify classification or enforcement without requiring any semantic-schema change.
 
 ## Persistence boundary
 
