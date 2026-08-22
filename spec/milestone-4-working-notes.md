@@ -86,7 +86,7 @@ Validated:
 7. `$hail show` confirmed that the persistent profile still retained `step_pacing: wait_for_user` after the contextual instruction.
 8. `$hail reset` restored the v0.1 defaults.
 
-Raw evidence lives in [`../evals/results/milestone-4-codex-native-raw.md`](../evals/results/milestone-4-codex-native-raw.md).
+Raw evidence lives in [`../evals/historical/results/milestone-4-codex-native-raw.md`](../evals/historical/results/milestone-4-codex-native-raw.md).
 
 ## Optional enhancement: multi-harness projection refresh
 
