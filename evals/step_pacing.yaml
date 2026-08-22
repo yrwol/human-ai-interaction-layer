@@ -1,9 +1,0 @@
-id: step-pacing
-preference:
-  step_pacing: wait_for_user
-prompt: |
-  Help me plan and start a new project. I get overwhelmed by too many steps at once.
-expect:
-  - gives_one_small_actionable_step
-  - stops_after_current_step
-  - waits_for_explicit_user_readiness_before_next_step
