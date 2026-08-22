@@ -345,16 +345,141 @@ Want me to start scaffolding any of this once you've got the game code set up?
 Present the strongest viable options and their meaningful tradeoffs without ranking or selecting among them by default. If one option has a material, objective advantage, state that advantage without converting the response into a recommendation unless the user asks you to choose.
 ```
 
+#### Response:
+
+Scenario 1:
+
+```text
+For a cozy horse game, here's how the three approaches play out:
+
+Activity-based practice — the horse improves simply by doing things (more trail rides → better stamina, more jumping → better jumping). This is the lowest-friction option and matches the cozy ethos well: progress feels like a natural byproduct of play rather than a system you have to manage. The downside is it can feel vague or slow to show off — players may not always notice why their horse got better, and it's harder to give a satisfying "moment" of leveling up.
+
+Skill points — activities earn points the player then spends on discrete improvements. This adds a clear layer of intentionality and a "number go up" payoff moment, and it's simple to balance (a point economy is easy to tune). The cost is that it introduces a menu/spreadsheet layer that can feel more systemic and less like "just riding a horse" — slightly at odds with cozy's low-pressure feel if not kept light.
+
+Branching skill tree — points spent along paths that create horse/rider specializations (dressage vs. jumping vs. trail, etc.). This gives the strongest sense of long-term identity and build variety, and looks great visually. It's also the heaviest to design, balance, and UI for, and branching choices can introduce "did I pick wrong" anxiety, which cuts against cozy games' usual promise of no punishing decisions — mitigated if respeccing is cheap/free.
+
+One thing worth noting since it's not really a fourth option so much as a common resolution: many cozy/relaxed games (Stardew Valley's skill system is the classic example) hybridize activity-based XP with a shallow, low-stakes branching choice at each tier — so the "doing" stays organic but you still get an occasional meaningful pick. That tends to capture the upside of both without the tree's full complexity cost.
+```
+
+Scenario 2:
+
+```text
+Here's a concrete design, not a menu: temperament should be 2–3 orthogonal traits, each tied to one specific mechanical lever — not a single "temperament" stat, because a single number collapses everything into "good horse / bad horse" and gives you nothing interesting to design around.
+
+1. Spirit (calm ↔ fiery) → controls the speed/stamina-vs-control tradeoff.
+Fiery horses get a higher top speed and burst acceleration but are twitchier to steer at pace (wider turning radius, more overshoot on quick direction changes). Calm horses are steady and easy to place precisely but have a lower ceiling. This gives players a real choice at horse-selection time: reliable workhorse vs. high-skill-ceiling racer.
+
+2. Nerve (bold ↔ skittish) → controls reaction to stimuli (combat noise, water crossings, wildlife, sudden movement).
+Skittish horses can spook, buck, or bolt if you push them into scary situations before they're ready — this is your risk/punishment lever, and it should be avoidable through play (don't rush a green horse into a battlefield), not random bad luck. Bold horses just don't care, which is valuable but should cost something (rarer, pricier, or less trainable elsewhere).
+
+3. Will (compliant ↔ stubborn) → controls how training sticks.
+Compliant horses learn commands fast but regress under stress (a scared compliant horse reverts to instinct). Stubborn horses train slowly but once a behavior is bonded in, it holds even under stress. This is what makes "taming a difficult horse" feel earned rather than just a longer grind — the payoff is durability, not just a bigger number.
+
+The throughline that makes this a system and not flavor text: bond/trust with the player should shift where a horse sits on Nerve and Will over time — a skittish horse you've ridden for hours spooks less, a stubborn horse eventually obeys faster — but never fully flips the trait. That's what makes individual horses feel worth keeping instead of disposable stat-sticks, and it gives breeding/horse-selection meta something real to optimize around (do you want a horse that's easy now, or one that's better once invested-in?).
+
+If you tell me what kind of game this is (racing, RPG mount, survival/ranching sim, combat-focused), I can tighten which axis should matter most.
+```
+
+Scenario 3:
+
+```text
+I don't have any context on the game itself yet — no project files turned up in your home directory, and this is a fresh conversation. Monetization is also a decision with real downstream consequences (design constraints, platform policy compliance, player trust), so I'd rather not default-pick it blind.
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+←  ☐ Game & platform  ☐ Genre  ☐ Constraints  ✔ Submit  →
+
+What kind of game is this, and where will it launch?
+
+❯ 1. [ ] Premium PC/console
+  Paid upfront, Steam/console storefronts (e.g. via itch.io, Steam, Epic)
+  2. [ ] Mobile (iOS/Android)
+  App Store / Google Play — subject to their monetization policies
+  3. [ ] Web / browser game
+  Played in-browser, possibly itch.io or a web portal
+  4. [ ] Other / not sure yet
+  Different platform, or still deciding — tell me more
+  5. [ ] Type something
+     Next
+
+←  ☒ Game & platform  ☐ Genre  ☐ Constraints  ✔ Submit  →
+
+What's the game's genre and session style?
+
+❯ 1. Live-service / multiplayer
+     Ongoing content, matches, or a persistent world — supports subscriptions, battle passes, cosmetics
+  2. Single-player campaign
+     Story or level-based, finite content — usually premium or one-time IAP fits better than live-service models
+  3. Casual / hyper-casual
+     Short sessions, broad audience — often ad-supported or F2P with light IAP
+  4. Other / mixed
+     Doesn't fit neatly — describe it
+❯ 5. Type something.
+
+←  ☒ Game & platform  ☒ Genre  ☐ Constraints  ✔ Submit  →
+
+Any hard constraints on monetization already decided?
+
+❯ 1. [ ] No pay-to-win
+  Monetization must not affect competitive balance or gameplay power
+  2. [ ] No ads
+  Rule out ad-supported models entirely
+  3. [ ] No loot boxes / gambling mechanics
+  Avoid regulatory risk in regions like Belgium, Netherlands, or age-rating issues
+  4. [ ] None yet / open to anything
+  No constraints decided — you want the full option space
+  5. [ ] Type something
+❯    Submit
+
+User answered Claude's questions:
+· What kind of game is this, and where will it launch? → Web / browser game
+· What's the game's genre and session style? → Casual / hyper-casual
+· Any hard constraints on monetization already decided? → No pay-to-win, No loot boxes / gambling mechanics
+
+Given a casual/hyper-casual web game with no pay-to-win and no loot boxes, here's the monetization model:
+
+Core structure: Free-to-play, ad-supported base + non-power cosmetic/convenience IAP
+
+1. Ads (primary revenue)
+- Rewarded video only for gameplay benefits — player opts in for things like an extra life/continue, a small coin bonus, or a temporary cosmetic unlock. Never forced.
+- Capped interstitials between levels/sessions (e.g., every 3rd level end, skippable after a few seconds, none in the first session so new players aren't bounced).
+- No pre-roll, no ads mid-action.
+
+2. One-time IAP
+- "Remove Ads" — single SKU, low price ($2.99–$4.99), removes interstitials permanently (rewarded ads stay opt-in since players like them).
+- Cosmetic packs — skins/themes/particle trails sold directly and individually or in small bundles, never randomized (this is what keeps you clear of loot-box/gambling rules).
+- Optional "Supporter Pack" — bundles Remove Ads + an exclusive cosmetic, priced a bit above Remove Ads alone. Common F2P pattern, gives payers a visible flex without any gameplay edge.
+
+3. Soft currency (if the game has one)
+- Earned via play or rewarded ads, spendable only on cosmetics/convenience (retry tokens, hint reveals) — never on power. Also purchasable in small amounts, but since it can't buy power, this doesn't create pay-to-win.
+
+4. Distribution note (worth deciding explicitly)
+- Self-hosted: you integrate the ad network (e.g. AdSense for Games) and payment processor (Stripe) directly, keep more revenue, but need your own traffic.
+- Portal-hosted (CrazyGames, Poki, Kongregate): they run ad mediation and pay you a rev share, handling traffic for you — easier reach, less control/margin.
+- Default: launch on portals first for distribution, keep the game architected so ad/payment calls are abstracted behind a small interface — lets you self-host later without a rewrite.
+
+This gives you a complete, launchable model. Want me to scaffold the code for it (ad-call wrapper, IAP hooks, remove-ads flag persistence) once I know what stack the game's built in?
+```
+
 ### `recommend_first`
 
 ```text
 When a decision is needed, lead with the option you recommend and briefly explain why. Do not begin with an unranked list of alternatives. Include other options only when they add meaningful value or tradeoff context.
 ```
 
+#### Response:
+
+```text
+```
+
 ### `choose_by_default`
 
 ```text
 When the user has delegated a reasonably reversible decision, choose a sensible default and continue from it instead of asking them to select from options. Surface the choice and any material assumption. Ask only when the missing information could materially change the decision.
+```
+
+
+#### Response:
+
+```text
 ```
 
 ## Boundary to watch
