@@ -13,11 +13,14 @@ Start here when you need to understand the project without reconstructing its hi
 
 ## Focused capability specifications
 
-Capability specs preserve deeper design work for coherent HAIL behavior areas without implying that the capability is implemented, part of the persistent schema, or next on the roadmap.
+Capability specs preserve deeper design work for coherent HAIL behavior areas without automatically implying that the capability is implemented, part of the persistent schema, or next on the roadmap.
 
+For **profile fields**, a capability spec is also required as the field's durable behavioral contract. New profile fields must create `capabilities/<field-name>.md` from [`capabilities/template.md`](capabilities/template.md) and follow [`../evals/adding-profile-fields.md`](../evals/adding-profile-fields.md). The capability document defines semantics and boundaries; evaluation evidence determines whether the field can be promoted into current supported semantics.
+
+- [`capabilities/template.md`](capabilities/template.md) — required starting structure for a new profile-field capability contract.
 - [`capabilities/review-guidance.md`](capabilities/review-guidance.md) — review confidence, intelligent skepticism, verification support, review-loop detection, domain-local scaffolding, and cognitive-load reduction while evaluating AI output.
 
-A capability spec may contribute durable product principles or taxonomy concepts while remaining separate from the current semantic model.
+A non-profile capability spec may contribute durable product principles or taxonomy concepts while remaining separate from the current semantic model.
 
 ## Historical evidence and decisions
 
@@ -45,8 +48,9 @@ CURRENT TRUTH       product.md + semantics.md
 REFERENCE IDEAS     interaction-taxonomy.md
 CURRENT ROADMAP     roadmap.md
 CAPABILITY SPECS    capabilities/*
-HISTORICAL EVIDENCE milestone/addendum documents + evals/historical/*
+BEHAVIOR EVIDENCE   ../evals/prompt-hardening/* and field-development eval artifacts
+HISTORICAL EVIDENCE milestone/addendum documents + ../evals/historical/*
 LEGACY CONTEXT      draft/* and superseded source docs
 ```
 
-Do not turn one document back into a giant catch-all spec.
+For profile fields, capability specs and evaluation evidence are both required: the capability defines what the field means; evaluation demonstrates that HAIL can produce that behavior. Do not turn one document back into a giant catch-all spec.
