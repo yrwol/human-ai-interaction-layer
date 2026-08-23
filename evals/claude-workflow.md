@@ -40,6 +40,12 @@ Repository administrators can still change environment configuration. This workf
 
 GitHub does not expose environment secrets to a job until the environment's protection rules have passed.
 
+## Recommended repository protection
+
+If branch protection is enabled for `main`, require review before merge and consider CODEOWNERS coverage for `.github/workflows/claude-eval.yml`. This adds a review checkpoint before any secret-consuming workflow change can reach `main`.
+
+These repository protections complement the environment gate; they do not replace the `main`-only environment deployment restriction.
+
 ## Claude credential setup
 
 Generate the credential locally, outside GitHub Actions:
