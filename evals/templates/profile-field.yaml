@@ -1,0 +1,27 @@
+# Copy to evals/<field_name>.yaml and replace placeholders.
+# Keep baseline evaluation small and focused. Hardening belongs under
+# evals/prompt-hardening/ once the basic directional behavior is established.
+
+field: <field_name>
+
+values:
+  - <value_a>
+  - <value_b>
+
+# Use the same prompt across values whenever possible so the field is the
+# meaningful variable being evaluated.
+prompt: |
+  <evaluation prompt>
+
+expectation: |
+  Describe the observable directional difference expected between values.
+  Do not grade subjective answer quality or require exact wording.
+
+boundaries:
+  - <behavior this field must not be mistaken for>
+
+interactions:
+  - field: <other_field>
+    relationship: independent | complementary | overlapping | conflicting
+    evaluation_required: true
+    expectation: <what correct composition should look like>
