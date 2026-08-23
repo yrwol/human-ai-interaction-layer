@@ -24,6 +24,7 @@ permissions:
 jobs:
   preflight:
     name: Validate manual request
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
       - name: Validate inputs
@@ -38,10 +39,11 @@ jobs:
               exit 1
               ;;
           esac
-          echo "Manual Claude eval requested. Execution requires approval through the claude-evals environment."
+          echo "Manual Claude eval requested from main. Execution requires approval through the claude-evals environment."
 
   claude-eval:
     name: Run Claude eval
+    if: github.ref == 'refs/heads/main'
     needs: preflight
     runs-on: ubuntu-latest
     environment: claude-evals
