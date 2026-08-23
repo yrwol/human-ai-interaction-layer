@@ -1,0 +1,2 @@
+# Credential-bearing eval workflows require explicit owner review.
+/.github/workflows/claude-eval.yml @yrwol
