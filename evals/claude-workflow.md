@@ -42,7 +42,7 @@ GitHub does not expose environment secrets to a job until the environment's prot
 
 ## Recommended repository protection
 
-If branch protection is enabled for `main`, require review before merge and consider CODEOWNERS coverage for `.github/workflows/claude-eval.yml`. This adds a review checkpoint before any secret-consuming workflow change can reach `main`.
+If branch protection is enabled for `main`, require review before merge. Also consider CODEOWNERS coverage for `.github/workflows/claude-eval.yml`, but note that CODEOWNERS only becomes an enforced approval requirement when branch protection/rulesets require code-owner review.
 
 These repository protections complement the environment gate; they do not replace the `main`-only environment deployment restriction.
 
