@@ -1,0 +1,104 @@
+name: Claude eval (manual)
+
+on:
+  workflow_dispatch:
+    inputs:
+      prompt:
+        description: Prompt to send to Claude
+        required: true
+        type: string
+      model:
+        description: Claude model alias or ID
+        required: true
+        default: sonnet
+        type: string
+      hail_profile:
+        description: Optional HAIL profile path to install before evaluation
+        required: false
+        default: profiles/example.yaml
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  preflight:
+    name: Validate manual request
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate inputs
+        shell: bash
+        env:
+          HAIL_PROFILE: ${{ inputs.hail_profile }}
+        run: |
+          set -euo pipefail
+          case "$HAIL_PROFILE" in
+            /*|*..*)
+              echo "hail_profile must be a repository-relative path without '..'." >&2
+              exit 1
+              ;;
+          esac
+          echo "Manual Claude eval requested. Execution requires approval through the claude-evals environment."
+
+  claude-eval:
+    name: Run Claude eval
+    needs: preflight
+    runs-on: ubuntu-latest
+    environment: claude-evals
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Require configured OAuth secret
+        shell: bash
+        env:
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+        run: |
+          set -euo pipefail
+          if [ -z "$CLAUDE_CODE_OAUTH_TOKEN" ]; then
+            echo "CLAUDE_CODE_OAUTH_TOKEN is not configured in the claude-evals environment." >&2
+            echo "No credential is committed or supplied by this workflow." >&2
+            exit 1
+          fi
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Install HAIL profile for Claude Code
+        if: ${{ inputs.hail_profile != '' }}
+        shell: bash
+        env:
+          HAIL_PROFILE: ${{ inputs.hail_profile }}
+        run: |
+          set -euo pipefail
+          test -f "$HAIL_PROFILE"
+          dotnet run --project reference/dotnet -- "$HAIL_PROFILE" --install claude-code --home "$HOME"
+
+      - name: Install Claude Code
+        shell: bash
+        run: npm install --global @anthropic-ai/claude-code
+
+      - name: Run Claude
+        id: claude
+        shell: bash
+        env:
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          EVAL_PROMPT: ${{ inputs.prompt }}
+          EVAL_MODEL: ${{ inputs.model }}
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts
+          claude -p "$EVAL_PROMPT" --model "$EVAL_MODEL" --output-format text | tee artifacts/claude-response.md
+
+      - name: Upload response artifact
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: claude-eval-${{ github.run_id }}
+          path: artifacts/
+          if-no-files-found: warn
+          retention-days: 14
