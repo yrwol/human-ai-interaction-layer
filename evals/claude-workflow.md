@@ -16,6 +16,7 @@ HAIL includes a manually dispatched GitHub Actions workflow for running Claude C
 - The workflow fails closed when the environment secret has not been configured.
 - Repository permissions are read-only.
 - Results are uploaded as workflow artifacts and are not committed automatically.
+- `.github/CODEOWNERS` covers the credential-consuming workflow; branch protection/rulesets must require Code Owner review for that to become an enforced merge requirement.
 
 The workflow-level `main` checks are defense in depth. GitHub Environment deployment restrictions are the security boundary for secret release.
 
@@ -23,9 +24,11 @@ The workflow-level `main` checks are defense in depth. GitHub Environment deploy
 
 Anyone able to modify workflow YAML can write code that attempts to read or exfiltrate any secret exposed to that job. GitHub secret masking is not a security boundary.
 
-For that reason, do not approve a run after changing the secret-consuming workflow unless you have reviewed the version on `main` that will execute. The environment's branch restriction ensures a feature branch cannot obtain the `claude-evals` secret merely by dispatching its own workflow revision.
+For that reason, approving the `claude-evals` environment means trusting the exact credential-consuming workflow code already merged on `main`. Do not approve a run after workflow changes unless the merged version has been reviewed.
 
-Repository administrators can still change environment configuration. This workflow does not attempt to protect credentials from a repository administrator who deliberately removes those protections.
+The environment's branch restriction ensures a feature branch cannot obtain the `claude-evals` secret merely by dispatching its own workflow revision. Workflow YAML cannot override the environment's configured branch restriction.
+
+Repository administrators can still change environment or branch-protection configuration. This workflow does not attempt to protect credentials from a repository administrator who deliberately removes those controls.
 
 ## Required GitHub setup
 
@@ -37,14 +40,10 @@ Repository administrators can still change environment configuration. This workf
 6. Disable administrator bypass if you want the configured protection rules to be mandatory during normal operation.
 7. Under **Environment secrets**, add a secret named `CLAUDE_CODE_OAUTH_TOKEN` after generating the token locally.
 8. Confirm that `CLAUDE_CODE_OAUTH_TOKEN` does NOT also exist as a repository-level or organization-level secret available to this repository.
+9. Protect `main` and require pull-request review before merge.
+10. Enable **Require review from Code Owners** so changes to `.github/workflows/claude-eval.yml` require explicit review from the owner listed in `.github/CODEOWNERS`.
 
 GitHub does not expose environment secrets to a job until the environment's protection rules have passed.
-
-## Recommended repository protection
-
-If branch protection is enabled for `main`, require review before merge. Also consider CODEOWNERS coverage for `.github/workflows/claude-eval.yml`, but note that CODEOWNERS only becomes an enforced approval requirement when branch protection/rulesets require code-owner review.
-
-These repository protections complement the environment gate; they do not replace the `main`-only environment deployment restriction.
 
 ## Claude credential setup
 
@@ -54,7 +53,7 @@ Generate the credential locally, outside GitHub Actions:
 claude setup-token
 ```
 
-Copy the resulting token directly into the `CLAUDE_CODE_OAUTH_TOKEN` environment secret in GitHub. Do not add the token to this repository, a workflow file, an issue, a PR, or an eval result.
+Copy the resulting token directly into the `CLAUDE_CODE_OAUTH_TOKEN` environment secret in GitHub. Do not add the token to this repository, a workflow file, an issue, a PR, an eval result, or a repository/organization secret.
 
 The workflow itself never generates, copies, or stores credentials in repository content.
 
@@ -73,6 +72,12 @@ The workflow itself never generates, copies, or stores credentials in repository
 8. Before approving, confirm the run is from `main` and review any recent changes to `.github/workflows/claude-eval.yml`.
 9. After approval, Claude Code is installed, HAIL is installed into the runner's temporary home, and the prompt is run.
 10. Download the `claude-eval-<run id>` artifact to inspect the response.
+
+## Codex parity
+
+The same architecture can be used later for Codex with a separate protected environment such as `codex-evals` and a separate credential. Keep provider credentials isolated and apply the same manual-only, `main`-only, environment-only-secret, approval, and workflow-review protections.
+
+Codex credential wiring is intentionally not part of this change.
 
 ## Current scope
 
