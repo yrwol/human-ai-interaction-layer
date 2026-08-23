@@ -89,6 +89,12 @@ Do not treat cross-harness projection synchronization as required product plumbi
 - Do not promote taxonomy candidates into schema without evidence.
 - Multi-harness synchronization is an optional enhancement, not a portability requirement.
 
+## Adding or changing profile fields
+
+For any new profile field or semantic change to an existing field, follow the required workflow in `evals/adding-profile-fields.md`.
+
+That document is the single authoritative procedure for capability contracts, evaluation, implementation, hardening, documentation, and support criteria. Do not duplicate or invent a parallel field-development process elsewhere.
+
 ## Validation
 
 The reference .NET implementation should continue to build and preserve its existing smoke tests under `reference/dotnet/`.
@@ -112,7 +118,7 @@ Parked enhancements such as multi-harness projection refresh should remain expli
 - `spec/semantics.md` — current validated semantic model
 - `spec/interaction-taxonomy.md` — broad interaction-dimension reference
 - `spec/roadmap.md` — living current roadmap/checkpoint; keep synchronized with material project progress
-- `spec/capabilities/` — focused capability specifications that are not automatically schema or roadmap commitments
+- `spec/capabilities/` — focused capability specifications and behavioral contracts
 - `spec/draft/draft.md` — original legacy working spec; useful historical context, not current authority
 - `spec/draft/draft-guidance.md` — superseded source for the review-guidance capability spec
 - `spec/milestone-1-addendum.md` — first-harness learnings
@@ -127,6 +133,8 @@ Parked enhancements such as multi-harness projection refresh should remain expli
 - `evals/prompt-hardening/` — active hardening experiments and results
 - `evals/historical/` — archived milestone fixtures, procedures, and evidence
 - `evals/historical/results/` — historical milestone summaries and raw transcripts
+- `evals/adding-profile-fields.md` — authoritative profile-field development/evaluation workflow
+- `evals/templates/` — reusable evaluation artifact templates
 
 ## Working style
 
