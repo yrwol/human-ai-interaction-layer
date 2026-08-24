@@ -1,5 +1,19 @@
 # Prompt-Hardening Experiment — `task_chunking`
 
+## Current status
+
+**Claude projection: Candidate A promoted for base differentiation.**
+
+The real-plugin Claude pass repaired the earlier inverted/weak behavior and produced the intended collaboration ordering:
+
+```text
+off < adaptive < always
+```
+
+The selected Claude wording is implemented in `integrations/claude/skills/hail/SKILL.md`. The remaining trivial-task boundary and `task_chunking × step_pacing` composition checks are follow-up regression/composition work; they are not evidence that a stronger Candidate B is currently needed.
+
+See [`results/task-chunking-claude-sonnet.md`](results/task-chunking-claude-sonnet.md).
+
 ## Semantic intent
 
 Control the **size and decomposition of work**: whether a task is kept whole or broken into smaller actionable pieces.
@@ -37,7 +51,7 @@ A response may contain several chunks and still move through them continuously. 
 
 ## Known concern
 
-Earlier cross-harness evidence showed weak/inconsistent enforcement, including behavior that could appear inverted. The main risk is that all three values collapse into generic step-by-step formatting, or that `always` over-applies to trivial one-step requests.
+Earlier cross-harness evidence showed weak/inconsistent enforcement, including behavior that could appear inverted. The Claude Candidate A differentiation pass repaired that failure under the recorded test conditions. Cross-harness replay and composition remain useful because a strong Claude result is not a universal harness/model claim.
 
 ## Test method
 
@@ -97,9 +111,9 @@ A reviewer should be able to identify which value produced the response from the
 
 If `adaptive` and `always` look substantially identical, treat that as a failure even if both responses are reasonable.
 
-## Phase 2 — boundary / regression
+**Claude status:** passed with Candidate A through the real HAIL plugin path.
 
-Run only after the targeted distinction improves.
+## Phase 2 — boundary / regression
 
 ### Scenario 2 — trivial one-step request
 
@@ -146,26 +160,26 @@ Expected:
 
 An explicit current request for small steps should override `task_chunking: off` for this interaction. Persistent semantics remain unchanged.
 
-## Candidate wording direction
+## Selected Claude wording — Candidate A
 
-Use these as current candidates, not schema definitions.
+These are projection wording, not schema definitions.
+
+### `off`
+
+```text
+Keep the user's work whole by default rather than proactively decomposing it into execution steps. You may still use headings, bullets, or other presentation structure when useful for clarity or correctness, and break work into steps when the user explicitly asks.
+```
 
 ### `adaptive`
 
 ```text
-Break work into smaller steps when the task is complex, cognitively heavy, or easier to act on incrementally. For simple requests, answer directly without inventing unnecessary steps.
+When a task is meaningfully complex, cognitively heavy, or easier to act on incrementally, decompose it into a small number of meaningful actionable chunks. Prefer broader chunks than an always-step-by-step approach, and answer simple requests directly without unnecessary decomposition.
 ```
 
 ### `always`
 
 ```text
-For genuinely multi-step work, deliberately divide the task into small, concrete, independently actionable pieces rather than presenting the whole task as one large block. Do not manufacture a step-by-step process for trivial or single-step requests.
-```
-
-### `off`
-
-```text
-Keep work whole by default rather than proactively decomposing it into execution steps. Use headings, bullets, or other structure when useful for clarity or correctness, and break work into steps when the user explicitly asks.
+For genuinely multi-step work, deliberately partition the work in the current response into small, concrete, independently actionable chunks. Do not merely describe or promise a future step-by-step plan. Do not manufacture a step-by-step process for trivial or single-step requests.
 ```
 
 ## What not to optimize for
@@ -182,8 +196,6 @@ The observable question is whether the **unit of work presented to the user** ch
 
 ## Phase 3 — composition with `step_pacing`
 
-Only after `task_chunking` works reasonably alone.
-
 The dedicated composition suite is:
 
 [`task-chunking-step-pacing-composition.md`](task-chunking-step-pacing-composition.md)
@@ -192,7 +204,7 @@ It tests `always` and `adaptive` under both `continuous` and `wait_for_user`, pl
 
 ## Promotion criteria
 
-Promote wording only if:
+For a fully closed harness-specific hardening cycle, verify:
 
 - `off`, `adaptive`, and `always` are behaviorally distinguishable;
 - `always` does not proceduralize trivial requests;
@@ -201,12 +213,12 @@ Promote wording only if:
 - composition with `step_pacing` preserves the chunking/pacing boundary;
 - no semantic schema change is required.
 
+Current Claude evidence satisfies the first criterion strongly and provides no evidence of semantic drift; the remaining boundary/composition criteria are tracked as follow-up checks.
+
 ## Results
 
-Store raw runs and assessments under:
+Authoritative Claude result:
 
-```text
-results/task-chunking-<model>-<effort>.md
-```
+[`results/task-chunking-claude-sonnet.md`](results/task-chunking-claude-sonnet.md)
 
-Use [`template.md`](template.md) for the result record.
+Raw harness records are persisted by `hail-testing` for traceability.
