@@ -2,23 +2,19 @@
 
 ## Outcome
 
-**Result: fail — targeted hardening is required before composition testing.**
+**Result: pass for base differentiation — Candidate A is strong enough to proceed to boundary and composition testing.**
 
-The three values were tested on fresh Claude Code runners with the same prompt and identical profile values except for `task_chunking`.
-
-Observed ordering did not match the semantic contract:
+This authoritative pass used the real Claude HAIL plugin (`integrations/claude`) rather than the reference .NET compiler. Each run used the same prompt and identical profile values except for `task_chunking`.
 
 ```text
 intended decomposition
 
 off < adaptive < always
 
-observed visible decomposition in this pass
+observed collaboration structure
 
-always < adaptive < off
+off < adaptive < always
 ```
-
-The ordering should not be interpreted as a precise scalar measurement, but it demonstrates that the current projection wording does not reliably control the intended axis.
 
 ## Test prompt
 
@@ -38,123 +34,94 @@ tangent_policy: capture_and_return
 
 Only `task_chunking` changed between runs.
 
-## Results summary
-
-### `off`
-
-Source run: `32778778307`
-
-Compiled instruction:
-
-```text
-Do not automatically break work into smaller steps unless the user asks.
-```
-
-Observed:
-
-- Claude explicitly said it would "break the planning itself into pieces";
-- produced five ordered planning chunks;
-- therefore proactively decomposed the task despite `off`.
-
-Assessment: **weak / fail**.
-
-### `adaptive`
-
-Source run: `32778793665`
-
-Compiled instruction:
-
-```text
-When a task is complex, ambiguous, or likely to create cognitive overload, break it into a small number of concrete next steps. Do not over-structure simple work.
-```
-
-Observed:
-
-- narrowed the problem to the core gameplay loop;
-- asked three scoping questions;
-- proposed three broad next steps;
-- reasonable adaptive behavior in isolation, but less visibly decomposed than `off`.
-
-Assessment: **moderate in isolation, weak comparatively / fail**.
-
-### `always`
-
-Source run: `32778799924`
-
-Compiled instruction:
-
-```text
-Break multi-step work into small, concrete, executable steps.
-```
-
-Observed:
-
-- recommended a vertical slice;
-- asked two clarifying questions;
-- deferred actual decomposition: "Once I know those, I'll break it into concrete steps";
-- did not perform the requested persistent chunking behavior in the current response.
-
-Assessment: **weak / fail**.
-
-## Failure diagnosis
-
-### 1. `off` is phrased as a prohibition, not a positive collaboration strategy
-
-`Do not automatically break work into smaller steps unless the user asks` leaves substantial room for Claude to classify a numbered plan as ordinary organization rather than task decomposition.
-
-The intended semantic is better expressed positively: keep the work whole by default, while still allowing presentation structure for clarity.
-
-### 2. `always` does not say decomposition must happen in the current response
-
-`Break multi-step work into small, concrete, executable steps` is semantically correct but underspecified operationally. Claude satisfied it weakly by promising future concrete steps after clarification.
-
-The projection should make clear that genuinely multi-step work should be deliberately partitioned into actionable units in the response rather than merely discussed as a future plan.
-
-### 3. `adaptive` lacks a strong comparative middle point
-
-The current wording is reasonable, but because `off` and `always` are weakly enforced, the middle value cannot be identified reliably by behavior alone.
-
-Do not overfit `adaptive` until the two endpoints are stronger.
-
-## Candidate repair A
-
-This repair keeps the semantic schema unchanged and strengthens only the Claude projection wording.
+## Candidate A projection
 
 ### `off`
 
 ```text
-Keep the user's work whole by default rather than proactively decomposing it into execution steps. You may still use headings, bullets, or other presentation structure when useful for clarity or correctness. Break the work into smaller actionable steps only when the user explicitly asks or when decomposition is necessary to complete the task correctly.
+Keep the user's work whole by default rather than proactively decomposing it into execution steps. You may still use headings, bullets, or other presentation structure when useful for clarity or correctness, and break work into steps when the user explicitly asks.
 ```
 
 ### `adaptive`
 
 ```text
-When a task is meaningfully complex, cognitively heavy, or easier to act on incrementally, decompose it into a small number of meaningful actionable chunks. For simple work, answer directly. Prefer broader chunks than an always-step-by-step approach; chunk only when doing so materially improves comprehension or actionability.
+When a task is meaningfully complex, cognitively heavy, or easier to act on incrementally, decompose it into a small number of meaningful actionable chunks. Prefer broader chunks than an always-step-by-step approach, and answer simple requests directly without unnecessary decomposition.
 ```
 
 ### `always`
 
 ```text
-For genuinely multi-step work, deliberately partition the work in the current response into small, concrete, independently actionable chunks. Do not merely describe or promise a future step-by-step plan. Continue through those chunks according to the user's pacing preference. Do not manufacture a workflow for trivial or single-step requests.
+For genuinely multi-step work, deliberately partition the work in the current response into small, concrete, independently actionable chunks. Do not merely describe or promise a future step-by-step plan. Do not manufacture a step-by-step process for trivial or single-step requests.
 ```
 
-## Why this candidate
+## Results
 
-- strengthens the endpoints without changing semantic meaning;
-- explicitly distinguishes task decomposition from presentation formatting;
-- prevents `always` from satisfying the instruction by promising future steps;
-- preserves the `task_chunking` / `step_pacing` boundary by saying continuation follows the pacing preference;
-- protects trivial requests from pathological over-structuring.
+### `off`
 
-## Next test
+Source plugin run: `32782790443`
 
-Update only the Claude `task_chunking` projection to Candidate repair A and rerun the exact same three-way differentiation prompt.
+Observed behavior:
 
-Do **not** run `task_chunking × step_pacing` composition yet. Composition would add another variable before the base semantic is stable.
+- gave one primary recommendation: start with the core loop;
+- explained why and identified a few scoping questions;
+- offered two alternative entry points as options, but did not turn the requested work into an execution sequence;
+- preserved presentation structure without confusing formatting with task decomposition.
 
-Promotion gate:
+Assessment: **strong pass**.
 
-- `off` should no longer proactively produce an execution sequence;
-- `adaptive` should produce a small number of meaningful chunks for this complex prompt;
-- `always` should visibly produce smaller/more actionable units than `adaptive` in the same response;
-- a reviewer should be able to infer the value from collaboration structure without relying only on numbered headings.
+### `adaptive`
+
+Source plugin run: `32782817167`
+
+Observed behavior:
+
+- explicitly said, “So I'd break planning into these chunks”;
+- produced five broad planning areas: vision/scope, core loop, systems design, tech foundation, MVP cut;
+- chunks were meaningfully larger conceptual units rather than granular execution steps;
+- clearly more decomposed than `off`, while remaining broader than `always`.
+
+Assessment: **strong pass**, with a minor note that five broad chunks is near the upper edge of “small number.” This is not currently a hardening failure because the chunks remain broad and cognitively meaningful.
+
+### `always`
+
+Source plugin run: `32782833690`
+
+Observed behavior:
+
+- immediately partitioned the current response into numbered sections;
+- included a build-order sequence of seven concrete system steps;
+- ended with a concrete first actionable chunk for immediate implementation;
+- did not defer decomposition to a future reply;
+- visibly more granular/actionable than `adaptive`.
+
+Assessment: **strong pass**.
+
+## Comparison against baseline
+
+Baseline failed because visible decomposition was effectively inverted (`always < adaptive < off`). Candidate A repaired both endpoints and made the middle value behaviorally identifiable.
+
+The distinction is now observable without relying only on headings:
+
+- `off`: discusses and recommends while keeping the work mostly whole;
+- `adaptive`: decomposes complex work into broad meaningful work areas;
+- `always`: deliberately creates smaller, execution-oriented units in the current response.
+
+## Decision
+
+**Keep Candidate A. Do not introduce Candidate B yet.**
+
+There is no concrete endpoint failure remaining that justifies stronger wording. Additional strengthening risks semantic drift or pathological over-structuring.
+
+## Next tests
+
+1. Run the simple-request boundary case to verify `adaptive` and `always` do not over-apply to trivial/single-step work.
+2. If the boundary passes, proceed to `task_chunking × step_pacing` composition.
+3. Keep the real-plugin HAIL eval path as the authoritative Claude hardening harness; the earlier .NET-compiler runs are historical diagnostics only.
+
+## Outcome status
+
+- Claude base differentiation: **strong**
+- Candidate A: **selected**
+- Semantic drift observed: **no**
+- Ready for boundary test: **yes**
+- Ready for composition after boundary: **yes**
