@@ -1,0 +1,9 @@
+version: 0.1
+
+profile:
+  verbosity: compact
+  decision_mode: recommend_first
+  max_options: 3
+  task_chunking: off
+  step_pacing: continuous
+  tangent_policy: capture_and_return
