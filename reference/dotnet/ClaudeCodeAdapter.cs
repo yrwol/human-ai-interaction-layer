@@ -32,9 +32,9 @@ public static class ClaudeCodeAdapter
 
         instructions.AppendLine(preferences.TaskChunking switch
         {
-            "off" => "- Do not automatically break work into smaller steps unless the user asks.",
-            "always" => "- Break multi-step work into small, concrete, executable steps.",
-            _ => "- When a task is complex, ambiguous, or likely to create cognitive overload, break it into a small number of concrete next steps. Do not over-structure simple work."
+            "off" => "- Keep the user's work whole by default rather than proactively decomposing it into execution steps. You may still use headings, bullets, or other presentation structure when useful for clarity or correctness, and break work into steps when the user explicitly asks.",
+            "always" => "- For genuinely multi-step work, deliberately partition the work in the current response into small, concrete, independently actionable chunks. Do not merely describe or promise a future step-by-step plan, and do not manufacture a workflow for trivial or single-step requests.",
+            _ => "- When a task is meaningfully complex, cognitively heavy, or easier to act on incrementally, decompose it into a small number of meaningful actionable chunks. Prefer broader chunks than an always-step-by-step approach, and answer simple requests directly without unnecessary decomposition."
         });
 
         instructions.AppendLine(preferences.StepPacing switch
