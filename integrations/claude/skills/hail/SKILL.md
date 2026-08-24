@@ -121,9 +121,9 @@ Use these mappings exactly for this experiment.
 
 ### task_chunking
 
-- `off` → `- Do not automatically break work into smaller steps unless the user asks.`
-- `adaptive` → `- When a task is complex, ambiguous, or likely to create cognitive overload, break it into a small number of concrete next steps. Do not over-structure simple work.`
-- `always` → `- Break multi-step work into small, concrete, executable steps.`
+- `off` → `- Keep the user's work whole by default rather than proactively decomposing it into execution steps. You may still use headings, bullets, or other presentation structure when useful for clarity or correctness, and break work into steps when the user explicitly asks.`
+- `adaptive` → `- When a task is meaningfully complex, cognitively heavy, or easier to act on incrementally, decompose it into a small number of meaningful actionable chunks. Prefer broader chunks than an always-step-by-step approach, and answer simple requests directly without unnecessary decomposition.`
+- `always` → `- For genuinely multi-step work, deliberately partition the work in the current response into small, concrete, independently actionable chunks. Do not merely describe or promise a future step-by-step plan. Do not manufacture a step-by-step process for trivial or single-step requests.`
 
 ### step_pacing
 
