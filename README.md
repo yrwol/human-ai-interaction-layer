@@ -14,9 +14,9 @@ The specification has been split so current truth is easier to find:
 - [`spec/product.md`](spec/product.md) — current product definition and architecture boundary
 - [`spec/semantics.md`](spec/semantics.md) — current validated semantic profile
 - [`spec/interaction-taxonomy.md`](spec/interaction-taxonomy.md) — broader catalog of candidate interaction dimensions
-- [`spec/roadmap.md`](spec/roadmap.md) — completed work, next candidate experiments, and parked areas
+- [`spec/roadmap.md`](spec/roadmap.md) — completed work, current checkpoint, next experiments, and parked areas
 
-The original [`spec/draft.md`](spec/draft.md) remains useful historical context, but it is no longer the authoritative source for current schema, architecture, or milestone order.
+The original [`spec/draft/draft.md`](spec/draft/draft.md) remains useful historical context, but it is no longer the authoritative source for current schema, architecture, or milestone order.
 
 ## Product direction
 
@@ -53,16 +53,22 @@ See [`spec/semantics.md`](spec/semantics.md) for the behavioral contract and evi
 
 The larger original interaction taxonomy has **not** been discarded. It now lives in [`spec/interaction-taxonomy.md`](spec/interaction-taxonomy.md), where candidate dimensions can remain visible without being mistaken for implemented schema.
 
-## Evidence so far
+## Evidence and active evaluation
 
-Detailed behavioral evidence lives under [`evals/results/`](evals/results/).
+Start with [`evals/README.md`](evals/README.md) for the evaluation map.
+
+- [`evals/prompt-hardening/`](evals/prompt-hardening/) — current semantic prompt-hardening experiments and current result records
+- [`evals/historical/`](evals/historical/) — historical fixtures, manual procedures, milestone summaries, raw transcripts, and portability evidence
+- [`evals/prompt-context-efficiency.md`](evals/prompt-context-efficiency.md) — standalone prompt-context efficiency experiment
+
+Completed evidence includes:
 
 - Static semantic profile → Claude: **PASS**
 - Same semantic profile → Codex: **PASS for portability evidence**
 - Claude native persistent profile management: **PASS / manually validated**
 - Codex native persistent profile management: **PASS / manually validated**
 
-The current project checkpoint is **documentation reconciliation** before choosing the next implementation experiment. See [`spec/roadmap.md`](spec/roadmap.md).
+The current project checkpoint is **projection hardening of the existing validated semantics**. Current targets are `task_chunking` and `verbosity`, followed by cross-harness replay of stable wording. See [`spec/roadmap.md`](spec/roadmap.md).
 
 ## Native Claude integration
 
@@ -108,7 +114,7 @@ The Codex skill uses the same canonical `~/.hail/profile.yaml` and manages only 
 
 The native Codex path has been manually validated for profile inspection, natural-language change, fresh-session pacing behavior, tangent composition, contextual requests that do not mutate persistent defaults, and reset.
 
-See [`integrations/codex/README.md`](integrations/codex/README.md) and [`evals/results/milestone-4-codex-native-raw.md`](evals/results/milestone-4-codex-native-raw.md).
+See [`integrations/codex/README.md`](integrations/codex/README.md) and [`evals/historical/results/milestone-4-codex-native-raw.md`](evals/historical/results/milestone-4-codex-native-raw.md).
 
 ## Multi-harness refresh is optional
 
@@ -133,8 +139,12 @@ integrations/         harness-native product experiments
 reference/
   dotnet/             reference compiler/conformance tooling
 profiles/             reference semantic profile examples
-evals/                behavioral scenarios and evidence
+evals/
+  prompt-hardening/   active behavioral hardening experiments/results
+  historical/         superseded eval fixtures/procedures + milestone evidence
+    results/           historical milestone summaries/raw transcripts
 spec/                 product truth, semantics, taxonomy, roadmap, historical decisions
+  draft/              legacy source documents
 .github/workflows/    repository validation
 AGENTS.md              contributor/agent guidance
 CLAUDE.md              Claude project guidance

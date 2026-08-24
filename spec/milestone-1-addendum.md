@@ -1,6 +1,6 @@
 # Milestone 1 Spec Addendum
 
-This addendum records changes in understanding that were validated during Milestone 1. It supplements `spec/draft.md`; it does not replace the broader draft.
+This addendum records changes in understanding that were validated during Milestone 1. It supplements `spec/draft/draft.md`; it does not replace the broader draft.
 
 ## Validated
 

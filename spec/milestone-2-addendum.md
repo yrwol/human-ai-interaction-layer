@@ -1,6 +1,6 @@
 # Milestone 2 Spec Addendum
 
-This addendum records changes in understanding validated by the Claude-to-Codex portability experiment. It supplements `spec/draft.md` and `spec/milestone-1-addendum.md`.
+This addendum records changes in understanding validated by the Claude-to-Codex portability experiment. It supplements `spec/draft/draft.md` and `spec/milestone-1-addendum.md`.
 
 ## Validated
 

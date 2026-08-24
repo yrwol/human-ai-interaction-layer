@@ -18,12 +18,32 @@ observable behavior
 
 A stronger prompt is allowed to be more operational or explicit for a given harness. It must not change the meaning of the underlying HAIL preference.
 
+## Current status
+
+Claude has reached a strong hardening checkpoint for the currently exercised semantics.
+
+| Preference | Claude status | Decision |
+| --- | --- | --- |
+| `decision_mode` | strong | hardened candidate retained |
+| `max_options` | strong | hardened candidate retained |
+| `task_chunking` | strong base differentiation | Candidate A promoted; remaining boundary/composition checks are follow-up |
+| `verbosity` | strong | existing wording promoted unchanged after differentiation, proportionality, and explicit-override checks |
+
+Authoritative current evidence:
+
+- [`results/decision-mode-sonnet-5-high.md`](results/decision-mode-sonnet-5-high.md)
+- [`results/max-options-sonnet-5-high.md`](results/max-options-sonnet-5-high.md)
+- [`results/task-chunking-claude-sonnet.md`](results/task-chunking-claude-sonnet.md)
+- [`results/verbosity-claude-sonnet.md`](results/verbosity-claude-sonnet.md)
+
+The real Claude plugin path (`integrations/claude`) is the authoritative Claude hardening path. Earlier reference-compiler runs remain useful historical diagnostics but should not override plugin-based evidence.
+
 ## Quick HAIL setup
 
-### 1. Switch to this experiment branch
+### 1. Switch to the experiment branch
 
 ```bash
-git switch eval/projection-prompt-hardening
+git switch eval/task-chunking-verbosity-hardening
 ```
 
 ### 2. Ensure the shared HAIL profile directory exists
@@ -135,7 +155,7 @@ For each preference:
 2. Record the current Claude and Codex projection wording.
 3. Identify the observed failure mode from previous evidence or a fresh baseline run.
 4. Draft one small wording change.
-5. Test the same scenarios in fresh Claude and Codex interactions.
+5. Test the same scenarios in fresh interactions.
 6. Record raw output before interpreting it.
 7. Compare behavior against the expectation, not against stylistic preference alone.
 8. Keep the candidate only if it improves enforcement without changing the semantic meaning.
@@ -169,16 +189,16 @@ Do not:
 - infer that more forceful wording is automatically better;
 - tune multiple semantic dimensions at once unless testing composition explicitly.
 
-## Starter targets
+## Next work
 
-The first useful targets are based on earlier behavioral evidence:
+The immediate next work is no longer discovery of Claude wording for `task_chunking` or `verbosity`.
 
-| Preference | Known concern |
-| --- | --- |
-| `task_chunking` | Weak / inconsistent cross-harness enforcement |
-| `decision_mode` | Codex showed weaker differentiation |
-| `max_options` | Claude showed weaker enforcement |
-| `verbosity` | Weak-to-moderate and interpreted inconsistently |
+Instead:
+
+1. replay stable Claude candidates in Codex before introducing Codex-specific wording;
+2. run the remaining `task_chunking` trivial-task boundary;
+3. run focused `task_chunking × step_pacing` composition;
+4. use verbosity composition tests to verify that information depth does not escape `max_options` or alter chunk count.
 
 ## Files
 
@@ -188,8 +208,7 @@ The first useful targets are based on earlier behavioral evidence:
 - [`max-options.md`](max-options.md) — experiment definition for `max_options`
 - [`max-options-decision-mode-composition.md`](max-options-decision-mode-composition.md) — focused composition evaluation
 - [`verbosity.md`](verbosity.md) — experiment definition for `verbosity`
-- [`results/decision-mode-sonnet-5-high.md`](results/decision-mode-sonnet-5-high.md) — Claude Sonnet 5 / high-effort decision-mode evidence
-- [`results/max-options-sonnet-5-high.md`](results/max-options-sonnet-5-high.md) — Claude Sonnet 5 / high-effort max-options evidence
+- [`task-chunking-step-pacing-composition.md`](task-chunking-step-pacing-composition.md) — focused chunking/pacing composition evaluation
 
 ## Success criterion
 

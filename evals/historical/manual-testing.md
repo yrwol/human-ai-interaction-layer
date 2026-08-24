@@ -1,8 +1,10 @@
 # Manual HAIL behavioral testing
 
+> Historical procedure used for the first static-profile Claude/Codex portability experiments. Current prompt-hardening work lives under [`../prompt-hardening/`](../prompt-hardening/).
+
 This guide defines the manual A/B procedure used to test whether changing only a semantic HAIL profile changes observable AI behavior.
 
-The current comparison profiles are:
+The comparison profiles were:
 
 ```yaml
 # profiles/test-a.yaml
@@ -41,7 +43,7 @@ For every harness:
 7. Run the exact same prompts in the same order.
 8. Compare direction of behavior, not subjective answer quality.
 
-The question is:
+The question was:
 
 > Did changing only the HAIL profile move the harness behavior in the direction requested by the profile?
 
@@ -111,11 +113,11 @@ Milestone 1 used the same semantic profiles against Claude. The summarized findi
 
 ## Codex / Milestone 2
 
-Use [`results/milestone-2-codex-raw.md`](results/milestone-2-codex-raw.md) as the paste-in worksheet. Keep the prompts and headings intact so the Codex results can be compared directly with the Claude record.
+The Codex record is preserved in [`results/milestone-2-codex-raw.md`](results/milestone-2-codex-raw.md).
 
-When reviewing Codex, score both:
+When reviewing Codex, the original procedure scored both:
 
-- whether Profile A and B produce the expected directional difference; and
-- how strongly Codex enforces each dimension compared with Claude.
+- whether Profile A and B produced the expected directional difference; and
+- how strongly Codex enforced each dimension compared with Claude.
 
-Do not change the semantic profiles merely to make one harness perform better. Harness-specific wording belongs in the adapter.
+The semantic profiles were not changed merely to make one harness perform better. Harness-specific wording belonged in the adapter.
