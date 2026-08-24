@@ -79,19 +79,35 @@ The repository now distinguishes current product truth, validated semantics, bro
 
 Documentation should continue to be reconciled when experiments produce meaningful evidence, but documentation cleanup is no longer the active product checkpoint.
 
+### Claude projection hardening — current semantic set
+
+Status: **strong checkpoint reached for current tested semantics**
+
+Claude hardening now has strong recorded evidence for the currently tested semantic preferences:
+
+- `decision_mode` — neighboring values produce recognizable differences in decision ownership;
+- `max_options` — projection better limits simultaneous choice-like burden rather than only literal alternatives;
+- `task_chunking` — Candidate A repairs the previously inverted/weak differentiation and produces the intended `off < adaptive < always` collaboration structure in the real Claude plugin path;
+- `verbosity` — the existing Claude wording already produces recognizable `compact < balanced < detailed` information depth and passes proportionality plus explicit-override checks.
+
+The `task_chunking` Candidate A wording is promoted into the Claude integration. Its remaining trivial-task boundary and `task_chunking × step_pacing` composition checks are follow-up regression/composition work rather than blockers to adopting the repaired projection wording.
+
+Evidence:
+
+- [`../evals/prompt-hardening/results/task-chunking-claude-sonnet.md`](../evals/prompt-hardening/results/task-chunking-claude-sonnet.md)
+- [`../evals/prompt-hardening/results/verbosity-claude-sonnet.md`](../evals/prompt-hardening/results/verbosity-claude-sonnet.md)
+
 ## Current project checkpoint
 
-### Projection hardening of existing semantics
+### Cross-harness replay and focused composition
 
-Status: **in progress**
+Status: **next**
 
 The current question is:
 
-> Can HAIL's existing semantic preferences be expressed strongly enough in each harness that neighboring values produce reliably recognizable collaboration behavior without changing the semantic schema?
+> Do the stable Claude projection candidates preserve the same semantic intent in Codex, and do neighboring semantics remain independently controllable when composed?
 
-This phase treats projection wording as an implementation layer rather than as the semantic definition itself.
-
-Current method:
+The hardening method remains:
 
 ```text
 semantic intent
@@ -104,56 +120,38 @@ semantic intent
 
 Evidence should record the harness, model, effort/reasoning mode, profile values, session conditions, and exact projection wording. A successful result under one configuration is evidence for that configuration, not a universal model/harness claim.
 
-### Current strongest results
-
-`decision_mode` has reached a strong Claude hardening checkpoint under the recorded test conditions:
-
-```text
-options
-→ preserve user choice
-
-recommend_first
-→ express AI judgment first
-
-choose_by_default
-→ assume responsibility for a reversible working decision and carry it forward
-```
-
-`max_options` has improved from a narrow "alternatives" interpretation toward the intended semantic of limiting simultaneous **choice-like user burden**, including open-ended brainstorming that creates a set of candidates to evaluate.
-
-These results strengthen the existing semantic model; they do not justify new persistent fields.
-
 ## Near-term work
 
-### Finish hardening current semantic set
+### Cross-harness replay
 
-Continue one semantic at a time.
+Replay the stable Claude candidates in Codex before introducing harness-specific wording unnecessarily.
 
 Priority targets:
 
-1. `task_chunking` — prove the distinction between `off`, `adaptive`, and `always` while holding `step_pacing` constant.
-2. `verbosity` — prove that detail level changes without silently changing task chunking, option count, decision ownership, or pacing.
-3. cross-harness replay — exercise stable Claude candidates in Codex before introducing harness-specific wording.
+1. `task_chunking` — verify the repaired semantic distinction survives in Codex; introduce Codex-specific wording only if evidence requires it.
+2. `verbosity` — verify information-depth differentiation, proportionality, and explicit overrides in Codex.
+3. preserve previously hardened `decision_mode` and `max_options` behavior while replaying neighboring semantics.
 
-Use targeted repair first: rerun a known failure with one wording change, then run the broader regression/boundary suite only after the failure is fixed.
+### Focused composition and remaining boundaries
 
-### Composition tests
+Composition matters, but do not tune multiple semantics simultaneously.
 
-Composition matters, but do not begin by tuning multiple semantics simultaneously.
+Known next checks include:
 
-Use focused composition tests only after the participating individual semantics are reasonably reliable. This keeps failures attributable and prevents one preference from being "fixed" by accidentally changing another.
-
-Known useful boundaries include:
-
-- `max_options` × `decision_mode` × ambiguity;
+- `task_chunking` trivial/single-step boundary;
 - `task_chunking` × `step_pacing`;
+- `verbosity` × `max_options`;
+- `verbosity` × a fixed `task_chunking` value;
+- `max_options` × `decision_mode` × ambiguity;
 - tangent handling while pacing is paused.
+
+Use composition to verify semantic independence, not to rescue weak individual projections.
 
 ## Next product-expansion candidate
 
 ### Temporary interaction state
 
-Temporary state remains a strong future product experiment, but it is **not the immediate next step while projection hardening is still producing useful evidence**.
+Temporary state remains a strong future product experiment, but it is **not the immediate next step while cross-harness replay and focused composition are still producing useful evidence**.
 
 Smallest useful question:
 
@@ -228,7 +226,7 @@ Do not introduce a daemon, shared runtime, cloud service, or MCP synchronization
 - autonomy as a new persistent semantic dimension;
 - capability manifests as a frozen protocol schema;
 - shared runtime/MCP without a concrete failing native experiment;
-- automated eval infrastructure without evidence that manual evaluation has become a bottleneck.
+- automated eval infrastructure beyond the current lightweight HAIL testing harness unless additional complexity is justified by evidence.
 
 ## Roadmap discipline
 
