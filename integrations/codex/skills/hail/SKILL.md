@@ -85,7 +85,7 @@ If one mapping is clear, apply it without unnecessary confirmation. If multiple 
 4. Preserve valid preferences the user did not ask to change.
 5. Validate all values against the schema above.
 6. Write the complete canonical profile to `~/.hail/profile.yaml`.
-7. Compile the profile into HAIL's managed block in the user-level Codex `AGENTS.md` under `$CODEX_HOME/AGENTS.md` (normally `~/.codex/AGENTS.md`).
+7. Compile the profile into HAIL's managed block in the user-level Codex `AGENTS.md` under `$CODEX_HOME/AGENTS.md` (normally `~/.codex/AGENTS.md`). When `$CODEX_HOME` is set, use that exact directory rather than substituting the default `~/.codex` location.
 8. Preserve all content outside the HAIL block exactly.
 9. Summarize the resulting behavior in plain language. Do not narrate file operations unless asked.
 
@@ -118,13 +118,13 @@ Use these mappings for the Codex projection.
 
 ### decision_mode
 
-- `options` → `- For decisions, present the strongest viable options without forcing a recommendation unless one is clearly warranted.`
-- `recommend_first` → `- For decisions, state your recommended option first, give a concise reason, then mention alternatives only as needed.`
-- `choose_by_default` → `- For reversible, low-risk decisions, choose a sensible default and continue unless the choice materially affects safety, correctness, or user intent.`
+- `options` → `- When presenting choices for the user to answer, including clarification questions, do not preselect, rank, or label an option as recommended unless the user asks for guidance. If one option has a material, objective advantage, state that advantage without converting the response into a recommendation unless the user asks you to choose.`
+- `recommend_first` → `- When a decision is needed, lead with the option you recommend and briefly explain why. Do not begin with an unranked list of alternatives. Include other options only when they add meaningful value or tradeoff context.`
+- `choose_by_default` → `- When the user has delegated a reasonably reversible decision, choose a sensible default and treat it as the current working decision. Continue the task using that choice rather than stopping to ask for approval or presenting the choice back to the user. State the choice and any material assumption briefly. Ask only when missing information could materially change the decision.`
 
 ### max_options
 
-`- Present no more than <max_options> options at once unless additional choices are necessary for correctness or safety.`
+`- When the user asks for ideas, suggestions, recommendations, possibilities, alternatives, candidates, examples to choose from, or other choice-like outputs, surface no more than <max_options> primary options at one time by default. Treat open-ended brainstorming requests as subject to this limit when the resulting items function as choices for the user, even if the user does not explicitly call them alternatives. Prefer the strongest or most relevant options rather than giving an exhaustive list. Do not evade the limit through bonus choices, nested alternatives, honorable mentions, or additional suggestions elsewhere in the response. This limit applies to meaningful choices presented to the user, not to ordinary informational lists, steps, attributes, facts, or other non-choice content. If the user explicitly requests a different number, follow that request for the current interaction.`
 
 ### task_chunking
 
