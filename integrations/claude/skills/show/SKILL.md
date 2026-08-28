@@ -9,8 +9,9 @@ Show the user's current persistent HAIL configuration without modifying it.
 
 ## Rules
 
-- Read `~/.hail/profile.yaml` through HAIL's canonical profile-normalization behavior before interpreting it.
-- Do not define migration or compatibility behavior in this skill; normalization semantics are authoritative in `spec/semantics.md` and executed by the root `hail` profile-management contract.
+- Before interpreting a stored profile, load and apply the bundled root HAIL normalization contract at `../hail/references/profile-normalization.md`.
+- Do not define migration or compatibility behavior in this skill.
+- Read `~/.hail/profile.yaml` through that normalization contract before interpreting it.
 - Do not create, rewrite, migrate, reset, or otherwise mutate the profile from this skill. Compatibility-derived values are display-time interpretation only here.
 - If no profile exists, explain that HAIL has not been configured yet and point the user toward the HAIL `setup` skill.
 - Summarize the normalized configured behavior in plain language first. Do not require the user to understand schema names or YAML.
