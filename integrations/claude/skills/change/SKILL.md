@@ -24,13 +24,14 @@ Read and write `~/.hail/profile.yaml` using the current v0.1 fields:
 
 ## Change behavior
 
-- Read the existing profile first.
+- Read the existing profile first and normalize it using HAIL's canonical profile-normalization behavior before applying the requested change.
+- Do not define migration or compatibility behavior in this skill; normalization semantics are authoritative in `spec/semantics.md` and executed by the root `hail` profile-management contract.
 - If no profile exists, start from the v0.1 defaults, apply the requested change, and make clear that this initializes HAIL as part of the explicit change request.
-- When reading an older valid profile without `step_pacing`, treat it as `continuous` unless the current explicit request specifies another value.
+- Apply explicit current configuration intent after normalization so the user's requested value wins over stored or compatibility-derived values.
 - Preserve every valid preference the user did not ask to change.
 - Map clear natural-language requests directly; ask only the minimum clarification when two materially different mappings are plausible.
 - Never infer diagnoses or neurotypes.
-- Validate the complete profile before writing it.
+- Validate the complete normalized/current profile before writing it.
 - Regenerate `~/.hail/claude-code.md` using the same semantic projection mappings as the root `hail` skill.
 - Ensure `~/.claude/CLAUDE.md` contains exactly one standalone `@~/.hail/claude-code.md` import and preserve all unrelated content exactly.
 - Explain what changed in behavioral terms rather than implementation terms.
