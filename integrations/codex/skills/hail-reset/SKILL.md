@@ -7,25 +7,27 @@ description: Reset the user's persistent HAIL interaction profile in Codex to su
 
 Reset persistent HAIL configuration intentionally without damaging unrelated Codex configuration.
 
+## Shared profile resources
+
+Load the bundled root HAIL resources before profile work:
+
+- `../hail/references/profile-schema.md`;
+- `../hail/references/default-profile.yaml`;
+- `../hail/references/profile-normalization.md`.
+
+Do not redefine schema, defaults, migration, or compatibility behavior in this skill.
+
 ## Reset behavior
 
-- Read `~/.hail/profile.yaml` if it exists and normalize it using HAIL's canonical profile-normalization behavior before applying any reset.
-- Do not define migration or compatibility behavior in this skill; normalization semantics are authoritative in `spec/semantics.md` and executed by the root `$hail` profile-management contract.
+- If HAIL is not configured, explain that there is nothing persistent to reset rather than creating a profile unnecessarily.
+- Normalize and validate the stored profile before applying a reset.
 - Confirm whether the user means the whole profile or only one preference when scope is ambiguous.
-- Whole-profile defaults are:
-  - `verbosity: balanced`
-  - `decision_mode: recommend_first`
-  - `max_options: 3`
-  - `task_chunking: adaptive`
-  - `step_pacing: continuous`
-  - `tangent_policy: capture_and_return`
-- For a single-preference reset, restore only that field's default and preserve every other normalized valid preference.
-- Validate the resulting complete current-schema profile before writing.
-- Regenerate HAIL's managed block in `$CODEX_HOME/AGENTS.md` (normally `~/.codex/AGENTS.md`) using the same semantic projection mappings as the root `$hail` skill.
-- Preserve all content outside `<!-- HAIL:START -->` / `<!-- HAIL:END -->` exactly. Replace one complete block or append one if absent; never create duplicates. If markers are malformed or multiple blocks exist, stop and ask permission to repair rather than guessing.
+- For a whole-profile reset, use the bundled `default-profile.yaml` as the resulting profile.
+- For a single-preference reset, copy that field's value from the bundled default profile and preserve every other normalized valid preference.
+- Validate the resulting profile against the bundled schema before writing `~/.hail/profile.yaml`.
+- Regenerate HAIL's managed block in `$CODEX_HOME/AGENTS.md` using the root `$hail` projection mappings.
+- Preserve all content outside the HAIL markers exactly. Replace one complete block or append one if absent; never create duplicates. If markers are malformed or multiple blocks exist, stop and ask permission to repair rather than guessing.
 - Never infer diagnoses or neurotypes.
 - Explain the resulting behavior in plain language.
-
-If HAIL is not configured, explain that there is nothing persistent to reset rather than creating a profile unnecessarily.
 
 This skill must produce the same persistent profile and Codex projection that equivalent reset intent handled through the root `$hail` skill would produce.
