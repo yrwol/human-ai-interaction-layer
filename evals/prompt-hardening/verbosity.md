@@ -61,16 +61,6 @@ Use the smallest repair loop that answers the current question:
 
 Record raw outputs and test conditions under `results/` using [`template.md`](template.md).
 
-Minimum metadata:
-
-- harness;
-- model;
-- effort/reasoning mode;
-- profile values;
-- projection wording;
-- whether the interaction/session was fresh;
-- date.
-
 ## Phase 1 — differentiation
 
 Prompt:
@@ -113,7 +103,7 @@ What is a palomino?
 
 Expected: all modes remain proportionate to the simplicity of the question. `detailed` may add relevant nuance but must not manufacture an essay merely to satisfy the preference.
 
-**Status:** passed in the cross-harness repair replay. Codex remained concise; Claude added useful genetics/appearance context without disproportionate expansion.
+**Status:** passed in the cross-harness repair replay.
 
 ### Explicit detail override
 
@@ -123,7 +113,7 @@ Give me a very detailed breakdown of how horse training progression could work, 
 
 Expected: the explicit request for detail overrides `verbosity: compact` for the current interaction without mutating the persistent profile.
 
-**Baseline status:** passed in the recorded Claude/Codex boundary evidence.
+**Baseline status:** passed in the recorded boundary evidence.
 
 ### Explicit brevity override
 
@@ -171,17 +161,12 @@ A compact response may still contain several necessary steps. A detailed respons
 
 ## Phase 3 — composition
 
-Composition remains useful follow-up evidence for semantic independence, but it is not a blocker to the promoted individual projection wording.
+Composition is tracked in dedicated focused eval files rather than embedded in this individual semantic definition:
 
-### `verbosity × max_options`
+- [`verbosity-max-options-composition.md`](verbosity-max-options-composition.md) — verify depth changes inside a stable choice set without escaping `max_options`;
+- [`verbosity-task-chunking-composition.md`](verbosity-task-chunking-composition.md) — verify depth changes inside stable work chunks without changing decomposition.
 
-With a fixed option cap, changing verbosity should deepen explanation inside the allowed choice set without escaping the cap through bonus or nested alternatives.
-
-### `verbosity × task_chunking`
-
-With a fixed task-chunking value, changing verbosity should alter depth inside chunks without materially changing the number or size of chunks.
-
-These checks should be run only with evaluation infrastructure capable of observing the required behavior. Do not claim multi-turn persistence or pacing evidence from the current single-turn workflow.
+Both core suites are single-turn observable with the current workflow. Neither should be used to claim multi-turn persistence or pacing behavior.
 
 ## Promotion criteria
 
@@ -193,6 +178,8 @@ The promoted cross-harness result satisfies the current individual/boundary crit
 - `detailed` remains proportionate on simple tasks;
 - explicit current instructions retain priority over the persistent default;
 - the repair works in both tested harnesses without changing semantic meaning.
+
+Composition remains independent follow-up evidence rather than a blocker to the promoted individual projection.
 
 ## Results
 
