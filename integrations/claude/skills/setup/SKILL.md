@@ -36,11 +36,13 @@ Allowed values:
 
 ## Setup behavior
 
-- If a valid profile already exists, explain that HAIL is already configured and ask whether the user wants to change it instead of silently replacing it.
+- If a stored profile exists, normalize it using HAIL's canonical profile-normalization behavior before deciding whether it is already configured.
+- Do not define migration or compatibility behavior in this skill; normalization semantics are authoritative in `spec/semantics.md` and executed by the root `hail` profile-management contract.
+- If a valid normalized profile already exists, explain that HAIL is already configured and ask whether the user wants to change it instead of silently replacing it.
 - If no profile exists, start from the v0.1 defaults and apply any explicit preferences the user gives during setup.
 - Prefer mapping clear natural-language needs directly instead of forcing a questionnaire.
 - Preserve human intent; do not invent fields or infer diagnoses/neurotypes.
-- Validate all values before writing.
+- Validate the resulting current-schema profile before writing.
 - After writing the profile, regenerate `~/.hail/claude-code.md` using the same semantic projection mappings as the root `hail` skill and ensure `~/.claude/CLAUDE.md` contains exactly one standalone `@~/.hail/claude-code.md` import while preserving all unrelated content.
 - Summarize the resulting behavior in plain language. Do not narrate file operations unless asked.
 
