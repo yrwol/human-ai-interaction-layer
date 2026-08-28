@@ -9,7 +9,8 @@ Reset persistent HAIL configuration intentionally without damaging unrelated Cod
 
 ## Reset behavior
 
-- Read `~/.hail/profile.yaml` if it exists.
+- Read `~/.hail/profile.yaml` if it exists and normalize it using HAIL's canonical profile-normalization behavior before applying any reset.
+- Do not define migration or compatibility behavior in this skill; normalization semantics are authoritative in `spec/semantics.md` and executed by the root `$hail` profile-management contract.
 - Confirm whether the user means the whole profile or only one preference when scope is ambiguous.
 - Whole-profile defaults are:
   - `verbosity: balanced`
@@ -18,9 +19,9 @@ Reset persistent HAIL configuration intentionally without damaging unrelated Cod
   - `task_chunking: adaptive`
   - `step_pacing: continuous`
   - `tangent_policy: capture_and_return`
-- For a single-preference reset, restore only that field's default and preserve every other valid preference.
-- Validate the resulting complete profile before writing.
-- Regenerate HAIL's managed block in `$CODEX_HOME/AGENTS.md` (normally `~/.codex/AGENTS.md`) using the same semantic projection mappings as the root `hail` skill.
+- For a single-preference reset, restore only that field's default and preserve every other normalized valid preference.
+- Validate the resulting complete current-schema profile before writing.
+- Regenerate HAIL's managed block in `$CODEX_HOME/AGENTS.md` (normally `~/.codex/AGENTS.md`) using the same semantic projection mappings as the root `$hail` skill.
 - Preserve all content outside `<!-- HAIL:START -->` / `<!-- HAIL:END -->` exactly. Replace one complete block or append one if absent; never create duplicates. If markers are malformed or multiple blocks exist, stop and ask permission to repair rather than guessing.
 - Never infer diagnoses or neurotypes.
 - Explain the resulting behavior in plain language.
