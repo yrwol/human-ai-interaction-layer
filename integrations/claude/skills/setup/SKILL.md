@@ -11,39 +11,25 @@ Create or initialize the user's persistent HAIL profile intentionally and conver
 
 This skill is an explicit HAIL configuration surface. Ordinary conversation outside explicit HAIL configuration must not silently mutate persistent defaults.
 
-## Canonical profile
+## Shared profile resources
 
-Write the canonical profile to `~/.hail/profile.yaml` using the current v0.1 schema:
+Before profile work, load the bundled root HAIL resources:
 
-```yaml
-version: 0.1
-profile:
-  verbosity: balanced
-  decision_mode: recommend_first
-  max_options: 3
-  task_chunking: adaptive
-  step_pacing: continuous
-  tangent_policy: capture_and_return
-```
+- `../hail/references/profile-schema.md` — current profile shape and allowed values;
+- `../hail/references/default-profile.yaml` — authoritative current defaults;
+- `../hail/references/profile-normalization.md` — compatibility and normalization rules.
 
-Allowed values:
-- `verbosity`: `compact`, `balanced`, `detailed`
-- `decision_mode`: `options`, `recommend_first`, `choose_by_default`
-- `max_options`: positive integer
-- `task_chunking`: `off`, `adaptive`, `always`
-- `step_pacing`: `continuous`, `check_in`, `wait_for_user`
-- `tangent_policy`: `follow`, `capture_and_return`, `redirect`
+Do not redefine schema, defaults, migration, or compatibility behavior in this skill.
 
 ## Setup behavior
 
-- If a stored profile exists, first load and apply the bundled root HAIL normalization contract at `../hail/references/profile-normalization.md`.
-- Do not define migration or compatibility behavior in this skill.
+- If a stored profile exists, normalize and validate it using the shared resources before deciding whether it is already configured.
 - If a valid normalized profile already exists, explain that HAIL is already configured and ask whether the user wants to change it instead of silently replacing it.
-- If no profile exists, start from the v0.1 defaults and apply any explicit preferences the user gives during setup.
+- If no profile exists, copy the bundled default profile as the working profile, then apply explicit preferences the user gives during setup.
 - Prefer mapping clear natural-language needs directly instead of forcing a questionnaire.
 - Preserve human intent; do not invent fields or infer diagnoses/neurotypes.
-- Validate the resulting current-schema profile before writing.
-- After writing the profile, regenerate `~/.hail/claude-code.md` using the same semantic projection mappings as the root `hail` skill and ensure `~/.claude/CLAUDE.md` contains exactly one standalone `@~/.hail/claude-code.md` import while preserving all unrelated content.
-- Summarize the resulting behavior in plain language. Do not narrate file operations unless asked.
+- Validate the resulting profile against the bundled schema before writing `~/.hail/profile.yaml`.
+- Regenerate `~/.hail/claude-code.md` using the root `hail` projection mappings and ensure `~/.claude/CLAUDE.md` contains exactly one standalone `@~/.hail/claude-code.md` import while preserving unrelated content.
+- Summarize the resulting behavior in plain language.
 
 This skill must produce the same persistent profile and Claude projection that equivalent setup intent handled through the root `hail` skill would produce.
