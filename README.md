@@ -69,25 +69,43 @@ Completed evidence includes:
 - Codex native persistent profile management: **PASS / manually validated**
 - `verbosity: detailed` cross-harness projection hardening: **PASS / promoted for Claude and Codex**
 
-The current project checkpoint remains **projection hardening and focused semantic composition**. `verbosity` cross-harness replay is complete; `task_chunking` cross-harness replay and supported single-turn boundary checks are the next hardening target. Every tracked composition boundary now has its own focused eval definition under [`evals/prompt-hardening/`](evals/prompt-hardening/), with the roadmap identifying which suites are single-turn-valid versus multi-turn-dependent. See [`spec/roadmap.md`](spec/roadmap.md).
+The current semantic-hardening checkpoint remains `task_chunking` cross-harness replay and supported single-turn boundary checks. Separately, the discoverable-skills capability is now being implemented and awaits discovery/behavioral-parity validation before it is considered complete. See [`spec/roadmap.md`](spec/roadmap.md).
+
+## Discoverable HAIL management
+
+HAIL keeps a root management skill for orientation and compatibility while exposing common persistent-profile actions as separately discoverable skills.
+
+Conceptually:
+
+```text
+hail   → orient, inspect, or route conversational HAIL intent
+show   → inspect the persistent profile (read-only)
+setup  → initialize HAIL
+change → change persistent defaults
+reset  → reset all or part of the profile
+```
+
+Invocation syntax is harness-native rather than artificially identical across products. `review` is intentionally not advertised yet because that separate capability is not implemented.
 
 ## Native Claude integration
 
 The Claude implementation lives at [`integrations/claude/`](integrations/claude/).
 
-Persistent configuration starts through explicit HAIL interaction:
+With the plugin loaded, the discoverable management surface is:
 
 ```text
 /hail:hail
-/hail:hail show
-/hail:hail setup
-/hail:hail change
-/hail:hail reset
+/hail:show
+/hail:setup
+/hail:change
+/hail:reset
 ```
 
-The skill reads/writes the canonical `~/.hail/profile.yaml`, regenerates HAIL's Claude projection at `~/.hail/claude-code.md`, and preserves the single HAIL import in `~/.claude/CLAUDE.md`.
+The root `/hail:hail` skill remains compatible with natural-language configuration intent and the legacy subcommand-shaped requests during migration.
 
-Normal use does **not** invoke the .NET reference implementation.
+The Claude skills read/write the canonical `~/.hail/profile.yaml`, regenerate HAIL's Claude projection at `~/.hail/claude-code.md`, and preserve the single HAIL import in `~/.claude/CLAUDE.md`.
+
+See [`integrations/claude/README.md`](integrations/claude/README.md).
 
 ### Claude developer test
 
@@ -95,25 +113,27 @@ Normal use does **not** invoke the .NET reference implementation.
 claude --plugin-dir ./integrations/claude
 ```
 
-Then invoke `/hail:hail`.
+Then verify `/hail:hail`, `/hail:show`, `/hail:setup`, `/hail:change`, and `/hail:reset` are discoverable.
 
 ## Native Codex integration
 
 The Codex port lives at [`integrations/codex/`](integrations/codex/).
 
-Its explicit persistent-configuration entry point is `$hail`:
+Codex uses collision-safe HAIL-prefixed skill names because skill names are effectively global:
 
 ```text
 $hail
-$hail show
-$hail setup
-$hail change
-$hail reset
+$hail-show
+$hail-setup
+$hail-change
+$hail-reset
 ```
 
-The Codex skill uses the same canonical `~/.hail/profile.yaml` and manages only HAIL's marked block in `$CODEX_HOME/AGENTS.md` (normally `~/.codex/AGENTS.md`).
+The root `$hail` skill remains available for orientation, compatibility, and conversational routing.
 
-The native Codex path has been manually validated for profile inspection, natural-language change, fresh-session pacing behavior, tangent composition, contextual requests that do not mutate persistent defaults, and reset.
+The Codex skills use the same canonical `~/.hail/profile.yaml` and manage only HAIL's marked block in `$CODEX_HOME/AGENTS.md` (normally `~/.codex/AGENTS.md`).
+
+The original native Codex profile-management path was manually validated before this skill split. The new discoverable surface still requires dedicated discovery and behavioral-parity validation before the capability is marked complete.
 
 See [`integrations/codex/README.md`](integrations/codex/README.md) and [`evals/historical/results/milestone-4-codex-native-raw.md`](evals/historical/results/milestone-4-codex-native-raw.md).
 
@@ -135,8 +155,8 @@ It remains useful as reference/conformance tooling for deterministic compilation
 
 ```text
 integrations/         harness-native product experiments
-  claude/             native Claude persistent profile management
-  codex/              native Codex persistent profile management
+  claude/             native Claude profile management + discoverable skills
+  codex/              native Codex profile management + discoverable skills
 reference/
   dotnet/             reference compiler/conformance tooling
 profiles/             reference semantic profile examples
@@ -145,6 +165,7 @@ evals/
   historical/         superseded eval fixtures/procedures + milestone evidence
     results/           historical milestone summaries/raw transcripts
 spec/                 product truth, semantics, taxonomy, roadmap, historical decisions
+  capabilities/       focused capability contracts
   draft/              legacy source documents
 .github/workflows/    repository validation
 AGENTS.md              contributor/agent guidance
@@ -162,6 +183,7 @@ CLAUDE.md              Claude project guidance
 - Treat generated harness artifacts as disposable projections of the human-owned semantic profile.
 - Do not mutate user intent to compensate for weak harness enforcement.
 - Do not expose implementation plumbing to normal users.
+- Make meaningful user actions discoverable when the harness supports it; do not hide every capability behind private subcommand vocabulary.
 - Add semantic fields only after a real scenario proves the current vocabulary insufficient.
 - Give each tracked composition boundary its own focused eval definition.
 - Do not make multi-harness synchronization a shipping requirement.
