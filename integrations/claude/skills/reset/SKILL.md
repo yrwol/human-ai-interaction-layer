@@ -9,8 +9,8 @@ Reset persistent HAIL configuration intentionally without damaging unrelated Cla
 
 ## Reset behavior
 
-- Read `~/.hail/profile.yaml` if it exists and normalize it using HAIL's canonical profile-normalization behavior before applying any reset.
-- Do not define migration or compatibility behavior in this skill; normalization semantics are authoritative in `spec/semantics.md` and executed by the root `hail` profile-management contract.
+- If a stored profile exists, first load and apply the bundled root HAIL normalization contract at `../hail/references/profile-normalization.md`.
+- Do not define migration or compatibility behavior in this skill.
 - Confirm whether the user means the whole profile or only one preference before changing anything when that scope is ambiguous.
 - Whole-profile defaults are:
   - `verbosity: balanced`
