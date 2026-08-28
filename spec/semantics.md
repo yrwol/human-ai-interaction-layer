@@ -37,7 +37,7 @@ Values:
 - `balanced` — provide enough context, reasoning, and tradeoff detail to make the response useful without unnecessary expansion.
 - `detailed` — provide fuller reasoning, relevant examples, tradeoffs, and important edge cases when the task benefits from depth.
 
-Status: **validated across harness experiments**, with enforcement strength varying. Projection hardening remains in progress.
+Status: **validated and hardened across Claude and Codex under the recorded single-turn test conditions**. Cross-harness evidence supports the shared strengthened `detailed` projection while preserving proportionality on simple requests. Focused composition remains useful regression evidence rather than a blocker to the promoted wording.
 
 ### `decision_mode`
 

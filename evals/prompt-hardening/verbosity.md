@@ -2,13 +2,18 @@
 
 ## Current status
 
-**Claude projection: promoted unchanged.**
+**Cross-harness `detailed` projection hardening: promoted.**
 
-The existing Claude wording already produced recognizable `compact < balanced < detailed` information depth through the real HAIL plugin path. Boundary checks also showed that `detailed` remains proportionate on a simple factual request and that explicit current instructions override the persistent verbosity default in both directions.
+The original Claude projection produced acceptable `compact < balanced < detailed` differentiation, proportionality, and explicit-override behavior. Cross-harness replay then exposed weaker `detailed` differentiation in Codex: the response was only marginally deeper than `balanced` and did not reliably add another useful explanatory layer.
 
-No wording repair or semantic schema change was justified.
+A stronger `detailed` projection was therefore tested in both Codex and Claude. It materially improved information depth in Codex, remained strong in Claude, and preserved proportionality on simple factual requests. The shared wording is now promoted in both native integrations.
 
-See [`results/verbosity-claude-sonnet.md`](results/verbosity-claude-sonnet.md).
+No semantic schema change was required.
+
+Evidence:
+
+- [`results/verbosity-claude-sonnet.md`](results/verbosity-claude-sonnet.md) — original Claude baseline and boundary evidence;
+- [`results/verbosity-cross-harness-detailed.md`](results/verbosity-cross-harness-detailed.md) — promoted cross-harness repair evidence.
 
 ## Semantic intent
 
@@ -24,8 +29,6 @@ verbosity: compact | balanced | detailed
 
 ## Behavioral contract
 
-The values should be distinguishable by behavior alone:
-
 ```text
 compact
 → core answer + only the context needed to understand/use it
@@ -39,9 +42,11 @@ detailed
 
 The distinction is **information depth**, not arbitrary word count.
 
-## Known concern
+## Hardening finding
 
-Earlier evidence showed weak-to-moderate enforcement and inconsistent interpretation across harnesses. The Claude pass did not reproduce a hardening failure under the recorded conditions, so the current Claude wording is retained. Cross-harness replay remains necessary before treating that result as universal.
+The original Claude evidence did not justify changing the projection in isolation. Codex replay provided the missing concrete failure: `detailed` was too close to `balanced` in information depth on a prompt with substantial room for explanation.
+
+The repair deliberately clarifies that detail means adding useful explanatory layers rather than merely expanding wording, while explicitly retaining proportionality for simple requests. Replaying the repair through Claude as well as Codex prevented a Codex-specific fix from silently regressing the other supported harness.
 
 ## Test method
 
@@ -51,23 +56,12 @@ Use the smallest repair loop that answers the current question:
 2. change only `verbosity` projection wording if a concrete failure appears;
 3. rerun the same prompt in a fresh interaction;
 4. run boundary/regression scenarios;
-5. test composition with another stable semantic only after individual behavior is stable.
+5. replay shared candidates across supported harnesses before introducing harness-specific wording unnecessarily;
+6. test composition with another stable semantic only after individual behavior is stable.
 
 Record raw outputs and test conditions under `results/` using [`template.md`](template.md).
 
-Minimum metadata:
-
-- harness;
-- model;
-- effort/reasoning mode;
-- profile values;
-- projection wording;
-- whether the interaction/session was fresh;
-- date.
-
 ## Phase 1 — differentiation
-
-### Scenario 1 — explanation with real room for depth
 
 Prompt:
 
@@ -77,116 +71,77 @@ Explain how a horse temperament system could affect gameplay in a cozy horse gam
 
 Expected observable behavior:
 
-#### `compact`
+### `compact`
 
 - directly states a usable core model;
 - includes only enough rationale/detail to understand how it affects gameplay;
 - omits optional examples, secondary implications, and edge cases unless necessary.
 
-#### `balanced`
+### `balanced`
 
 - explains the core model and the most important gameplay consequences;
 - includes enough reasoning/tradeoff context to make the design understandable and actionable;
 - does not attempt to cover every implication.
 
-#### `detailed`
+### `detailed`
 
 - retains the same core answer but meaningfully expands relevant reasoning;
 - may include examples, interactions, tradeoffs, implementation implications, or important edge cases;
 - added detail should deepen understanding rather than merely repeat the answer.
 
-### Differentiation pass condition
+Pass condition: a reviewer can distinguish the values by **what explanatory layers are included**, not merely by counting words.
 
-A reviewer should be able to distinguish the three values by **what explanatory layers are included**, not merely by counting words.
-
-**Claude status:** passed with the existing projection wording.
+**Status:** passed with the promoted cross-harness `detailed` wording under the recorded Claude and Codex configurations.
 
 ## Phase 2 — boundary / regression
 
-### Scenario 2 — simple factual request
-
-Prompt:
+### Simple factual request
 
 ```text
 What is a palomino?
 ```
 
-Expected:
+Expected: all modes remain proportionate to the simplicity of the question. `detailed` may add relevant nuance but must not manufacture an essay merely to satisfy the preference.
 
-- all modes remain proportionate to the simplicity of the question;
-- `compact` may answer in one or two concise sentences;
-- `balanced` may add one useful distinction or contextual detail;
-- `detailed` may add relevant nuance, but must not manufacture an essay merely to satisfy the preference.
+**Status:** passed in the cross-harness repair replay.
 
-**Claude status:** passed. `detailed` added useful genetics/context without disproportionate expansion.
-
-### Scenario 3 — explicit current override
-
-Prompt:
+### Explicit detail override
 
 ```text
 Give me a very detailed breakdown of how horse training progression could work, including examples and edge cases.
 ```
 
-Expected:
+Expected: the explicit request for detail overrides `verbosity: compact` for the current interaction without mutating the persistent profile.
 
-The explicit request for detail should override `verbosity: compact` for this interaction. The persistent profile remains unchanged.
+**Baseline status:** passed in the recorded boundary evidence.
 
-**Claude status:** passed. The compact profile yielded to the explicit detailed request and produced a substantially detailed response with examples and edge cases.
-
-### Scenario 4 — necessary brevity / direct answer
-
-Prompt:
+### Explicit brevity override
 
 ```text
 In one sentence, what's the biggest design risk of making every horse stat independently trainable?
 ```
 
-Expected:
+Expected: the explicit one-sentence request constrains `verbosity: detailed`.
 
-The explicit one-sentence request should constrain `verbosity: detailed`. Persistent detail preference must not override a direct current instruction.
+**Baseline status:** passed in the recorded boundary evidence.
 
-**Claude status:** passed with a single substantive sentence.
+## Current promoted projection wording
 
-## Current Claude projection wording
-
-These are projection wording, not schema definitions. The existing wording is promoted unchanged.
-
-### `compact`
+`compact` and `balanced` remain harness-native wording. The repaired `detailed` behavior is intentionally shared across Claude and Codex:
 
 ```text
-Keep responses compact. Include necessary detail, but avoid expanding beyond what is needed to make progress.
+Provide detailed responses when the task benefits from depth. Add useful explanatory layers such as reasoning, interactions, examples, tradeoffs, edge cases, or implementation implications rather than merely expanding wording. Remain proportionate to simple requests.
 ```
 
-### `balanced`
-
-```text
-Use balanced verbosity: enough detail to be useful without overwhelming the user.
-```
-
-### `detailed`
-
-```text
-Provide detailed responses when useful, including relevant reasoning, context, and implementation detail.
-```
-
-Stronger candidate wording remains available as a future repair direction if another harness/model exposes a concrete failure, but should not replace wording that already satisfies the behavioral contract without evidence.
+This is projection wording, not a schema definition. The semantic contract remains vendor-neutral.
 
 ## What not to optimize for
 
-Do not judge success by:
-
-- exact word count;
-- number of bullets/headings;
-- number of options;
-- number of task steps;
-- whether the answer is conversational versus structured.
+Do not judge success by exact word count, number of bullets/headings, number of options, number of task steps, or conversational versus structured presentation.
 
 The observable question is whether the **amount of useful explanatory context** changes while the underlying task behavior stays stable.
 
 ## Semantic boundaries
-
-Verbosity is not the same as:
 
 ```text
 max_options
@@ -206,55 +161,33 @@ A compact response may still contain several necessary steps. A detailed respons
 
 ## Phase 3 — composition
 
-Composition is follow-up evidence for semantic independence, not a blocker to retaining the current Claude wording after the successful individual and boundary checks.
+Composition is tracked in dedicated focused eval files rather than embedded in this individual semantic definition:
 
-### Composition A — `max_options`
+- [`verbosity-max-options-composition.md`](verbosity-max-options-composition.md) — verify depth changes inside a stable choice set without escaping `max_options`;
+- [`verbosity-task-chunking-composition.md`](verbosity-task-chunking-composition.md) — verify depth changes inside stable work chunks without changing decomposition.
 
-Use:
-
-```yaml
-max_options: 3
-```
-
-Prompt:
-
-```text
-What are some good approaches for horse training in a cozy game?
-```
-
-Expected:
-
-- all verbosity values honor the same choice-set limit;
-- `compact` explains each option minimally;
-- `balanced` gives useful tradeoffs;
-- `detailed` may deepen each option/tradeoff but must not escape the cap with bonus/nested alternatives.
-
-### Composition B — `task_chunking`
-
-Use a fixed `task_chunking` value and a multi-step design prompt.
-
-Expected:
-
-- changing verbosity changes the depth inside chunks;
-- it does not materially change the number/size of chunks;
-- detailed output must not be mistaken for more chunking.
+Both core suites are single-turn observable with the current workflow. Neither should be used to claim multi-turn persistence or pacing behavior.
 
 ## Promotion criteria
 
-The Claude result satisfies the current individual/boundary promotion criteria:
+The promoted cross-harness result satisfies the current individual/boundary criteria:
 
-- `compact`, `balanced`, and `detailed` show recognizable information-depth differences;
+- recognizable information-depth differentiation;
 - necessary reasoning survives `compact`;
+- `detailed` adds useful explanatory layers rather than repetition;
 - `detailed` remains proportionate on simple tasks;
-- explicit current instructions override the persistent default;
-- added detail is informative rather than repetitive;
-- no semantic schema change is required.
+- explicit current instructions retain priority over the persistent default;
+- the repair works in both tested harnesses without changing semantic meaning.
 
-Composition remains useful as regression evidence that verbosity stays independent from neighboring semantics.
+Composition remains independent follow-up evidence rather than a blocker to the promoted individual projection.
 
 ## Results
 
-Authoritative Claude result:
+Current promoted evidence:
+
+[`results/verbosity-cross-harness-detailed.md`](results/verbosity-cross-harness-detailed.md)
+
+Historical/baseline Claude evidence:
 
 [`results/verbosity-claude-sonnet.md`](results/verbosity-claude-sonnet.md)
 
