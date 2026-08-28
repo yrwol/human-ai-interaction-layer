@@ -1,40 +1,53 @@
 # HAIL for Codex
 
-This directory contains the harness-native Codex experiment for explicit persistent HAIL profile management.
+This directory contains the harness-native Codex integration for explicit persistent HAIL profile management.
 
 ## Persistence boundary
 
 Persistent HAIL preferences change only through explicit HAIL configuration.
 
-In Codex, the intended entry point is the `hail` skill, invoked explicitly as `$hail`.
-
 Ordinary conversation such as "stop waiting on me" or "be more concise" may affect the current interaction, but must not silently rewrite the persistent HAIL profile.
+
+## Discoverable skills
+
+HAIL exposes persistent profile-management actions as independently discoverable Codex skills:
+
+```text
+$hail    → orient, inspect, or route conversational HAIL intent
+$show    → show the current persistent HAIL profile (read-only)
+$setup   → initialize persistent HAIL configuration
+$change  → change one or more persistent HAIL defaults
+$reset   → reset the whole profile or a selected preference
+```
+
+The root `$hail` skill remains available for compatibility and conversational routing. The specific skills make supported actions discoverable without requiring the user to already know hidden `$hail <subcommand>` vocabulary.
+
+`review` is not advertised here because the separate review capability is not yet implemented as a supported skill.
 
 ## Local test setup
 
-Install the skill into your user Codex skills directory so Codex can discover it:
+Install all HAIL skill directories into the user Codex skills directory so Codex can discover the complete surface:
 
 ```text
 ~/.codex/skills/hail/SKILL.md
+~/.codex/skills/show/SKILL.md
+~/.codex/skills/setup/SKILL.md
+~/.codex/skills/change/SKILL.md
+~/.codex/skills/reset/SKILL.md
 ```
 
-For this repository experiment, copy `skills/hail/` to that location using your normal local file workflow.
+For this repository experiment, copy each directory under `integrations/codex/skills/` into `~/.codex/skills/` using your normal local file workflow.
 
-Then start a fresh Codex session and invoke:
+Then start a fresh Codex session and verify the skills are discoverable before testing behavior.
+
+The legacy conversational shape remains compatible through the root skill, for example:
 
 ```text
 $hail
-```
-
-Useful test interactions:
-
-```text
 $hail show
 $hail change
 $hail reset
 ```
-
-or invoke `$hail` and continue conversationally.
 
 ## Expected storage
 
@@ -69,6 +82,6 @@ Everything outside that block must be preserved.
 
 The semantic profile is shared, but generated harness projections are not synchronized automatically.
 
-For example, if `$hail change` modifies the canonical profile in Codex, Codex's `AGENTS.md` projection is regenerated immediately, but Claude's previously generated projection is not refreshed until the Claude HAIL integration runs again.
+For example, if `$change` modifies the canonical profile in Codex, Codex's `AGENTS.md` projection is regenerated immediately, but Claude's previously generated projection is not refreshed until the Claude HAIL integration runs again.
 
-Do not add shared runtime or synchronization infrastructure to solve this during the current experiment. Record it as portability evidence first.
+Do not add shared runtime or synchronization infrastructure solely to solve this. Record portability behavior first.
