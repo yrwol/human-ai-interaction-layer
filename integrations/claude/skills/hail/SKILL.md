@@ -46,6 +46,20 @@ Allowed values:
 
 Do not invent additional persistent fields during this milestone without a concrete user scenario demonstrating that the existing vocabulary cannot express a persistent need.
 
+## Profile normalization
+
+`spec/semantics.md` is the authoritative semantic source for profile normalization and backward compatibility. This root skill executes that contract for Claude; user-facing action skills must not define their own migration rules.
+
+Normalize before interpreting, displaying, changing, resetting, validating, or projecting a stored profile.
+
+Current v0.1 compatibility behavior, mirroring the authoritative semantic contract:
+
+- a valid older profile that predates `step_pacing` is interpreted as `step_pacing: continuous`;
+- explicit current HAIL configuration intent wins over a stored or compatibility-derived value;
+- normalization alone does not authorize persistence, so read-only actions must not rewrite storage merely to materialize a compatibility-derived value.
+
+If compatibility semantics change, `spec/semantics.md` changes first; this harness execution contract must then be updated to match it.
+
 ## HAIL configuration behavior
 
 - Speak in terms of what the user experiences, not schema names, unless they ask for technical details.
@@ -76,13 +90,14 @@ Examples **inside explicit HAIL configuration**:
 2. If it does not exist:
    - for a read-only request, explain that HAIL has not been configured yet;
    - for an explicit setup/change request, start from the v0.1 defaults and apply the user's requested changes.
-3. When reading an older valid profile without `step_pacing`, treat it as `continuous` unless the current explicit HAIL request specifies another pacing behavior.
-4. Preserve valid preferences the user did not ask to change.
-5. Validate all values against the schema above.
-6. Write the complete canonical profile back to `~/.hail/profile.yaml` only for an explicit persistent change.
-7. Compile the profile into `~/.hail/claude-code.md`. This file is HAIL-owned and may be replaced completely on every persistent update.
-8. Ensure `~/.claude/CLAUDE.md` contains exactly one standalone import line: `@~/.hail/claude-code.md`. Preserve all unrelated content in `CLAUDE.md` exactly.
-9. Tell the user what changed in behavioral terms. Do not narrate file operations unless they ask.
+3. Normalize any stored profile according to the authoritative semantic compatibility contract above.
+4. Apply explicit current HAIL configuration intent after normalization.
+5. Preserve valid preferences the user did not ask to change.
+6. Validate all values against the current schema above.
+7. Write the complete canonical profile back to `~/.hail/profile.yaml` only for an explicit persistent change.
+8. Compile the profile into `~/.hail/claude-code.md`. This file is HAIL-owned and may be replaced completely on every persistent update.
+9. Ensure `~/.claude/CLAUDE.md` contains exactly one standalone import line: `@~/.hail/claude-code.md`. Preserve all unrelated content in `CLAUDE.md` exactly.
+10. Tell the user what changed in behavioral terms. Do not narrate file operations unless they ask.
 
 ## Claude behavior compilation
 
