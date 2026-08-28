@@ -29,33 +29,17 @@ Do not require exact command syntax after `$hail`; natural language is preferred
 - Do not implement temporary/session overrides in this milestone.
 - Never infer diagnoses or neurotypes from configuration requests.
 
-## Canonical profile
+## Bundled profile resources
 
 The canonical vendor-neutral profile is stored at `~/.hail/profile.yaml`.
 
-Current v0.1 schema:
+Before reading, creating, changing, resetting, validating, or projecting a profile, load the bundled runtime resources in this skill directory:
 
-```yaml
-version: 0.1
-profile:
-  verbosity: balanced
-  decision_mode: recommend_first
-  max_options: 3
-  task_chunking: adaptive
-  step_pacing: continuous
-  tangent_policy: capture_and_return
-```
+- `references/profile-schema.md` — current profile shape and allowed values;
+- `references/default-profile.yaml` — authoritative current defaults;
+- `references/profile-normalization.md` — compatibility, normalization, precedence, and mutation-boundary rules.
 
-Allowed values:
-
-- `verbosity`: `compact`, `balanced`, `detailed`
-- `decision_mode`: `options`, `recommend_first`, `choose_by_default`
-- `max_options`: positive integer
-- `task_chunking`: `off`, `adaptive`, `always`
-- `step_pacing`: `continuous`, `check_in`, `wait_for_user`
-- `tangent_policy`: `follow`, `capture_and_return`, `redirect`
-
-Do not invent additional persistent fields during this milestone without a concrete user scenario showing the existing vocabulary cannot express the need.
+Do not redefine schema, defaults, or compatibility behavior in user-facing action skills. Repository-level semantic authority remains `spec/semantics.md`; these bundled resources are the installed runtime contract.
 
 ## Conversational mappings
 
@@ -77,17 +61,19 @@ If one mapping is clear, apply it without unnecessary confirmation. If multiple 
 
 ## Read and update flow
 
-1. Read `~/.hail/profile.yaml` if it exists.
-2. If it does not exist:
+1. Load the bundled profile resources.
+2. Read `~/.hail/profile.yaml` if it exists.
+3. If it does not exist:
    - for `$hail` / `$hail show`, say HAIL is not configured yet and offer setup;
-   - for setup/change, start from the v0.1 defaults and apply requested changes.
-3. When reading an older valid profile without `step_pacing`, treat it as `continuous` unless the explicit current request specifies otherwise.
-4. Preserve valid preferences the user did not ask to change.
-5. Validate all values against the schema above.
-6. Write the complete canonical profile to `~/.hail/profile.yaml`.
-7. Compile the profile into HAIL's managed block in the user-level Codex `AGENTS.md` under `$CODEX_HOME/AGENTS.md` (normally `~/.codex/AGENTS.md`).
-8. Preserve all content outside the HAIL block exactly.
-9. Summarize the resulting behavior in plain language. Do not narrate file operations unless asked.
+   - for setup/change, use `references/default-profile.yaml` as the working profile and apply requested changes.
+4. Normalize any stored profile using `references/profile-normalization.md`.
+5. Apply explicit current HAIL configuration intent after normalization.
+6. Preserve valid preferences the user did not ask to change.
+7. Validate against `references/profile-schema.md`.
+8. Write the complete canonical profile only for an explicit persistent change.
+9. Compile the validated profile into HAIL's managed block in `$CODEX_HOME/AGENTS.md` (normally `~/.codex/AGENTS.md`).
+10. Preserve all content outside the HAIL block exactly.
+11. Summarize the resulting behavior in plain language.
 
 ## Codex behavior compilation
 

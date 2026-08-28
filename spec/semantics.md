@@ -19,6 +19,37 @@ profile:
   tangent_policy: capture_and_return
 ```
 
+## Profile normalization and compatibility
+
+This document is the **authoritative semantic source** for profile normalization and backward-compatibility behavior.
+
+Harness integrations and individual management skills must consume the same normalized profile semantics rather than independently embedding migration rules.
+
+Normalization happens before an action interprets, displays, changes, resets, validates, or projects a profile:
+
+```text
+stored profile
+→ normalize compatibility
+→ apply explicit current configuration intent
+→ validate current semantic profile
+→ action-specific behavior
+→ persist/project only when the action permits mutation
+```
+
+Current compatibility rule:
+
+- A valid older profile that predates `step_pacing` is interpreted as `step_pacing: continuous`.
+
+Precedence:
+
+1. an explicit value supplied by the current intentional HAIL configuration request;
+2. an explicitly stored current-schema value;
+3. a compatibility-derived value defined by this section.
+
+Compatibility-derived values are interpretation defaults, not permission to mutate storage. A read-only action such as `show` must never rewrite a profile merely to materialize a normalized value. A mutating action may persist the complete current-schema profile after applying the user's intentional change and validation.
+
+New compatibility behavior belongs **here first**. Do not add one-off migration rules to `show`, `setup`, `change`, `reset`, or other user-facing skill contracts.
+
 ## Semantic contract rule
 
 A semantic preference should describe a **human-AI collaboration mechanic**, not merely an output style.

@@ -83,7 +83,7 @@ Evidence:
 
 Status: **next**
 
-The immediate question is:
+The immediate semantic-hardening question is:
 
 > Does the repaired `task_chunking` distinction survive in Codex under single-turn observable scenarios without requiring harness-specific semantic meaning?
 
@@ -134,22 +134,21 @@ The multi-turn cases must wait for runner support or use a separate valid manual
 
 ### Discoverable skills interaction surface
 
-Status: **specified / implementation pending**
+Status: **implementation in progress**
 
-The current management surface still exposes `show`, `setup`, `change`, and `reset` as behavior interpreted through a single root HAIL skill. A focused capability specification now defines the target discoverable-skill model without changing persistent profile semantics.
+The capability contract is defined in [`capabilities/discoverable-skills.md`](capabilities/discoverable-skills.md), and implementation has started on a dedicated branch.
 
-See [`capabilities/discoverable-skills.md`](capabilities/discoverable-skills.md).
+Current implementation direction:
 
-Implementation should follow the capability contract rather than ad hoc command splitting. The intended direction is:
-
-- preserve a root `hail` orientation/routing skill;
-- expose implemented management actions as independently discoverable harness-native skills;
+- preserve the root `hail` orientation/routing skill for compatibility and conversational HAIL intent;
+- expose `show`, `setup`, `change`, and `reset` as independently discoverable Claude plugin skills;
+- expose the same conceptual actions in Codex using collision-resistant namespaced skills (`hail-show`, `hail-setup`, `hail-change`, `hail-reset`);
 - preserve natural-language compatibility and existing persistence boundaries;
-- share profile-management logic rather than duplicate behavior across skills;
-- validate Claude and Codex separately because discovery/invocation mechanisms are harness-native;
+- preserve harness-specific projection behavior rather than forcing identical internal mechanics;
+- validate discovery and behavioral parity separately in Claude and Codex before marking the capability complete;
 - do not advertise speculative skills such as `review` until their own capability is sufficiently implemented.
 
-This capability is **not the immediate semantic-hardening checkpoint**. It is a defined near-term implementation track that can proceed when implementation work is selected without displacing the current evidence question by documentation alone.
+Implementation does not change the persistent HAIL schema or semantic meanings.
 
 ## Next product-expansion candidate
 
@@ -166,6 +165,8 @@ The original candidate state was `overloaded`, with expected behavior such as re
 Do **not** assume the implementation should be a runtime, MCP server, `state.json`, automatic mood inference, or a general override engine. Those are implementation hypotheses to test only if needed.
 
 Relevant unresolved design questions include explicit versus inferred state, scope, expiration, precedence, inspection/clearing UX, and behavior across `/clear` or new harness sessions.
+
+**Persistence-contract dependency:** this capability is allowed to challenge or qualify today's rule that ordinary conversation cannot mutate persistent HAIL configuration, but any accepted change to temporary/contextual override or persistence semantics MUST update the authoritative semantic contract and the bundled runtime contracts in the same implementation. At minimum, review and update both harness copies of `skills/hail/references/profile-normalization.md`, plus any affected root/action skill instructions, schema/default resources, tests, and integration docs. Do not ship a temporary-state or contextual-persistence behavior change while leaving the bundled management contracts describing the old boundary.
 
 ## Later candidates
 
