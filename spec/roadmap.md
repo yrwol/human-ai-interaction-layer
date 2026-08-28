@@ -132,6 +132,25 @@ Multi-turn-dependent suites:
 
 The multi-turn cases must wait for runner support or use a separate valid manual methodology that preserves conversation state. Composition should verify semantic independence, not rescue weak individual projections.
 
+### Discoverable skills interaction surface
+
+Status: **specified / implementation pending**
+
+The current management surface still exposes `show`, `setup`, `change`, and `reset` as behavior interpreted through a single root HAIL skill. A focused capability specification now defines the target discoverable-skill model without changing persistent profile semantics.
+
+See [`capabilities/discoverable-skills.md`](capabilities/discoverable-skills.md).
+
+Implementation should follow the capability contract rather than ad hoc command splitting. The intended direction is:
+
+- preserve a root `hail` orientation/routing skill;
+- expose implemented management actions as independently discoverable harness-native skills;
+- preserve natural-language compatibility and existing persistence boundaries;
+- share profile-management logic rather than duplicate behavior across skills;
+- validate Claude and Codex separately because discovery/invocation mechanisms are harness-native;
+- do not advertise speculative skills such as `review` until their own capability is sufficiently implemented.
+
+This capability is **not the immediate semantic-hardening checkpoint**. It is a defined near-term implementation track that can proceed when implementation work is selected without displacing the current evidence question by documentation alone.
+
 ## Next product-expansion candidate
 
 ### Temporary interaction state
