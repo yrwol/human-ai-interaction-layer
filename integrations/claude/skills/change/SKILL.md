@@ -24,8 +24,8 @@ Read and write `~/.hail/profile.yaml` using the current v0.1 fields:
 
 ## Change behavior
 
-- Read the existing profile first and normalize it using HAIL's canonical profile-normalization behavior before applying the requested change.
-- Do not define migration or compatibility behavior in this skill; normalization semantics are authoritative in `spec/semantics.md` and executed by the root `hail` profile-management contract.
+- Load and apply the bundled root HAIL normalization contract at `../hail/references/profile-normalization.md` before interpreting the existing profile.
+- Do not define migration or compatibility behavior in this skill.
 - If no profile exists, start from the v0.1 defaults, apply the requested change, and make clear that this initializes HAIL as part of the explicit change request.
 - Apply explicit current configuration intent after normalization so the user's requested value wins over stored or compatibility-derived values.
 - Preserve every valid preference the user did not ask to change.
