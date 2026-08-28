@@ -101,7 +101,9 @@ semantic intent
 
 Evidence should record harness, model, effort/reasoning mode, profile values, session conditions, and exact projection wording. A successful result under one configuration is evidence for that configuration, not a universal model/harness claim.
 
-The current `hail-testing` workflow supplies one prompt in a fresh session. Treat it as authoritative only for **single-turn observable behavior**. Do not claim multi-turn persistence, follow-up behavior, or wait/resume composition from that runner until explicit multi-turn support exists.
+The current semantic `hail-testing` workflow supplies one prompt in a fresh session. Treat it as authoritative only for **single-turn observable behavior**. Do not claim multi-turn persistence, follow-up behavior, or wait/resume composition from that runner until explicit multi-turn support exists.
+
+The separate skill-surface workflow is deterministic state validation, not a conversational multi-turn runner. Multiple fresh management-skill invocations do not remove the semantic runner's one-prompt limitation.
 
 ## Near-term work
 
@@ -134,21 +136,34 @@ The multi-turn cases must wait for runner support or use a separate valid manual
 
 ### Discoverable skills interaction surface
 
-Status: **implementation in progress**
+Status: **implemented; deterministic management behavior validated; interactive discovery UI check pending**
 
-The capability contract is defined in [`capabilities/discoverable-skills.md`](capabilities/discoverable-skills.md), and implementation has started on a dedicated branch.
+The capability contract is defined in [`capabilities/discoverable-skills.md`](capabilities/discoverable-skills.md).
 
-Current implementation direction:
+Current evidence supports:
 
-- preserve the root `hail` orientation/routing skill for compatibility and conversational HAIL intent;
-- expose `show`, `setup`, `change`, and `reset` as independently discoverable Claude plugin skills;
-- expose the same conceptual actions in Codex using collision-resistant namespaced skills (`hail-show`, `hail-setup`, `hail-change`, `hail-reset`);
-- preserve natural-language compatibility and existing persistence boundaries;
-- preserve harness-specific projection behavior rather than forcing identical internal mechanics;
-- validate discovery and behavioral parity separately in Claude and Codex before marking the capability complete;
-- do not advertise speculative skills such as `review` until their own capability is sufficiently implemented.
+- the root `hail` orientation/routing skill remains packaged for compatibility and conversational HAIL intent;
+- `show`, `setup`, `change`, and `reset` exist as first-class Claude plugin skills;
+- the same conceptual actions exist in Codex using collision-resistant namespaced skills (`hail-show`, `hail-setup`, `hail-change`, `hail-reset`);
+- shared schema/default/normalization contracts are bundled with the root HAIL skill rather than duplicated across action skills;
+- `show` normalizes legacy profiles without mutating storage;
+- `setup`, `change`, and `reset` produce validated canonical state and preserve unrelated harness configuration;
+- Claude and Codex produce equivalent canonical profile outcomes in the tested management scenarios;
+- unimplemented `review` skills are not packaged;
+- YAML-safe writes quote semantic `task_chunking: "off"` while existing unquoted profiles remain valid and read-only access remains non-mutating.
 
-Implementation does not change the persistent HAIL schema or semantic meanings.
+Dedicated skill-surface evidence:
+
+- `yrwol/hail-testing` run `33141790176` — Claude + Codex pass against the YAML serialization repair branch;
+- `yrwol/hail-testing` run `33142056465` — Claude + Codex pass against merged HAIL `main`.
+
+The remaining discoverability question is narrower than behavioral validation:
+
+> Does each harness's actual autocomplete/search UI present the installed HAIL actions clearly enough that a user can discover them without prior command knowledge?
+
+That presentation has not been proven by the deterministic runner and should be checked manually in each harness unless a reliable programmatic discovery interface becomes available.
+
+Implementation does not add a persistent HAIL field or change the semantic meaning of existing preferences.
 
 ## Next product-expansion candidate
 
