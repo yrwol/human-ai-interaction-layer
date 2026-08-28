@@ -20,14 +20,15 @@ Read and write `~/.hail/profile.yaml` using these v0.1 fields and allowed values
 
 ## Change behavior
 
-- Read the existing profile first.
+- Read the existing profile first and normalize it using HAIL's canonical profile-normalization behavior before applying the requested change.
+- Do not define migration or compatibility behavior in this skill; normalization semantics are authoritative in `spec/semantics.md` and executed by the root `$hail` profile-management contract.
 - If no profile exists, start from v0.1 defaults, apply the requested change, and make clear that this initializes HAIL as part of the explicit change request.
-- Treat older valid profiles without `step_pacing` as `continuous` unless the current explicit request specifies otherwise.
+- Apply explicit current configuration intent after normalization so the user's requested value wins over stored or compatibility-derived values.
 - Preserve all valid preferences the user did not ask to change.
 - Map clear natural-language intent directly; ask only the minimum clarification when materially different mappings are plausible.
 - Never infer diagnoses or neurotypes.
-- Validate the complete profile before writing.
-- Regenerate HAIL's managed block in `$CODEX_HOME/AGENTS.md` (normally `~/.codex/AGENTS.md`) using the same semantic projection mappings as the root `hail` skill.
+- Validate the complete normalized/current profile before writing.
+- Regenerate HAIL's managed block in `$CODEX_HOME/AGENTS.md` (normally `~/.codex/AGENTS.md`) using the same semantic projection mappings as the root `$hail` skill.
 - Preserve all content outside the HAIL markers exactly. Replace one complete block or append one if absent; never create duplicates. If markers are malformed or multiple blocks exist, stop and ask permission to repair rather than guessing.
 - Explain what changed in behavioral terms.
 
