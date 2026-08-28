@@ -67,8 +67,9 @@ Completed evidence includes:
 - Same semantic profile → Codex: **PASS for portability evidence**
 - Claude native persistent profile management: **PASS / manually validated**
 - Codex native persistent profile management: **PASS / manually validated**
+- `verbosity: detailed` cross-harness projection hardening: **PASS / promoted for Claude and Codex**
 
-The current project checkpoint is **projection hardening of the existing validated semantics**. Current targets are `task_chunking` and `verbosity`, followed by cross-harness replay of stable wording. See [`spec/roadmap.md`](spec/roadmap.md).
+The current project checkpoint remains **projection hardening and focused semantic composition**. `verbosity` cross-harness replay is complete; `task_chunking` cross-harness replay and supported single-turn boundary checks are the next hardening target. See [`spec/roadmap.md`](spec/roadmap.md).
 
 ## Native Claude integration
 
