@@ -7,28 +7,26 @@ description: Change one or more persistent HAIL interaction defaults in Codex. U
 
 Modify only the persistent HAIL preferences the user intentionally wants changed.
 
-## Canonical profile
+## Shared profile resources
 
-Read and write `~/.hail/profile.yaml` using these v0.1 fields and allowed values:
+Load the bundled root HAIL resources before profile work:
 
-- `verbosity`: `compact`, `balanced`, `detailed`
-- `decision_mode`: `options`, `recommend_first`, `choose_by_default`
-- `max_options`: positive integer
-- `task_chunking`: `off`, `adaptive`, `always`
-- `step_pacing`: `continuous`, `check_in`, `wait_for_user`
-- `tangent_policy`: `follow`, `capture_and_return`, `redirect`
+- `../hail/references/profile-schema.md`;
+- `../hail/references/default-profile.yaml`;
+- `../hail/references/profile-normalization.md`.
+
+Do not redefine schema, defaults, migration, or compatibility behavior in this skill.
 
 ## Change behavior
 
-- Read the existing profile first and normalize it using HAIL's canonical profile-normalization behavior before applying the requested change.
-- Do not define migration or compatibility behavior in this skill; normalization semantics are authoritative in `spec/semantics.md` and executed by the root `$hail` profile-management contract.
-- If no profile exists, start from v0.1 defaults, apply the requested change, and make clear that this initializes HAIL as part of the explicit change request.
+- Normalize and validate the existing profile before applying the requested change.
+- If no profile exists, copy the bundled default profile as the working profile, apply the requested change, and make clear that this initializes HAIL as part of the explicit request.
 - Apply explicit current configuration intent after normalization so the user's requested value wins over stored or compatibility-derived values.
-- Preserve all valid preferences the user did not ask to change.
+- Preserve every valid preference the user did not ask to change.
 - Map clear natural-language intent directly; ask only the minimum clarification when materially different mappings are plausible.
 - Never infer diagnoses or neurotypes.
-- Validate the complete normalized/current profile before writing.
-- Regenerate HAIL's managed block in `$CODEX_HOME/AGENTS.md` (normally `~/.codex/AGENTS.md`) using the same semantic projection mappings as the root `$hail` skill.
+- Validate the resulting profile against the bundled schema before writing `~/.hail/profile.yaml`.
+- Regenerate HAIL's managed block in `$CODEX_HOME/AGENTS.md` using the root `$hail` projection mappings.
 - Preserve all content outside the HAIL markers exactly. Replace one complete block or append one if absent; never create duplicates. If markers are malformed or multiple blocks exist, stop and ask permission to repair rather than guessing.
 - Explain what changed in behavioral terms.
 
