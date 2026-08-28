@@ -30,6 +30,7 @@ HAIL gives the user a portable semantic description of those needs while allowin
 14. **Optimize understanding, not merely usage.** HAIL should reduce unnecessary cognitive effort while helping users understand assumptions, uncertainty, tradeoffs, and what evidence would actually change a conclusion. Fewer interactions are not inherently better if additional interaction prevents misunderstanding.
 15. **Context over global labels.** Expertise, confidence, cognitive load, and support needs can vary by task and domain. HAIL should avoid turning local interaction signals into permanent judgments such as globally classifying a user as beginner, expert, or low-confidence.
 16. **Support evaluation without replacing judgment.** HAIL should reduce the effort required to evaluate AI output, not reduce the user's responsibility to evaluate it. When useful, it should help identify what matters, what can be verified, what remains uncertain, and when outside evidence or expertise is needed.
+17. **Discoverable user actions.** When a harness supports skill discovery, meaningful HAIL actions should be independently discoverable rather than requiring prior knowledge of hidden subcommand vocabulary.
 
 ## Current architecture boundary
 
@@ -38,11 +39,11 @@ The current product model is:
 ```text
 Human
   |
-  +--> persistent semantic HAIL profile
+  +--> explicit HAIL management surface
   |            |
-  |            +--> harness-native integration
-  |                       |
-  |                       +--> harness-specific projection / behavior
+  |            +--> persistent semantic HAIL profile
+  |                         |
+  |                         +--> harness-native projection / behavior
   |
   +--> ordinary contextual instructions
                |
@@ -85,6 +86,35 @@ For example, `stop waiting on me` during a task may reasonably mean “continue 
 
 Temporary/session/task-specific state remains a distinct future design area.
 
+## Configuration and discovery model
+
+Persistent configuration happens through explicit HAIL interaction inside a harness.
+
+HAIL keeps a root management skill for orientation, compatibility, and natural-language routing while exposing supported management actions as first-class discoverable skills where the harness allows it.
+
+The current conceptual surface is:
+
+```text
+hail   → orient, inspect, or route conversational HAIL intent
+show   → inspect the persistent profile (read-only)
+setup  → initialize persistent HAIL configuration
+change → intentionally change persistent HAIL defaults
+reset  → reset all or part of the persistent profile
+```
+
+Invocation syntax is harness-native:
+
+```text
+Claude: /hail:hail, /hail:show, /hail:setup, /hail:change, /hail:reset
+Codex:  $hail, $hail-show, $hail-setup, $hail-change, $hail-reset
+```
+
+The Codex action names carry a HAIL prefix because its skill namespace is effectively global; generic names such as `$show` and `$change` would create avoidable collision risk.
+
+Users should still be able to configure HAIL conversationally. Discoverability adds affordance; it does not turn HAIL into a rigid command parser.
+
+The discoverable-skill structure is currently experimental: the first implementation exists for Claude and Codex, but dedicated discovery and behavioral-parity validation are still required before the capability is considered complete.
+
 ## Evaluation model
 
 HAIL should evaluate semantics as behavioral contracts rather than prompt text quality.
@@ -108,6 +138,8 @@ For each semantic, evidence should distinguish:
 - differentiation behavior — are neighboring values behaviorally distinct?
 
 Composition testing should generally follow individual-semantic validation so interaction failures can be attributed cleanly.
+
+Interaction-surface capabilities such as discoverable skills require their own evidence: structure/discovery, behavioral parity with validated flows, compatibility, and harness-specific invocation behavior.
 
 ## Compatibility
 
@@ -145,21 +177,14 @@ Minimum rule:
 
 > Profile data is not forwarded downstream unless a specific feature genuinely requires it and the user has a clear reason to expect that disclosure.
 
-## Current normal-user configuration model
-
-Persistent configuration should happen through an explicit HAIL entry point inside a harness.
-
-Claude currently demonstrates this through `/hail:hail`; the Codex port uses `$hail`.
-
-After entering HAIL configuration, the interaction should remain natural language. Users should not need to know schema field names or YAML values.
-
 ## Focused capability specifications
 
 Some HAIL behaviors are coherent capability areas rather than current persistent-profile fields.
 
-[`capabilities/review-guidance.md`](capabilities/review-guidance.md) explores how HAIL can help users evaluate AI output, allocate skepticism, surface material assumptions, recognize verification boundaries, and stop unproductive review loops without telling users simply to trust AI.
+- [`capabilities/discoverable-skills.md`](capabilities/discoverable-skills.md) defines how meaningful HAIL management actions become first-class discoverable harness skills without changing profile semantics or persistence boundaries.
+- [`capabilities/review-guidance.md`](capabilities/review-guidance.md) explores how HAIL can help users evaluate AI output, allocate skepticism, surface material assumptions, recognize verification boundaries, and stop unproductive review loops without telling users simply to trust AI.
 
-Capability specs do not automatically become current semantics or roadmap commitments. They preserve deeper design work until an experiment earns implementation priority.
+Capability specs do not automatically become current semantics. Their implementation and evidence status must be tracked separately.
 
 ## Non-goals for the current stage
 
@@ -183,4 +208,4 @@ The core question remains:
 
 > Can a person own one semantic interaction model and receive meaningfully aligned collaboration behavior across different AI harnesses without adapting themselves to each harness's configuration plumbing?
 
-Current experiments have established semantic portability and native persistent-management flows. The current development phase is strengthening behavioral durability of existing semantics before expanding the product surface. See [`roadmap.md`](roadmap.md) for current project state.
+Current experiments have established semantic portability and native persistent-management flows. The current development phase is strengthening behavioral durability of existing semantics while selectively improving the harness-native management experience where a focused capability has been specified. See [`roadmap.md`](roadmap.md) for current project state.
