@@ -57,7 +57,7 @@ The larger original interaction taxonomy has **not** been discarded. It now live
 
 Start with [`evals/README.md`](evals/README.md) for the evaluation map.
 
-- [`evals/prompt-hardening/`](evals/prompt-hardening/) — current semantic prompt-hardening experiments and current result records
+- [`evals/prompt-hardening/`](evals/prompt-hardening/) — current semantic prompt-hardening experiments, focused composition boundaries, and current result records
 - [`evals/historical/`](evals/historical/) — historical fixtures, manual procedures, milestone summaries, raw transcripts, and portability evidence
 - [`evals/prompt-context-efficiency.md`](evals/prompt-context-efficiency.md) — standalone prompt-context efficiency experiment
 
@@ -69,7 +69,7 @@ Completed evidence includes:
 - Codex native persistent profile management: **PASS / manually validated**
 - `verbosity: detailed` cross-harness projection hardening: **PASS / promoted for Claude and Codex**
 
-The current project checkpoint remains **projection hardening and focused semantic composition**. `verbosity` cross-harness replay is complete; `task_chunking` cross-harness replay and supported single-turn boundary checks are the next hardening target. See [`spec/roadmap.md`](spec/roadmap.md).
+The current project checkpoint remains **projection hardening and focused semantic composition**. `verbosity` cross-harness replay is complete; `task_chunking` cross-harness replay and supported single-turn boundary checks are the next hardening target. Every tracked composition boundary now has its own focused eval definition under [`evals/prompt-hardening/`](evals/prompt-hardening/), with the roadmap identifying which suites are single-turn-valid versus multi-turn-dependent. See [`spec/roadmap.md`](spec/roadmap.md).
 
 ## Native Claude integration
 
@@ -141,7 +141,7 @@ reference/
   dotnet/             reference compiler/conformance tooling
 profiles/             reference semantic profile examples
 evals/
-  prompt-hardening/   active behavioral hardening experiments/results
+  prompt-hardening/   active field hardening + focused composition experiments/results
   historical/         superseded eval fixtures/procedures + milestone evidence
     results/           historical milestone summaries/raw transcripts
 spec/                 product truth, semantics, taxonomy, roadmap, historical decisions
@@ -163,5 +163,6 @@ CLAUDE.md              Claude project guidance
 - Do not mutate user intent to compensate for weak harness enforcement.
 - Do not expose implementation plumbing to normal users.
 - Add semantic fields only after a real scenario proves the current vocabulary insufficient.
+- Give each tracked composition boundary its own focused eval definition.
 - Do not make multi-harness synchronization a shipping requirement.
 - Do not add MCP, shared runtime, cloud sync, diagnosis presets, or polished UI until a concrete experiment requires them.
