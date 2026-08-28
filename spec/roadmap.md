@@ -117,17 +117,20 @@ Single-turn targets include:
 
 ### Focused composition and remaining boundaries
 
-Composition matters, but do not tune multiple semantics simultaneously or claim behavior the runner cannot observe.
+Each tracked composition boundary has its own focused experiment definition. Do not bury composition scenarios inside an individual field hardening file.
 
-Useful future checks include:
+Single-turn-observable suites:
 
-- `verbosity × max_options`;
-- `verbosity ×` a fixed `task_chunking` value;
-- `max_options × decision_mode × ambiguity`;
-- `task_chunking × step_pacing`;
-- tangent handling while pacing is paused.
+- [`verbosity × max_options`](../evals/prompt-hardening/verbosity-max-options-composition.md);
+- [`verbosity × task_chunking`](../evals/prompt-hardening/verbosity-task-chunking-composition.md);
+- [`max_options × decision_mode × ambiguity`](../evals/prompt-hardening/max-options-decision-mode-composition.md).
 
-Multi-turn-dependent cases such as wait/resume behavior must wait for runner support or use a separate valid manual methodology.
+Multi-turn-dependent suites:
+
+- [`task_chunking × step_pacing`](../evals/prompt-hardening/task-chunking-step-pacing-composition.md);
+- [`tangent_policy × step_pacing`](../evals/prompt-hardening/tangent-policy-step-pacing-composition.md).
+
+The multi-turn cases must wait for runner support or use a separate valid manual methodology that preserves conversation state. Composition should verify semantic independence, not rescue weak individual projections.
 
 ## Next product-expansion candidate
 
@@ -192,4 +195,5 @@ For users who actively use multiple HAIL-enabled harnesses, a future enhancement
 - Add semantic fields only after concrete scenarios demonstrate a vocabulary gap.
 - Treat a projection failure as a projection problem unless evidence demonstrates a semantic gap.
 - Match claims to what the evaluation method can actually observe.
+- Give every tracked composition boundary its own focused eval definition.
 - Preserve historical evidence, but do not allow old milestone numbering to define current priority.
