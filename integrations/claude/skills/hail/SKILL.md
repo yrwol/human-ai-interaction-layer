@@ -12,53 +12,23 @@ You are the explicit, human-facing configuration experience for the user's **per
 Persistent HAIL configuration must be intentional.
 
 - Only modify the canonical HAIL profile when the user explicitly entered HAIL configuration or explicitly says they want to change HAIL/their persistent defaults.
-- Ordinary conversation is contextual. Statements such as "stop waiting on me", "just decide", "keep this short", or "I'm overwhelmed today" MUST NOT silently rewrite the persistent HAIL profile.
+- Ordinary conversation is contextual and MUST NOT silently rewrite the persistent HAIL profile.
 - A contextual instruction may affect the current conversation or task according to normal harness behavior, but temporary/session overrides are outside this milestone and are not persisted by HAIL.
 - If it is genuinely unclear whether the user means a persistent HAIL change or a one-off request, preserve the profile and ask whether they want to change their HAIL default.
 
-The user should not need to know HAIL's schema, YAML, instruction files, or implementation details. Translate explicit HAIL configuration needs into semantic preferences and explain them in plain language.
+The user should not need to know HAIL's schema, YAML, instruction files, or implementation details.
 
-## Canonical profile
+## Bundled profile resources
 
 The canonical profile is stored at `~/.hail/profile.yaml`.
 
-Current v0.1 schema:
+Before reading, creating, changing, resetting, validating, or projecting a profile, load the bundled runtime resources in this skill directory:
 
-```yaml
-version: 0.1
-profile:
-  verbosity: balanced
-  decision_mode: recommend_first
-  max_options: 3
-  task_chunking: adaptive
-  step_pacing: continuous
-  tangent_policy: capture_and_return
-```
+- `references/profile-schema.md` — current profile shape and allowed values;
+- `references/default-profile.yaml` — authoritative current defaults;
+- `references/profile-normalization.md` — compatibility, normalization, precedence, and mutation-boundary rules.
 
-Allowed values:
-
-- `verbosity`: `compact`, `balanced`, `detailed`
-- `decision_mode`: `options`, `recommend_first`, `choose_by_default`
-- `max_options`: positive integer
-- `task_chunking`: `off`, `adaptive`, `always`
-- `step_pacing`: `continuous`, `check_in`, `wait_for_user`
-- `tangent_policy`: `follow`, `capture_and_return`, `redirect`
-
-Do not invent additional persistent fields during this milestone without a concrete user scenario demonstrating that the existing vocabulary cannot express a persistent need.
-
-## Profile normalization
-
-`spec/semantics.md` is the authoritative semantic source for profile normalization and backward compatibility. This root skill executes that contract for Claude; user-facing action skills must not define their own migration rules.
-
-Normalize before interpreting, displaying, changing, resetting, validating, or projecting a stored profile.
-
-Current v0.1 compatibility behavior, mirroring the authoritative semantic contract:
-
-- a valid older profile that predates `step_pacing` is interpreted as `step_pacing: continuous`;
-- explicit current HAIL configuration intent wins over a stored or compatibility-derived value;
-- normalization alone does not authorize persistence, so read-only actions must not rewrite storage merely to materialize a compatibility-derived value.
-
-If compatibility semantics change, `spec/semantics.md` changes first; this harness execution contract must then be updated to match it.
+Do not redefine schema, defaults, or compatibility behavior in user-facing action skills. Repository-level semantic authority remains `spec/semantics.md`; these bundled resources are the installed runtime contract.
 
 ## HAIL configuration behavior
 
@@ -77,7 +47,7 @@ Examples **inside explicit HAIL configuration**:
 - "If it's reversible, just pick for me" → `decision_mode: choose_by_default`.
 - "Keep answers short" → `verbosity: compact`.
 - "I want more context" → `verbosity: detailed`.
-- "Break big things down for me" → `task_chunking: adaptive` or `always` depending on whether they want it only for complex work or every multi-step task.
+- "Break big things down for me" → `task_chunking: adaptive` or `always` depending on intended scope.
 - "Give me one small step and wait until I'm ready" → `task_chunking: always` plus `step_pacing: wait_for_user`.
 - "Check whether I'm ready before continuing" → `step_pacing: check_in`.
 - "Just keep going through the steps" → `step_pacing: continuous`.
@@ -86,22 +56,23 @@ Examples **inside explicit HAIL configuration**:
 
 ## Read and update flow
 
-1. Read `~/.hail/profile.yaml` if it exists.
-2. If it does not exist:
+1. Load the bundled profile resources.
+2. Read `~/.hail/profile.yaml` if it exists.
+3. If it does not exist:
    - for a read-only request, explain that HAIL has not been configured yet;
-   - for an explicit setup/change request, start from the v0.1 defaults and apply the user's requested changes.
-3. Normalize any stored profile according to the authoritative semantic compatibility contract above.
-4. Apply explicit current HAIL configuration intent after normalization.
-5. Preserve valid preferences the user did not ask to change.
-6. Validate all values against the current schema above.
-7. Write the complete canonical profile back to `~/.hail/profile.yaml` only for an explicit persistent change.
-8. Compile the profile into `~/.hail/claude-code.md`. This file is HAIL-owned and may be replaced completely on every persistent update.
-9. Ensure `~/.claude/CLAUDE.md` contains exactly one standalone import line: `@~/.hail/claude-code.md`. Preserve all unrelated content in `CLAUDE.md` exactly.
-10. Tell the user what changed in behavioral terms. Do not narrate file operations unless they ask.
+   - for an explicit setup/change request, use `references/default-profile.yaml` as the working profile and apply the user's requested changes.
+4. Normalize any stored profile using `references/profile-normalization.md`.
+5. Apply explicit current HAIL configuration intent after normalization.
+6. Preserve valid preferences the user did not ask to change.
+7. Validate against `references/profile-schema.md`.
+8. Write the complete canonical profile only for an explicit persistent change.
+9. Compile the validated profile into `~/.hail/claude-code.md`.
+10. Ensure `~/.claude/CLAUDE.md` contains exactly one standalone import line: `@~/.hail/claude-code.md`, preserving all unrelated content exactly.
+11. Tell the user what changed in behavioral terms.
 
 ## Claude behavior compilation
 
-Write `~/.hail/claude-code.md` as the complete generated projection below. Do not preserve older unmarked HAIL instructions in this file; replacing the full file is the migration path from the reference compiler.
+Write `~/.hail/claude-code.md` as the complete generated projection below:
 
 ```markdown
 # HAIL Interaction Instructions
@@ -154,7 +125,7 @@ Use these mappings exactly for this experiment.
 
 ## Projection and import safety
 
-`~/.hail/claude-code.md` is generated HAIL output, not user-authored configuration. Replace it completely whenever the persistent profile changes. This intentionally removes stale or contradictory instructions left by older HAIL versions.
+`~/.hail/claude-code.md` is generated HAIL output and may be replaced completely whenever the persistent profile changes.
 
 When updating `~/.claude/CLAUDE.md`:
 
