@@ -3,15 +3,15 @@
 ## Status
 
 - **Capability type:** harness interaction / command discovery
-- **Status:** experimental
+- **Status:** experimental — management behavior validated; interactive discovery presentation still pending manual verification
 - **Profile field:** none
-- **Implementation status:** first-pass skill structure implemented for Claude and Codex; discovery and behavioral-parity validation pending
+- **Implementation status:** first-class skill structure is implemented for Claude and Codex; deterministic package/callability/profile-management validation passes in both harnesses
 
 ## Purpose
 
 HAIL historically exposed multiple user actions through one harness entry point and interpreted words such as `show`, `setup`, `change`, and `reset` as subcommands or conversational intent inside that single skill.
 
-That works when the user already knows the actions exist, but it creates a discoverability problem: important HAIL capabilities are effectively hidden behind undocumented knowledge of command words.
+That works when the user already knows the actions exist, but it creates a discoverability problem: important HAIL capabilities are effectively hidden behind prior knowledge of command words.
 
 This capability defines a discoverable skill model where meaningful HAIL actions are represented as first-class harness skills when the harness supports skill discovery.
 
@@ -21,9 +21,9 @@ The goal is:
 
 This is an interaction-surface capability, not a new persistent semantic preference.
 
-## Implemented first-pass shape
+## Implemented shape
 
-The current feature implementation preserves a root HAIL skill and adds independently discoverable management skills.
+The current implementation preserves a root HAIL skill and adds independently invokable management skills.
 
 Conceptually:
 
@@ -54,7 +54,7 @@ $hail-change
 $hail-reset
 ```
 
-Codex uses HAIL-prefixed action names because skill names are effectively global and generic names such as `$show` or `$change` would create unnecessary collision risk.
+Codex uses HAIL-prefixed action names because skill names are effectively global and generic names such as `$show` or `$change` would create unnecessary collision risk. Claude action skill folders may use the short conceptual names because the HAIL plugin namespace exposes them as `/hail:<skill>`; they are not intended to be installed as generic standalone global skills.
 
 `review` remains reserved for the separately defined review capability and is not exposed as implemented.
 
@@ -66,6 +66,8 @@ A user browsing or searching the harness's available HAIL skills should be able 
 
 Users should not have to know that a hidden `show`, `change`, or similar subcommand exists before they can find it.
 
+Automated validation can prove that the expected skills are packaged and callable by their harness-native names. Visual autocomplete/search presentation remains a distinct harness-UI check and must not be claimed from filesystem/callability evidence alone.
+
 ### Single-purpose skills
 
 Each first-class skill should represent one coherent user intent.
@@ -73,7 +75,7 @@ Each first-class skill should represent one coherent user intent.
 - **show** — inspect the current persistent profile and effective HAIL configuration;
 - **setup** — establish a usable initial profile;
 - **change** — intentionally persist one or more preference changes;
-- **reset** — restore the supported default profile.
+- **reset** — restore the supported default profile or a selected preference.
 
 A skill may share implementation behavior with other skills, but its user-facing contract should remain narrow enough to understand from its name and description.
 
@@ -104,6 +106,29 @@ Change my default so you stop waiting between steps.
 should not be rejected merely because they did not explicitly invoke a `change` skill.
 
 Skill discovery improves affordance; it does not turn HAIL into a rigid command parser.
+
+## Shared packaged runtime contracts
+
+The management skills consume shared runtime profile contracts bundled with the root HAIL skill rather than independently re-declaring schema/default/migration behavior:
+
+```text
+hail/
+  SKILL.md
+  references/
+    profile-schema.md
+    default-profile.yaml
+    profile-normalization.md
+```
+
+Repository-level semantic authority remains `spec/semantics.md`. The bundled references are the installed runtime representation and must mirror that semantic contract before release.
+
+The bundled runtime split means:
+
+- `show` reads schema + normalization and remains non-mutating;
+- `setup` initializes from the bundled default profile;
+- `change` normalizes first, applies explicit user intent, validates, and persists only the intended semantic change plus supported normalization;
+- `reset` reads defaults from the bundled default profile instead of duplicating default values in the action skill;
+- harness-specific projection mappings remain harness-local rather than being treated as vendor-neutral semantic data.
 
 ## Skill lifecycle
 
@@ -165,17 +190,17 @@ The `show` skill is read-only.
 
 The root `hail` skill should preserve the same distinction when routing natural-language requests.
 
+Future temporary-interaction-state work may refine this boundary. Any such change must update the repository semantic contract and the bundled runtime normalization/persistence instructions together rather than leaving installed skills with stale persistence rules.
+
 ## Shared behavior and duplication boundary
 
-First-class skills should preserve the same canonical profile schema, validation rules, persistence boundary, and harness projection semantics as the root skill.
+First-class skills should preserve the same canonical profile schema, validation rules, persistence boundary, normalization behavior, and harness projection semantics as the root skill.
 
-The current skill-file implementation necessarily repeats some operational guidance because each harness skill is independently invoked from its own `SKILL.md`. That repetition must not become semantic drift.
-
-If maintenance cost or divergence becomes material, introduce shared harness-local helpers or generated skill content only when that complexity is justified by evidence.
+Shared schema/default/normalization behavior belongs in bundled runtime references rather than being copied into each action skill. Harness-specific operational projection behavior may remain harness-local where that is the simplest reliable execution contract.
 
 Do not introduce a shared runtime merely to remove textual duplication.
 
-## Migration from the current single-skill model
+## Migration from the original single-skill model
 
 The original single HAIL skill remains as the compatibility starting point rather than being deleted.
 
@@ -217,49 +242,58 @@ The review capability is a natural candidate for a separate discoverable skill b
 
 Future user-facing HAIL capabilities should explicitly decide whether they warrant their own discoverable skill. New functionality should not automatically become another hidden word interpreted by the root skill.
 
-## Evaluation plan
+## Validation evidence
 
-### Structure / discovery
+A dedicated deterministic skill-surface runner now exists in the private `yrwol/hail-testing` repository. It is intentionally separate from HAIL's single-turn semantic behavior eval workflow.
 
-For each supported harness:
+The runner validates the actual installed management surfaces for Claude and Codex using fresh invocations and then inspects persistent filesystem state. It checks:
 
-- install/load the HAIL integration;
-- inspect the harness's discoverable skill list/search behavior;
-- verify that each implemented HAIL action is independently discoverable by an understandable name/description;
-- verify that unsupported/speculative actions are not presented as implemented.
+- expected action skills and bundled root resources exist;
+- `review` is not packaged as an implemented HAIL skill;
+- the harness-native action names are callable;
+- a legacy profile missing `step_pacing` is interpreted as `continuous`;
+- `show` does not mutate the legacy profile;
+- `setup` produces the bundled default profile and preserves unrelated harness configuration;
+- `change` applies the requested delta, preserves untouched semantic values, and persists supported normalization;
+- `reset` reads bundled defaults and preserves unrelated semantic values;
+- Claude projection/import integrity is preserved;
+- Codex managed-block integrity is preserved;
+- both harnesses preserve unrelated user-authored configuration.
 
-### Behavioral parity
+During the first run, the suite exposed a YAML portability issue: plain `task_chunking: off` may be interpreted as boolean `false` by YAML 1.1-style parsers. HAIL now preserves existing unquoted profiles as semantic `off`, keeps read-only access non-mutating, and serializes HAIL-owned writes as `task_chunking: "off"`.
 
-For each migrated management action, compare the new first-class skill against the existing behavior:
+Validation runs:
 
-- `show` returns the same authoritative persistent configuration and remains read-only;
-- `setup` creates a valid supported profile;
-- `change` persists intentional supported changes and refreshes the harness-local projection appropriately;
-- `reset` restores defaults without damaging unrelated harness configuration.
+- `yrwol/hail-testing` run `33141790176` — complete Claude + Codex pass against the YAML serialization repair branch;
+- `yrwol/hail-testing` run `33142056465` — complete Claude + Codex pass against merged HAIL `main`.
 
-### Compatibility
+The second run is the authoritative current release evidence for the deterministic skill surface.
 
-Verify that reasonable existing invocation patterns continue to work during migration where compatibility is intended.
+### What this evidence does not prove
 
-The root HAIL skill should still orient and route users rather than responding as though only exact skill invocation is valid.
+The skill-surface runner does not validate:
 
-### Cross-harness semantics
+- visual autocomplete/search rendering in Claude or Codex;
+- whether a user naturally notices the skill in a harness UI;
+- multi-turn conversational persistence or wait/resume behavior;
+- tangent-return composition across multiple turns.
 
-Claude and Codex do not need identical UI syntax. They do need conceptually equivalent discoverable capabilities and persistence outcomes.
+Those require separate observation/methodology. In particular, the existing single-prompt semantic runner must not be used to claim multi-turn behavior.
 
 ## Implementation completion criteria
 
-This capability should not be marked complete for a harness until:
+For deterministic management behavior, the implemented Claude and Codex skill surfaces now satisfy the tested criteria:
 
-- supported HAIL actions exist as independently discoverable skills in that harness;
+- supported management actions exist as first-class harness skills;
 - each skill has a clear user-facing name and description;
-- each skill preserves the validated management behavior;
-- the root HAIL skill remains a useful orientation/routing surface;
+- the action skills preserve validated profile-management semantics in the tested scenarios;
 - persistent configuration behavior is regression-tested;
-- README/integration docs show the actual skill surface rather than legacy hidden subcommands;
-- unsupported future skills are not advertised as available.
+- README/integration docs describe the actual skill surface;
+- unsupported `review` skills are not packaged;
+- bundled schema/default/normalization contracts are installed and exercised;
+- equivalent canonical profile outcomes were observed in Claude and Codex.
 
-The first structural implementation now exists for Claude and Codex. Completion remains blocked on discovery and behavioral-parity evidence for each harness separately.
+The capability remains **experimental rather than complete** until the actual harness discovery/autocomplete presentation is manually verified in each harness and any remaining root-skill migration compatibility checks considered necessary for release are recorded.
 
 ## Documentation impact
 
@@ -272,4 +306,4 @@ Current implementation documentation includes:
 - `spec/roadmap.md`;
 - this capability contract.
 
-Relevant evaluation/result documentation should be added as validation is performed.
+The private testing repository documents the deterministic skill-surface methodology separately from the semantic eval methodology.
