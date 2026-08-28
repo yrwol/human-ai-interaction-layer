@@ -107,7 +107,7 @@ Use these mappings exactly for this experiment.
 
 - `compact` → `- Keep responses compact. Include necessary detail, but avoid expanding beyond what is needed to make progress.`
 - `balanced` → `- Use balanced verbosity: enough detail to be useful without overwhelming the user.`
-- `detailed` → `- Provide detailed responses when useful, including relevant reasoning, context, and implementation detail.`
+- `detailed` → `- Provide detailed responses when the task benefits from depth. Add useful explanatory layers such as reasoning, interactions, examples, tradeoffs, edge cases, or implementation implications rather than merely expanding wording. Remain proportionate to simple requests.`
 
 ### decision_mode
 
