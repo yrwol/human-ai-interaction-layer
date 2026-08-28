@@ -57,6 +57,20 @@ Allowed values:
 
 Do not invent additional persistent fields during this milestone without a concrete user scenario showing the existing vocabulary cannot express the need.
 
+## Profile normalization
+
+`spec/semantics.md` is the authoritative semantic source for profile normalization and backward compatibility. This root skill executes that contract for Codex; user-facing action skills must not define their own migration rules.
+
+Normalize before interpreting, displaying, changing, resetting, validating, or projecting a stored profile.
+
+Current v0.1 compatibility behavior, mirroring the authoritative semantic contract:
+
+- a valid older profile that predates `step_pacing` is interpreted as `step_pacing: continuous`;
+- explicit current HAIL configuration intent wins over a stored or compatibility-derived value;
+- normalization alone does not authorize persistence, so read-only actions must not rewrite storage merely to materialize a compatibility-derived value.
+
+If compatibility semantics change, `spec/semantics.md` changes first; this harness execution contract must then be updated to match it.
+
 ## Conversational mappings
 
 Inside an explicit HAIL configuration interaction:
@@ -81,13 +95,14 @@ If one mapping is clear, apply it without unnecessary confirmation. If multiple 
 2. If it does not exist:
    - for `$hail` / `$hail show`, say HAIL is not configured yet and offer setup;
    - for setup/change, start from the v0.1 defaults and apply requested changes.
-3. When reading an older valid profile without `step_pacing`, treat it as `continuous` unless the explicit current request specifies otherwise.
-4. Preserve valid preferences the user did not ask to change.
-5. Validate all values against the schema above.
-6. Write the complete canonical profile to `~/.hail/profile.yaml`.
-7. Compile the profile into HAIL's managed block in the user-level Codex `AGENTS.md` under `$CODEX_HOME/AGENTS.md` (normally `~/.codex/AGENTS.md`).
-8. Preserve all content outside the HAIL block exactly.
-9. Summarize the resulting behavior in plain language. Do not narrate file operations unless asked.
+3. Normalize any stored profile according to the authoritative semantic compatibility contract above.
+4. Apply explicit current HAIL configuration intent after normalization.
+5. Preserve valid preferences the user did not ask to change.
+6. Validate all values against the current schema above.
+7. Write the complete canonical profile to `~/.hail/profile.yaml` only for an explicit persistent change.
+8. Compile the profile into HAIL's managed block in the user-level Codex `AGENTS.md` under `$CODEX_HOME/AGENTS.md` (normally `~/.codex/AGENTS.md`).
+9. Preserve all content outside the HAIL block exactly.
+10. Summarize the resulting behavior in plain language. Do not narrate file operations unless asked.
 
 ## Codex behavior compilation
 
