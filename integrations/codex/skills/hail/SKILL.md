@@ -114,7 +114,7 @@ Use these mappings for the Codex projection.
 
 - `compact` → `- Keep responses compact and action-oriented. Include only the detail needed to make safe, correct progress.`
 - `balanced` → `- Use balanced verbosity: enough detail to support progress without unnecessary expansion.`
-- `detailed` → `- Provide detailed explanations when useful, including relevant context, reasoning, and implementation detail.`
+- `detailed` → `- Provide detailed responses when the task benefits from depth. Add useful explanatory layers such as reasoning, interactions, examples, tradeoffs, edge cases, or implementation implications rather than merely expanding wording. Remain proportionate to simple requests.`
 
 ### decision_mode
 
