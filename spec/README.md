@@ -19,8 +19,9 @@ For **profile fields**, a capability spec is also required as the field's durabl
 
 - [`capabilities/template.md`](capabilities/template.md) — required starting structure for a new profile-field capability contract.
 - [`capabilities/review-guidance.md`](capabilities/review-guidance.md) — review confidence, intelligent skepticism, verification support, review-loop detection, domain-local scaffolding, and cognitive-load reduction while evaluating AI output.
+- [`capabilities/discoverable-skills.md`](capabilities/discoverable-skills.md) — proposed first-class skill architecture for making HAIL actions such as `show`, `setup`, `change`, and `reset` discoverable instead of hiding them behind knowledge of subcommands.
 
-A non-profile capability spec may contribute durable product principles or taxonomy concepts while remaining separate from the current semantic model.
+A non-profile capability spec may contribute durable product principles or interaction-surface behavior while remaining separate from the current semantic model.
 
 ## Historical evidence and decisions
 
