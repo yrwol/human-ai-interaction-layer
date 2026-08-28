@@ -35,11 +35,29 @@ This preserves the effective behavior that existed before pacing became configur
 
 If the current explicit HAIL request specifies a different pacing value, that requested value wins.
 
+### Existing unquoted `task_chunking: off`
+
+HAIL semantics use YAML 1.2 scalar meaning. Existing profiles containing plain:
+
+```yaml
+task_chunking: off
+```
+
+mean the HAIL string value `off`, even if a YAML 1.1-style parser would coerce that token to boolean `false`.
+
+Read-only operations must preserve the stored representation. When an explicit mutating HAIL action writes the complete profile, serialize the value as:
+
+```yaml
+task_chunking: "off"
+```
+
+to avoid cross-parser ambiguity.
+
 ## Mutation boundary
 
 Normalization is interpretation, not authorization to persist.
 
-- Read-only actions such as `show` MUST NOT rewrite the stored profile merely to materialize a compatibility-derived value.
+- Read-only actions such as `show` MUST NOT rewrite the stored profile merely to materialize a compatibility-derived value or normalize YAML quoting.
 - Explicit mutating actions such as `setup`, `change`, or `reset` may persist a validated current-schema profile as part of the requested configuration change.
 - Ordinary conversation MUST NOT persist profile changes.
 

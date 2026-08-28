@@ -17,4 +17,14 @@ profile:
 
 Validate normalized profiles against this contract before persistence or projection.
 
+## YAML serialization
+
+When HAIL writes `task_chunking: off`, serialize the scalar as:
+
+```yaml
+task_chunking: "off"
+```
+
+This avoids YAML 1.1 parsers interpreting plain `off` as boolean `false`. Existing unquoted `task_chunking: off` profiles remain semantically valid and should be interpreted as the HAIL string value `off`.
+
 Do not redefine allowed fields or values inside individual action skills.

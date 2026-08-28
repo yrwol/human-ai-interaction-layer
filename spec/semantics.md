@@ -36,9 +36,10 @@ stored profile
 → persist/project only when the action permits mutation
 ```
 
-Current compatibility rule:
+Current compatibility rules:
 
 - A valid older profile that predates `step_pacing` is interpreted as `step_pacing: continuous`.
+- Existing HAIL profiles containing plain YAML `task_chunking: off` are semantically `task_chunking: off`. HAIL treats the profile format using YAML 1.2 scalar meaning; compatibility with YAML 1.1-style parsers must not change that semantic value.
 
 Precedence:
 
@@ -47,6 +48,18 @@ Precedence:
 3. a compatibility-derived value defined by this section.
 
 Compatibility-derived values are interpretation defaults, not permission to mutate storage. A read-only action such as `show` must never rewrite a profile merely to materialize a normalized value. A mutating action may persist the complete current-schema profile after applying the user's intentional change and validation.
+
+### YAML serialization safety
+
+The canonical semantic value is `task_chunking: off`, but HAIL-owned writes SHOULD serialize that scalar as:
+
+```yaml
+task_chunking: "off"
+```
+
+Some YAML 1.1 parsers interpret plain `off` as boolean `false`. Quoting the value preserves the intended string across YAML parser versions without changing HAIL semantics.
+
+Existing unquoted HAIL profiles remain valid and must be interpreted as semantic `off`; read-only operations must not rewrite them solely to add quotes. When an explicit mutating HAIL action writes the complete current profile, it may normalize the serialized representation to quoted `"off"`.
 
 New compatibility behavior belongs **here first**. Do not add one-off migration rules to `show`, `setup`, `change`, `reset`, or other user-facing skill contracts.
 
