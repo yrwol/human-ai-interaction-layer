@@ -36,8 +36,8 @@ Allowed values:
 
 ## Setup behavior
 
-- If a stored profile exists, normalize it using HAIL's canonical profile-normalization behavior before deciding whether it is already configured.
-- Do not define migration or compatibility behavior in this skill; normalization semantics are authoritative in `spec/semantics.md` and executed by the root `hail` profile-management contract.
+- If a stored profile exists, first load and apply the bundled root HAIL normalization contract at `../hail/references/profile-normalization.md`.
+- Do not define migration or compatibility behavior in this skill.
 - If a valid normalized profile already exists, explain that HAIL is already configured and ask whether the user wants to change it instead of silently replacing it.
 - If no profile exists, start from the v0.1 defaults and apply any explicit preferences the user gives during setup.
 - Prefer mapping clear natural-language needs directly instead of forcing a questionnaire.
