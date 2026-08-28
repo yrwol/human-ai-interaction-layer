@@ -32,12 +32,14 @@ Allowed values:
 
 ## Setup behavior
 
-- If a valid profile already exists, explain that HAIL is already configured and ask whether the user wants to change it instead of silently replacing it.
+- If a stored profile exists, normalize it using HAIL's canonical profile-normalization behavior before deciding whether it is already configured.
+- Do not define migration or compatibility behavior in this skill; normalization semantics are authoritative in `spec/semantics.md` and executed by the root `$hail` profile-management contract.
+- If a valid normalized profile already exists, explain that HAIL is already configured and ask whether the user wants to change it instead of silently replacing it.
 - If no profile exists, start from defaults and apply explicit preferences the user gives during setup.
 - Prefer direct natural-language mapping over a forced questionnaire.
 - Never infer diagnoses or neurotypes.
-- Validate all values before writing.
-- After writing, regenerate HAIL's managed block in `$CODEX_HOME/AGENTS.md` (normally `~/.codex/AGENTS.md`) using the same semantic projection mappings as the root `hail` skill.
+- Validate the resulting current-schema profile before writing.
+- After writing, regenerate HAIL's managed block in `$CODEX_HOME/AGENTS.md` (normally `~/.codex/AGENTS.md`) using the same semantic projection mappings as the root `$hail` skill.
 - Preserve all content outside `<!-- HAIL:START -->` / `<!-- HAIL:END -->` exactly. Replace one complete block or append one if absent; never create duplicates. If markers are malformed or multiple blocks exist, stop and ask permission to repair rather than guessing.
 - Summarize the resulting behavior in plain language.
 
