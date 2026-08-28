@@ -9,7 +9,8 @@ Reset persistent HAIL configuration intentionally without damaging unrelated Cla
 
 ## Reset behavior
 
-- Read `~/.hail/profile.yaml` if it exists.
+- Read `~/.hail/profile.yaml` if it exists and normalize it using HAIL's canonical profile-normalization behavior before applying any reset.
+- Do not define migration or compatibility behavior in this skill; normalization semantics are authoritative in `spec/semantics.md` and executed by the root `hail` profile-management contract.
 - Confirm whether the user means the whole profile or only one preference before changing anything when that scope is ambiguous.
 - Whole-profile defaults are:
   - `verbosity: balanced`
@@ -18,8 +19,8 @@ Reset persistent HAIL configuration intentionally without damaging unrelated Cla
   - `task_chunking: adaptive`
   - `step_pacing: continuous`
   - `tangent_policy: capture_and_return`
-- For a single-preference reset, restore only that field's default and preserve all other valid preferences.
-- Validate the resulting complete profile before writing.
+- For a single-preference reset, restore only that field's default and preserve all other normalized valid preferences.
+- Validate the resulting complete current-schema profile before writing.
 - Regenerate `~/.hail/claude-code.md` using the same semantic projection mappings as the root `hail` skill.
 - Ensure `~/.claude/CLAUDE.md` contains exactly one standalone `@~/.hail/claude-code.md` import while preserving unrelated content exactly.
 - Never infer diagnoses or neurotypes.
