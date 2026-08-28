@@ -13,12 +13,14 @@ Ordinary conversation such as "stop waiting on me" or "be more concise" may affe
 HAIL exposes persistent profile-management actions as independently discoverable Codex skills:
 
 ```text
-$hail    → orient, inspect, or route conversational HAIL intent
-$show    → show the current persistent HAIL profile (read-only)
-$setup   → initialize persistent HAIL configuration
-$change  → change one or more persistent HAIL defaults
-$reset   → reset the whole profile or a selected preference
+$hail         → orient, inspect, or route conversational HAIL intent
+$hail-show    → show the current persistent HAIL profile (read-only)
+$hail-setup   → initialize persistent HAIL configuration
+$hail-change  → change one or more persistent HAIL defaults
+$hail-reset   → reset the whole profile or a selected preference
 ```
+
+Codex skills are user-level rather than plugin-namespaced, so HAIL-specific action skills use the `hail-` prefix to avoid collisions with unrelated generic skills such as `show` or `change`.
 
 The root `$hail` skill remains available for compatibility and conversational routing. The specific skills make supported actions discoverable without requiring the user to already know hidden `$hail <subcommand>` vocabulary.
 
@@ -30,10 +32,10 @@ Install all HAIL skill directories into the user Codex skills directory so Codex
 
 ```text
 ~/.codex/skills/hail/SKILL.md
-~/.codex/skills/show/SKILL.md
-~/.codex/skills/setup/SKILL.md
-~/.codex/skills/change/SKILL.md
-~/.codex/skills/reset/SKILL.md
+~/.codex/skills/hail-show/SKILL.md
+~/.codex/skills/hail-setup/SKILL.md
+~/.codex/skills/hail-change/SKILL.md
+~/.codex/skills/hail-reset/SKILL.md
 ```
 
 For this repository experiment, copy each directory under `integrations/codex/skills/` into `~/.codex/skills/` using your normal local file workflow.
@@ -82,6 +84,6 @@ Everything outside that block must be preserved.
 
 The semantic profile is shared, but generated harness projections are not synchronized automatically.
 
-For example, if `$change` modifies the canonical profile in Codex, Codex's `AGENTS.md` projection is regenerated immediately, but Claude's previously generated projection is not refreshed until the Claude HAIL integration runs again.
+For example, if `$hail-change` modifies the canonical profile in Codex, Codex's `AGENTS.md` projection is regenerated immediately, but Claude's previously generated projection is not refreshed until the Claude HAIL integration runs again.
 
 Do not add shared runtime or synchronization infrastructure solely to solve this. Record portability behavior first.
