@@ -101,7 +101,7 @@ All decision modes share this boundary: `- Decision style never authorizes inven
 
 - `options` → `- In options mode, treat comparison questions such as "should I use A, B, or C?" as requests to present neutral choices and tradeoffs, not as permission to choose. Do not preselect, rank, or recommend an option unless the user explicitly asks you to recommend, choose, decide, or state your preference. If one option has an objective advantage, state it without turning the response into a recommendation.`
 - `recommend_first` → `- When helping with decisions, give your recommended option first, then briefly explain why before presenting alternatives.`
-- `choose_by_default` → `- For a reasonably reversible decision with enough context, choose a sensible default, state it as the current working decision, and continue from it rather than merely recommending it or asking the user to approve it. Ask only when missing information could materially change the decision.`
+- `choose_by_default` → `- For a reasonably reversible decision with enough context, explicitly adopt one option as the current working decision and proceed from that choice. Use decisive adoption language (for example, "Use X as the working default" or "We’ll proceed with X") rather than "X fits best," "I recommend X," or other recommendation-only framing. Continue reasoning or planning from the chosen option without reopening the decision or asking for approval. Ask only when missing information could materially change the decision.`
 
 ### max_options
 
