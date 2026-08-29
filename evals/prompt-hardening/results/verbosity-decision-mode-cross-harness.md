@@ -80,3 +80,89 @@ Raw runner records remain private in `yrwol/hail-testing`. Record run IDs and re
 - `33254600137` — detailed × choose_by_default
 
 All runs target Claude Sonnet + Codex GPT-5.5/high and use fresh sessions against `eval/verbosity-decision-mode`.
+
+
+## Baseline assessment — core matrix
+
+### `options`
+
+- compact:
+  - Claude: **PASS** — neutral comparison, no recommendation.
+  - Codex: **FAIL / possible compact-specific recommendation creep** — compared all three, then said a strong cozy design could make bond/trust the emotional core and combine the systems.
+- balanced:
+  - Claude: **PASS**.
+  - Codex: **PASS**.
+- detailed:
+  - Claude: **PASS for decision ownership** — neutral comparison; a structural note mentioned layering but did not select a preferred direction.
+  - Codex: **PASS for decision ownership** — deeper comparison without explicitly choosing a winner, though it retained the known closing-synthesis tendency documented under `max_options`.
+
+The compact Codex failure is being repeated before any wording change.
+
+### `recommend_first`
+
+- compact:
+  - Claude: **PASS**.
+  - Codex: **PASS**.
+- balanced:
+  - Claude: **PASS**.
+  - Codex: **PASS**.
+- detailed:
+  - Claude: **PASS**.
+  - Codex: **PASS**.
+
+The recommendation remains obvious at every verbosity. Detailed mode does not bury it, and compact mode does not collapse into an unranked list.
+
+### `choose_by_default`
+
+- compact:
+  - Claude: **FAIL differentiation** — said bond/trust “fits best,” then compared alternatives and offered a follow-up; it did not state a working/default decision or proceed from it.
+  - Codex: **PASS** — directly said to use bond/trust as the main system and continued from that choice.
+- balanced:
+  - Claude: **FAIL differentiation** — again framed bond/trust as the best fit rather than adopting it as the current working decision.
+  - Codex: **PASS** — explicitly adopted a core structure and continued from it.
+- detailed:
+  - Claude: **FAIL differentiation** — again used recommendation-style “strongest fit” language and asked whether to sketch the combination.
+  - Codex: **PASS** — explicitly adopted bond/trust as the primary system and continued with an implementation structure.
+
+This is repeatable across all three verbosity values and therefore is **not a verbosity-specific failure**.
+
+Likely cause: Claude treats “choose a sensible default” and “state it as the current working decision” as satisfied by strong recommendation language. The semantic distinction needs more operational adoption language in the Claude projection.
+
+## Consequential ambiguity regression
+
+All completed ambiguity controls pass in both harnesses:
+
+- compact × recommend_first: **PASS**
+- compact × choose_by_default: **PASS**
+- detailed × recommend_first: **PASS**
+- detailed × choose_by_default: **PASS**
+
+Both harnesses ask for material context and stop before inventing a monetization model. Verbosity does not weaken the shared material-ambiguity boundary.
+
+## Invalid first override control
+
+The first recommendation-override prompt said:
+
+```text
+Recommend one of those horse training progression approaches for a cozy horse game and explain why.
+```
+
+Because each eval starts in a fresh session, “those” had no antecedent. Claude correctly requested the missing options, while Codex invented context. These runs are **not valid evidence for the override semantic**.
+
+The suite definition has been corrected to a self-contained prompt and replacement runs were launched.
+
+## Candidate A — Claude-specific `choose_by_default` adoption wording
+
+Current shared wording is semantically correct, but Claude repeatedly collapses adoption into recommendation. Candidate A changes only the Claude projection:
+
+```text
+For a reasonably reversible decision with enough context, explicitly adopt one option as the current working decision and proceed from that choice. Use decisive adoption language (for example, “Use X as the working default” or “We’ll proceed with X”) rather than “X fits best,” “I recommend X,” or other recommendation-only framing. Continue reasoning or planning from the chosen option without reopening the decision or asking for approval. Ask only when missing information could materially change the decision.
+```
+
+Codex is left unchanged because it already distinguishes `choose_by_default` correctly.
+
+Candidate A must replay:
+
+- Claude compact / balanced / detailed core `choose_by_default`;
+- Claude compact + detailed consequential ambiguity controls;
+- at least one Claude `recommend_first` control to confirm the distinction remains clear.
