@@ -2,7 +2,7 @@
 
 ## Status
 
-- **Status:** active
+- **Status:** complete for recorded single-turn scope; Candidate B max-options projection selected
 - **Evaluation method:** single-turn observable
 - **Harness target:** Claude + Codex
 - **Current HAIL ref under test:** `eval/verbosity-max-options`
@@ -249,3 +249,24 @@ Record reviewed evidence in:
 ```text
 results/verbosity-max-options-cross-harness.md
 ```
+
+## Outcome
+
+The composition is complete for the recorded single-turn scope.
+
+Findings:
+
+- verbosity remained independently meaningful; no verbosity wording change was justified;
+- explicit current requests overrode persistent choice-count/detail defaults as intended;
+- informational lists remained outside `max_options`;
+- the starting max-options projection exposed repeatable closing-synthesis/hybrid leakage;
+- Candidate A over-hardened one Claude informational boundary and was rejected;
+- Candidate B materially improved cross-harness enforcement while preserving boundaries;
+- Candidate C's procedural internal count did not reliably eliminate the remaining synthesis leak and was rejected;
+- residual closing-synthesis leakage is recorded as a prompt/harness enforcement limitation rather than a semantic gap.
+
+Authoritative evidence:
+
+[`results/verbosity-max-options-cross-harness.md`](results/verbosity-max-options-cross-harness.md)
+
+The selected projection is Candidate B. Do not claim deterministic option-count compliance from prompt-only projection behavior.
