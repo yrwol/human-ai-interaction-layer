@@ -160,7 +160,7 @@ Do not:
 
 ## Next work
 
-The `verbosity × max_options` suite is complete for the recorded single-turn scope. Candidate B is the selected max-options projection, with residual closing-synthesis leakage documented as a prompt/harness enforcement limitation. The next evaluation-infrastructure question is multi-turn semantic runner support, because `task_chunking`, `task_chunking × step_pacing`, and `tangent_policy × step_pacing` cannot be assessed authoritatively with the current one-prompt runner.
+The `verbosity × max_options` suite is complete for the recorded single-turn scope. The active final single-turn composition is [`verbosity × decision_mode`](verbosity-decision-mode-composition.md). After that, remaining defined composition work requires multi-turn semantic runner support.
 
 ## Files
 
@@ -176,6 +176,7 @@ The `verbosity × max_options` suite is complete for the recorded single-turn sc
 - [`max-options-decision-mode-composition.md`](max-options-decision-mode-composition.md) — `max_options × decision_mode × ambiguity`
 - [`task-chunking-step-pacing-composition.md`](task-chunking-step-pacing-composition.md) — `task_chunking × step_pacing`
 - [`verbosity-max-options-composition.md`](verbosity-max-options-composition.md) — `verbosity × max_options`
+- [`verbosity-decision-mode-composition.md`](verbosity-decision-mode-composition.md) — `verbosity × decision_mode`
 - [`verbosity-task-chunking-composition.md`](verbosity-task-chunking-composition.md) — `verbosity × task_chunking`
 - [`tangent-policy-step-pacing-composition.md`](tangent-policy-step-pacing-composition.md) — `tangent_policy × step_pacing`
 
