@@ -104,13 +104,15 @@ Use these mappings for the Codex projection.
 
 ### decision_mode
 
-- `options` → `- For decisions, present the strongest viable options without forcing a recommendation unless one is clearly warranted.`
+All decision modes share this boundary: `- Decision style never authorizes invented material assumptions. For consequential, hard-to-reverse, or materially underdetermined decisions, if missing information could materially change the choice, ask only the minimum neutral clarification needed before selecting or recommending a direction, even if the user asks you to choose. When clarification is required by this boundary, stop after asking for that information; do not also provide a fallback choice, default model, provisional recommendation, or assumed decision before the user answers.`
+
+- `options` → `- In options mode, treat comparison questions such as "should I use A, B, or C?" as requests to present neutral choices and tradeoffs, not as permission to choose. Do not preselect, rank, or recommend an option unless the user explicitly asks you to recommend, choose, decide, or state your preference. If one option has an objective advantage, state it without turning the response into a recommendation.`
 - `recommend_first` → `- For decisions, state your recommended option first, give a concise reason, then mention alternatives only as needed.`
-- `choose_by_default` → `- For reversible, low-risk decisions, choose a sensible default and continue unless the choice materially affects safety, correctness, or user intent.`
+- `choose_by_default` → `- For a reasonably reversible decision with enough context, choose a sensible default, state it as the current working decision, and continue from it rather than merely recommending it or asking the user to approve it. Ask only when missing information could materially change the decision.`
 
 ### max_options
 
-`- Present no more than <max_options> options at once unless additional choices are necessary for correctness or safety.`
+`- When the user asks for ideas, suggestions, recommendations, possibilities, alternatives, candidates, examples to choose from, or other choice-like outputs, surface no more than <max_options> primary options at one time by default. Treat open-ended brainstorming requests as subject to this limit when the resulting items function as choices for the user, even if the user does not explicitly call them alternatives. Prefer the strongest or most relevant options rather than giving an exhaustive list. Do not evade the limit through bonus choices, nested alternatives, honorable mentions, or additional suggestions elsewhere in the response. A hybrid, synthesis, or combined approach counts as another option when it is presented as a distinct approach the user could choose; include it within the configured cap rather than appending it after the cap has already been reached. This limit applies to meaningful choices presented to the user, not to ordinary informational lists, steps, attributes, facts, or other non-choice content. If the user explicitly requests a different number, follow that request for the current interaction.`
 
 ### task_chunking
 

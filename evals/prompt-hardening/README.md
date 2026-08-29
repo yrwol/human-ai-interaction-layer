@@ -24,13 +24,14 @@ Claude has reached a strong hardening checkpoint for the currently exercised sem
 
 | Preference | Status | Decision |
 | --- | --- | --- |
-| `decision_mode` | strong Claude evidence | hardened candidate retained |
-| `max_options` | strong Claude evidence | hardened candidate retained |
+| `decision_mode` | strong cross-harness single-turn evidence | Candidate D promoted |
+| `max_options` | strong cross-harness single-turn evidence | Candidate D promoted |
 | `task_chunking` | strong Claude base differentiation | Candidate A promoted; boundary/cross-harness work remains |
 | `verbosity` | strong cross-harness evidence | strengthened shared `detailed` wording promoted |
 
 Authoritative current evidence:
 
+- [`results/decision-max-options-ambiguity-cross-harness.md`](results/decision-max-options-ambiguity-cross-harness.md)
 - [`results/decision-mode-sonnet-5-high.md`](results/decision-mode-sonnet-5-high.md)
 - [`results/max-options-sonnet-5-high.md`](results/max-options-sonnet-5-high.md)
 - [`results/task-chunking-claude-sonnet.md`](results/task-chunking-claude-sonnet.md)
@@ -158,7 +159,7 @@ Do not:
 
 ## Next work
 
-Immediate work remains cross-harness `task_chunking` replay and its supported single-turn boundaries. Focused composition suites are tracked independently and should be executed only when their required evaluation method is available.
+Immediate work is the single-turn-observable [`verbosity × max_options`](verbosity-max-options-composition.md) suite. The `max_options × decision_mode × ambiguity` composition is complete for the recorded Claude/Codex conditions and Candidate D is promoted. Base `task_chunking` replay and any composition involving `task_chunking` or `step_pacing` remain blocked until a semantic runner can preserve conversation state (or a separate valid multi-turn manual method is used).
 
 ## Files
 
@@ -179,7 +180,7 @@ Immediate work remains cross-harness `task_chunking` replay and its supported si
 
 ### Candidate / historical notes
 
-- [`results/codex-decision-max-options-candidate-history.md`](results/codex-decision-max-options-candidate-history.md) — rescued unvalidated hypotheses from the retired Codex hardening branch; not evidence or promoted wording.
+- [`results/codex-decision-max-options-candidate-history.md`](results/codex-decision-max-options-candidate-history.md) — rescued historical hypotheses from the retired Codex hardening branch. The source branch remains unvalidated; several ideas were later independently validated and promoted through the current cross-harness composition evidence.
 
 ### Shared template
 

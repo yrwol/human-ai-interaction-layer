@@ -77,62 +77,76 @@ Evidence:
 - [`../evals/prompt-hardening/results/verbosity-cross-harness-detailed.md`](../evals/prompt-hardening/results/verbosity-cross-harness-detailed.md)
 - [`../evals/prompt-hardening/verbosity.md`](../evals/prompt-hardening/verbosity.md)
 
+### Cross-harness `max_options × decision_mode × ambiguity` hardening
+
+Status: **complete for the tested single-turn scope / promoted**
+
+The cross-harness composition replay exposed and repaired several interaction failures:
+
+- `options` treated explicit comparisons as permission to recommend;
+- `choose_by_default` was not reliably distinct from recommendation-first behavior;
+- open-ended brainstorming bypassed `max_options: 3` in both harnesses;
+- hybrids/syntheses could behave as hidden extra choices;
+- Codex invented consequential monetization assumptions across all decision modes;
+- Claude `recommend_first` could ask for necessary context and still append a fallback recommendation.
+
+Candidate D repaired those failures while preserving:
+
+- explicit current-request count overrides;
+- ordinary informational lists outside the option cap; and
+- recognizable decision ownership across `options`, `recommend_first`, and `choose_by_default`.
+
+Claude showed some run-to-run ambiguity variance on the informational control, but repeat runs did not reproduce a stable regression.
+
+Evidence:
+
+- [`../evals/prompt-hardening/results/decision-max-options-ambiguity-cross-harness.md`](../evals/prompt-hardening/results/decision-max-options-ambiguity-cross-harness.md)
+- [`../evals/prompt-hardening/max-options-decision-mode-composition.md`](../evals/prompt-hardening/max-options-decision-mode-composition.md)
+
 ## Current project checkpoint
 
-### Cross-harness `task_chunking` replay and supported boundaries
+### `verbosity × max_options`
 
 Status: **next**
 
-The immediate semantic-hardening question is:
+The immediate single-turn composition question is:
 
-> Does the repaired `task_chunking` distinction survive in Codex under single-turn observable scenarios without requiring harness-specific semantic meaning?
+> Can HAIL increase useful explanatory depth without increasing simultaneous choice load, and can `max_options` constrain choices without flattening the explanation around them?
 
-The hardening method remains:
+This suite is valid for the current semantic runner because both response detail and user-facing option count are observable in one response.
 
-```text
-semantic intent
-→ observable behavioral distinction
-→ targeted failure scenario
-→ smallest projection-wording change
-→ regression / boundary checks
-→ cross-harness replay
-→ composition only when the evaluation runner can validly observe it
-```
+Primary checks:
+
+- `verbosity: detailed` adds useful explanatory layers around the same bounded choice set rather than generating more alternatives;
+- `verbosity: compact` does not collapse necessary tradeoff information merely to stay brief;
+- `max_options` continues to count meaningful choices rather than bullets, examples, facts, or explanatory subpoints;
+- explicit user requests for more/fewer choices or more/less detail still override persistent defaults for the current interaction;
+- the already-promoted Candidate D decision/option boundaries remain stable while verbosity changes.
 
 Evidence should record harness, model, effort/reasoning mode, profile values, session conditions, and exact projection wording. A successful result under one configuration is evidence for that configuration, not a universal model/harness claim.
 
-The current semantic `hail-testing` workflow supplies one prompt in a fresh session. Treat it as authoritative only for **single-turn observable behavior**. Do not claim multi-turn persistence, follow-up behavior, or wait/resume composition from that runner until explicit multi-turn support exists.
-
-The separate skill-surface workflow is deterministic state validation, not a conversational multi-turn runner. Multiple fresh management-skill invocations do not remove the semantic runner's one-prompt limitation.
+The current semantic `hail-testing` workflow supplies one prompt in a fresh session. Treat it as authoritative only for behavior that can be judged from that single response.
 
 ## Near-term work
 
-### `task_chunking` cross-harness replay
+### Active single-turn composition
 
-Replay the stable Claude Candidate A behavior in Codex before introducing Codex-specific wording unnecessarily.
+Run [`verbosity × max_options`](../evals/prompt-hardening/verbosity-max-options-composition.md).
 
-Single-turn targets include:
+### Blocked pending multi-turn semantic runner
 
-- base differentiation among `off`, `adaptive`, and `always` on genuinely multi-step work;
-- trivial/single-step boundary behavior where decomposition should not be manufactured;
-- preservation of neighboring stable semantics while replaying the field.
+`task_chunking` is **not currently eligible for authoritative cross-harness replay**. The collaboration behavior HAIL cares about is how work is divided and carried forward across interaction turns, not merely whether one response contains more headings or bullets.
 
-### Focused composition and remaining boundaries
+Blocked work:
 
-Each tracked composition boundary has its own focused experiment definition. Do not bury composition scenarios inside an individual field hardening file.
-
-Single-turn-observable suites:
-
-- [`verbosity × max_options`](../evals/prompt-hardening/verbosity-max-options-composition.md);
+- base `task_chunking` cross-harness replay;
 - [`verbosity × task_chunking`](../evals/prompt-hardening/verbosity-task-chunking-composition.md);
-- [`max_options × decision_mode × ambiguity`](../evals/prompt-hardening/max-options-decision-mode-composition.md).
-
-Multi-turn-dependent suites:
-
 - [`task_chunking × step_pacing`](../evals/prompt-hardening/task-chunking-step-pacing-composition.md);
 - [`tangent_policy × step_pacing`](../evals/prompt-hardening/tangent-policy-step-pacing-composition.md).
 
-The multi-turn cases must wait for runner support or use a separate valid manual methodology that preserves conversation state. Composition should verify semantic independence, not rescue weak individual projections.
+These must wait for runner support or use a separate valid manual methodology that preserves conversation state. Do not convert them into independent one-turn prompts and claim equivalent evidence.
+
+Composition should verify semantic independence, not rescue weak individual projections.
 
 ### Discoverable skills interaction surface
 

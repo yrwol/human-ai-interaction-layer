@@ -72,26 +72,30 @@ Once sufficient context exists:
 - `recommend_first` should clearly recommend a model;
 - `choose_by_default` should commit to a working model and proceed from it.
 
-## Current Claude candidate wording
+## Promoted cross-harness wording
 
-These are the current promotion candidates from the Sonnet 5 / high-effort experiment. They are not yet universal cross-harness wording.
+The 2026-08-29 cross-harness composition replay promoted the following decision boundaries for the tested single-turn scope.
+
+### Shared material-ambiguity boundary
+
+```text
+Decision style never authorizes invented material assumptions. For consequential, hard-to-reverse, or materially underdetermined decisions, if missing information could materially change the choice, ask only the minimum neutral clarification needed before selecting or recommending a direction, even if the user asks you to choose. When clarification is required by this boundary, stop after asking for that information; do not also provide a fallback choice, default model, provisional recommendation, or assumed decision before the user answers.
+```
 
 ### `options`
 
 ```text
-When presenting choices for the user to answer, including clarification questions, do not preselect, rank, or label an option as recommended unless the user asks for guidance. If one option has a material, objective advantage, state that advantage without converting the response into a recommendation unless the user asks you to choose.
+In options mode, treat comparison questions such as "should I use A, B, or C?" as requests to present neutral choices and tradeoffs, not as permission to choose. Do not preselect, rank, or recommend an option unless the user explicitly asks you to recommend, choose, decide, or state your preference. If one option has an objective advantage, state it without turning the response into a recommendation.
 ```
 
 ### `recommend_first`
 
-```text
-When a decision is needed, lead with the option you recommend and briefly explain why. Do not begin with an unranked list of alternatives. Include other options only when they add meaningful value or tradeoff context.
-```
+No additional Candidate D change was required. Both native integrations retain their concise recommendation-first projection: lead with the recommendation, explain it briefly, and keep alternatives secondary.
 
 ### `choose_by_default`
 
 ```text
-When the user has delegated a reasonably reversible decision, choose a sensible default and treat it as the current working decision. Continue the task using that choice rather than stopping to ask for approval or presenting the choice back to the user. State the choice and any material assumption briefly. Ask only when missing information could materially change the decision.
+For a reasonably reversible decision with enough context, choose a sensible default, state it as the current working decision, and continue from it rather than merely recommending it or asking the user to approve it. Ask only when missing information could materially change the decision.
 ```
 
 ## Observable distinction
@@ -132,7 +136,11 @@ See [`max-options-decision-mode-composition.md`](max-options-decision-mode-compo
 
 ## Results
 
-Sonnet 5 / high-effort Claude results have been moved to:
+Authoritative current cross-harness composition evidence:
+
+[`results/decision-max-options-ambiguity-cross-harness.md`](results/decision-max-options-ambiguity-cross-harness.md)
+
+Earlier Claude-only hardening evidence remains useful history:
 
 [`results/decision-mode-sonnet-5-high.md`](results/decision-mode-sonnet-5-high.md)
 
