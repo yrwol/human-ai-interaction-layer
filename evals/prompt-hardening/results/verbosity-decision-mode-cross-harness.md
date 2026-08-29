@@ -328,3 +328,12 @@ It does not establish multi-turn decision persistence or universal deterministic
 The correct conclusion is:
 
 > Verbosity and decision ownership remain independently meaningful in the tested single-turn scope. Claude required more explicit adoption wording for `choose_by_default`; Codex did not.
+
+
+## Deterministic management safety
+
+Private `yrwol/hail-testing` skill-surface run `33255022755` passed against `eval/verbosity-decision-mode`.
+
+Claude and Codex both passed the deterministic management suite, including packaged skill surface, read-only normalization, setup, change, reset, projection generation, and unrelated-config preservation.
+
+This confirms the Claude `choose_by_default` projection hardening did not regress persistent profile-management behavior.
