@@ -103,59 +103,63 @@ Evidence:
 - [`../evals/prompt-hardening/results/decision-max-options-ambiguity-cross-harness.md`](../evals/prompt-hardening/results/decision-max-options-ambiguity-cross-harness.md)
 - [`../evals/prompt-hardening/max-options-decision-mode-composition.md`](../evals/prompt-hardening/max-options-decision-mode-composition.md)
 
+### Cross-harness `verbosity × max_options` composition
+
+Status: **complete for the tested single-turn scope / Candidate B selected**
+
+The composition replay established that verbosity and simultaneous choice load remain semantically independent under the recorded Claude/Codex conditions:
+
+- compact responses retained enough tradeoff information to distinguish choices;
+- detailed responses could deepen explanation without requiring more choices;
+- an initial Claude balanced/detailed inversion did not reproduce on repeat and did not justify a verbosity wording change;
+- ordinary informational lists remained outside the option cap;
+- explicit current requests overrode persistent choice-count/detail defaults as intended.
+
+The experiment also exposed a prompt-only enforcement ceiling for `max_options`: both harnesses, especially Claude, can still append a distinct helpful hybrid/synthesis after the configured cap. Candidate B materially improved compliance and preserved semantic boundaries; stronger Candidate A/C formulations did not outperform it.
+
+Evidence:
+
+- [`../evals/prompt-hardening/results/verbosity-max-options-cross-harness.md`](../evals/prompt-hardening/results/verbosity-max-options-cross-harness.md)
+- [`../evals/prompt-hardening/verbosity-max-options-composition.md`](../evals/prompt-hardening/verbosity-max-options-composition.md)
 ## Current project checkpoint
 
-### `verbosity × max_options`
+### Multi-turn semantic eval support
 
-Status: **active**
+Status: **next**
 
-The immediate single-turn composition question is:
+The current one-prompt/fresh-session runner has reached the edge of what it can validly prove. Several existing HAIL semantics depend on behavior across interaction turns.
 
-> Can HAIL increase useful explanatory depth without increasing simultaneous choice load, and can `max_options` constrain choices without flattening the explanation around them?
+The immediate infrastructure question is:
 
-This suite is valid for the current semantic runner because both response detail and user-facing option count are observable in one response.
+> Can `hail-testing` preserve one harness conversation across a scripted sequence of user turns while capturing the complete interaction record and keeping HAIL profile/projection state stable?
 
-Primary checks:
+This work is now justified by concrete blocked semantic questions; it is not general-purpose runtime/MCP infrastructure.
 
-- `verbosity: detailed` adds useful explanatory layers around the same bounded choice set rather than generating more alternatives;
-- `verbosity: compact` does not collapse necessary tradeoff information merely to stay brief;
-- `max_options` continues to count meaningful choices rather than bullets, examples, facts, or explanatory subpoints;
-- explicit user requests for more/fewer choices or more/less detail still override persistent defaults for the current interaction;
-- the already-promoted Candidate D decision/option boundaries remain stable while verbosity changes.
+Minimum runner contract:
 
-Evidence should record harness, model, effort/reasoning mode, profile values, session conditions, and exact projection wording. A successful result under one configuration is evidence for that configuration, not a universal model/harness claim.
+- start each scenario from a fresh harness session;
+- apply one recorded HAIL ref/profile before the scenario begins;
+- send an ordered sequence of user turns through the **same** conversation/session;
+- preserve assistant context naturally between those turns;
+- capture every user/assistant turn plus harness/model/effort/profile/ref metadata;
+- do not mutate the persistent profile between turns unless the scenario explicitly tests profile management;
+- keep Claude and Codex behavior records comparable without requiring identical harness implementation details;
+- retain the existing single-turn runner for scenarios that do not require state.
 
-The current semantic `hail-testing` workflow supplies one prompt in a fresh session. Treat it as authoritative only for behavior that can be judged from that single response.
+First semantics unlocked by this runner:
+
+1. base `task_chunking` cross-harness replay;
+2. [`verbosity × task_chunking`](../evals/prompt-hardening/verbosity-task-chunking-composition.md);
+3. [`task_chunking × step_pacing`](../evals/prompt-hardening/task-chunking-step-pacing-composition.md);
+4. [`tangent_policy × step_pacing`](../evals/prompt-hardening/tangent-policy-step-pacing-composition.md).
+
+The first validation scenario should prove the runner itself can observe a wait/resume interaction that the current single-turn runner cannot.
 
 ## Near-term work
 
-### Active single-turn composition
+### Build the smallest multi-turn runner extension
 
-Run [`verbosity × max_options`](../evals/prompt-hardening/verbosity-max-options-composition.md).
-
-Execution plan:
-
-1. compare `compact`, `balanced`, and `detailed` on a fixed three-choice prompt;
-2. pressure-test the persistent `max_options: 3` cap with an open-ended choice request;
-3. replay the informational-list boundary;
-4. verify explicit current-request overrides for both choice count and detail;
-5. change projection wording only if a repeatable composition failure appears.
-
-### Blocked pending multi-turn semantic runner
-
-`task_chunking` is **not currently eligible for authoritative cross-harness replay**. The collaboration behavior HAIL cares about is how work is divided and carried forward across interaction turns, not merely whether one response contains more headings or bullets.
-
-Blocked work:
-
-- base `task_chunking` cross-harness replay;
-- [`verbosity × task_chunking`](../evals/prompt-hardening/verbosity-task-chunking-composition.md);
-- [`task_chunking × step_pacing`](../evals/prompt-hardening/task-chunking-step-pacing-composition.md);
-- [`tangent_policy × step_pacing`](../evals/prompt-hardening/tangent-policy-step-pacing-composition.md).
-
-These must wait for runner support or use a separate valid manual methodology that preserves conversation state. Do not convert them into independent one-turn prompts and claim equivalent evidence.
-
-Composition should verify semantic independence, not rescue weak individual projections.
-
+Prefer extending the private `yrwol/hail-testing` harness rather than adding runtime infrastructure to HAIL itself. Do not design a general conversation protocol before the minimum scripted-turn experiment proves useful.
 ### Discoverable skills interaction surface
 
 Status: **implemented; deterministic management behavior validated; interactive discovery UI check pending**
