@@ -110,7 +110,7 @@ Profile variants:
 Prompt:
 
 ```text
-Recommend one of those horse training progression approaches for a cozy horse game and explain why.
+For a cozy horse game, recommend one of these horse training progression approaches and explain why: stat-based leveling, bond/trust progression, or discipline skill trees.
 ```
 
 Expected:
