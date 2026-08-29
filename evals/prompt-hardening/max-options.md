@@ -80,22 +80,17 @@ Expected:
 
 ## Promoted cross-harness wording
 
-The 2026-08-29 cross-harness composition replay promoted this classification and enforcement wording for the tested single-turn scope:
+The 2026-08-29 `verbosity × max_options` composition replay selected the following shared projection as the best-performing prompt-only enforcement for the tested single-turn scope:
 
 ```text
-When the user asks for ideas, suggestions, recommendations, possibilities, alternatives, candidates, examples to choose from, or other choice-like outputs, surface no more than <max_options> primary options at one time by default.
-
-Treat open-ended brainstorming requests as subject to this limit when the resulting items function as choices for the user, even if the user does not explicitly call them alternatives.
-
-Prefer the strongest or most relevant options rather than giving an exhaustive list. Do not evade the limit through bonus choices, nested alternatives, honorable mentions, or additional suggestions elsewhere in the response.
-
-A hybrid, synthesis, or combined approach counts as another option when it is presented as a distinct approach the user could choose; include it within the configured cap rather than appending it after the cap has already been reached.
-
-This limit applies to meaningful choices presented to the user, not to ordinary informational lists, steps, attributes, facts, or other non-choice content.
-
-If the user explicitly requests a different number, follow that request for the current interaction.
+Limit user-facing choice load to at most <max_options> meaningful choices at one time by default when the user asks for ideas, suggestions, recommendations, possibilities, alternatives, candidates, examples to choose from, brainstorming, or other choice-like output. Hybrids, combinations, nested alternatives, bonus ideas, and syntheses count as choices when the user could reasonably select them as a distinct direction. Hard stop: once <max_options> distinct choices have been surfaced, do not mention or construct another distinct choice anywhere else in the response — not even as an excluded option, hypothetical hybrid, aside, honorable mention, follow-up offer, or closing synthesis. Closing text may only compare or summarize the same surfaced choices. This limit does not apply to ordinary informational lists, facts, attributes, steps, or other non-choice content. If the user explicitly requests a different number of choices, use that number for the current interaction.
 ```
 
+### Enforcement limitation
+
+This wording **strongly steers** choice load but does not guarantee perfect counting in every generated response. Repeated Claude/Codex testing showed that a model may still append a helpful combined/hybrid direction after the allowed choices, even when the projection explicitly prohibits it and even when a procedural self-check is added.
+
+Treat that as a harness/projection enforcement limitation, not a reason to change the semantic meaning of `max_options`.
 ## Why this wording exists
 
 The earlier phrase:
@@ -140,13 +135,14 @@ Expected:
 
 The focused composition replay confirmed that hybrids/syntheses count when they function as distinct choices, explicit current-request counts override the persistent default, and ordinary informational lists remain outside the cap. Claude showed some run-to-run ambiguity variance on the informational control, but repeat runs did not reproduce a stable regression.
 
-See [`max-options-decision-mode-composition.md`](max-options-decision-mode-composition.md) and [`results/decision-max-options-ambiguity-cross-harness.md`](results/decision-max-options-ambiguity-cross-harness.md) for the completed evaluation.
+See [`max-options-decision-mode-composition.md`](max-options-decision-mode-composition.md), [`results/decision-max-options-ambiguity-cross-harness.md`](results/decision-max-options-ambiguity-cross-harness.md), and [`results/verbosity-max-options-cross-harness.md`](results/verbosity-max-options-cross-harness.md) for the completed evidence trail.
 
 ## Results
 
 Authoritative current cross-harness composition evidence:
 
-[`results/decision-max-options-ambiguity-cross-harness.md`](results/decision-max-options-ambiguity-cross-harness.md)
+- [`results/decision-max-options-ambiguity-cross-harness.md`](results/decision-max-options-ambiguity-cross-harness.md)
+- [`results/verbosity-max-options-cross-harness.md`](results/verbosity-max-options-cross-harness.md)
 
 Earlier Claude-only hardening evidence remains useful history:
 
