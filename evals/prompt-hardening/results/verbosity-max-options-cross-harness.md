@@ -213,3 +213,72 @@ This is enforcement hardening of the existing semantic meaning.
 3. Replay Scenario 1 under at least balanced and detailed.
 4. Preserve Scenario 3 informational boundary.
 5. Repeat Claude fixed-control balanced/detailed runs separately to determine whether the observed verbosity inversion is stable or stochastic before changing verbosity wording.
+
+
+## Composition Candidate A replay
+
+Candidate A was delivered correctly into the generated Claude and Codex projections. The compiled instruction explicitly contained the new “do not introduce/name/describe another distinct option after the cap” rule, so remaining failures are genuine enforcement behavior rather than stale projection plumbing.
+
+### Result
+
+**REJECT Candidate A.**
+
+It improved some runs but did not reliably close the leak:
+
+- Claude open compact: borderline — did not describe a concrete hybrid, but still referenced a combination as a potential extra option.
+- Claude open balanced: **FAIL** — explicitly offered a bond-gated + lightweight-stats hybrid as a fourth distinct approach.
+- Claude open detailed: **FAIL** — explicitly described a combined bond-multiplier + stat/skill-tree approach as a fourth distinct option.
+- Codex open compact: **FAIL** — appended a concrete combined routine + temperament + skill-tree design.
+- Codex open balanced: **PASS** — summarized the existing choice axis without constructing a new selectable design.
+- Codex open detailed: **FAIL** — appended a concrete combined design.
+- Claude fixed balanced: **FAIL** — explicitly named a combined bond-gated-stat model as a fourth option.
+- Claude fixed detailed: **PASS**.
+- Codex fixed balanced/detailed: **PASS**.
+
+### Candidate A boundary regression
+
+The informational-list detailed control exposed a separate concern:
+
+- baseline Claude detailed: 13 informational attributes;
+- Candidate A Claude detailed: only three “core attribute categories”;
+- Candidate A Codex detailed: 18 informational attributes.
+
+Because the semantic explicitly excludes informational lists from the cap, the Claude result is a possible over-classification regression. Candidate A should not be promoted even if its option leakage were stronger.
+
+### Verbosity repeat assessment
+
+The original fixed-control Claude matrix had an inverted depth ordering:
+
+- baseline balanced: 398 words;
+- baseline detailed: 279 words.
+
+Repeat testing under unchanged verbosity wording produced:
+
+- Claude balanced repeat: 166 words;
+- Claude detailed repeat: 407 words.
+
+The repeated detailed response also added materially deeper pros/cons and implementation considerations rather than merely more wording.
+
+**Assessment:** the original inversion is not stable evidence of a verbosity projection failure. Do not change verbosity wording.
+
+## Composition Candidate B — simplify rather than stack rules
+
+Candidate A demonstrated that adding more clauses to the already-long `max_options` projection did not reliably increase compliance and may have made classification behavior noisier.
+
+Candidate B replaces the long projection with a shorter operational contract:
+
+```text
+Limit user-facing choice load to at most <max_options> meaningful choices at one time by default when the user asks for ideas, suggestions, recommendations, possibilities, alternatives, candidates, examples to choose from, brainstorming, or other choice-like output. Hybrids, combinations, nested alternatives, bonus ideas, and syntheses count as choices when the user could reasonably select them as a distinct direction. Hard stop: once <max_options> distinct choices have been surfaced, do not mention or construct another distinct choice anywhere else in the response — not even as an excluded option, hypothetical hybrid, aside, honorable mention, follow-up offer, or closing synthesis. Closing text may only compare or summarize the same surfaced choices. This limit does not apply to ordinary informational lists, facts, attributes, steps, or other non-choice content. If the user explicitly requests a different number of choices, use that number for the current interaction.
+```
+
+Candidate B preserves the semantic meaning while reducing instruction length and making the hard-stop boundary more salient.
+
+### Candidate B replay requirements
+
+1. open-ended cap pressure under compact / balanced / detailed;
+2. fixed three-choice control under balanced / detailed;
+3. informational-list boundary under compact / detailed;
+4. explicit six-choice override;
+5. explicit detail override under compact.
+
+Promotion requires both leakage repair **and** preservation of the informational-list boundary.
