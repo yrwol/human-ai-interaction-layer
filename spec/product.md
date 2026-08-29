@@ -113,7 +113,7 @@ The Codex action names carry a HAIL prefix because its skill namespace is effect
 
 Users should still be able to configure HAIL conversationally. Discoverability adds affordance; it does not turn HAIL into a rigid command parser.
 
-The discoverable-skill structure is currently experimental: the first implementation exists for Claude and Codex, but dedicated discovery and behavioral-parity validation are still required before the capability is considered complete.
+The discoverable-skill structure is currently experimental: the Claude and Codex implementations exist and deterministic management behavior has been validated in both harnesses. The remaining completion question is interactive autocomplete/search presentation, which requires a manual harness-UI check unless a reliable programmatic discovery interface becomes available.
 
 ## Evaluation model
 
@@ -182,6 +182,7 @@ Minimum rule:
 Some HAIL behaviors are coherent capability areas rather than current persistent-profile fields.
 
 - [`capabilities/discoverable-skills.md`](capabilities/discoverable-skills.md) defines how meaningful HAIL management actions become first-class discoverable harness skills without changing profile semantics or persistence boundaries.
+- [`capabilities/conversation-review.md`](capabilities/conversation-review.md) defines an evidence-based retrospective over the human–AI interaction itself, including collaboration friction/success, profile-vs-projection diagnosis, confidence, and non-mutating recommendations.
 - [`capabilities/review-guidance.md`](capabilities/review-guidance.md) explores how HAIL can help users evaluate AI output, allocate skepticism, surface material assumptions, recognize verification boundaries, and stop unproductive review loops without telling users simply to trust AI.
 
 Capability specs do not automatically become current semantics. Their implementation and evidence status must be tracked separately.

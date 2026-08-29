@@ -69,7 +69,7 @@ Completed evidence includes:
 - Codex native persistent profile management: **PASS / manually validated**
 - `verbosity: detailed` cross-harness projection hardening: **PASS / promoted for Claude and Codex**
 
-The current semantic-hardening checkpoint remains `task_chunking` cross-harness replay and supported single-turn boundary checks. Separately, the discoverable-skills capability is now being implemented and awaits discovery/behavioral-parity validation before it is considered complete. See [`spec/roadmap.md`](spec/roadmap.md).
+The current semantic-hardening checkpoint remains `task_chunking` cross-harness replay and supported single-turn boundary checks. Separately, the discoverable-skills management surface is implemented and its deterministic Claude/Codex management behavior has been validated; only interactive autocomplete/search discoverability remains a manual harness-UI check. See [`spec/roadmap.md`](spec/roadmap.md).
 
 ## Discoverable HAIL management
 
@@ -133,7 +133,7 @@ The root `$hail` skill remains available for orientation, compatibility, and con
 
 The Codex skills use the same canonical `~/.hail/profile.yaml` and manage only HAIL's marked block in `$CODEX_HOME/AGENTS.md` (normally `~/.codex/AGENTS.md`).
 
-The original native Codex profile-management path was manually validated before this skill split. The new discoverable surface still requires dedicated discovery and behavioral-parity validation before the capability is marked complete.
+The original native Codex profile-management path was manually validated before this skill split. The discoverable surface now also passes deterministic package, callability, normalization, state-mutation, and projection-integrity validation in both Claude and Codex. Interactive autocomplete/search presentation remains a separate manual harness-UI check.
 
 See [`integrations/codex/README.md`](integrations/codex/README.md) and [`evals/historical/results/milestone-4-codex-native-raw.md`](evals/historical/results/milestone-4-codex-native-raw.md).
 
