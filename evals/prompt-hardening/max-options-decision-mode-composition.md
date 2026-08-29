@@ -1,36 +1,33 @@
 # Composition Eval — `max_options` × `decision_mode` × ambiguity
 
+## Status
+
+- **Status:** active
+- **Evaluation method:** single-turn observable
+- **Harness target:** Claude + Codex
+- **Current HAIL ref under test:** `eval/decision-max-options-ambiguity`
+- **Starting point:** current integration wording; do not pre-apply the retired Codex candidate hypotheses
+
 ## Purpose
 
-Determine why an informational prompt under Candidate B caused Claude to ask a decision-shaped clarification instead of answering the informational list directly.
+Test whether `max_options` and `decision_mode` remain independently meaningful when prompts contain ordinary ambiguity.
 
-This eval is intentionally narrow. Do not change Candidate B yet. First isolate whether the behavior comes from:
+The key failure classes are:
 
-1. `max_options` over-classifying ambiguous informational prompts as choice-like output;
-2. `decision_mode: recommend_first` amplifying ambiguity into a decision interaction; or
-3. the combination of both fields.
+1. an informational request gets unnecessarily turned into a decision interaction;
+2. `options` mode sneaks in a recommendation or preferred hybrid;
+3. `recommend_first` expands into an unnecessary option menu;
+4. `choose_by_default` asks the user to decide instead of adopting a reasonable reversible working choice;
+5. `max_options` is evaded through bonus choices, nested alternatives, hybrids, or a closing recommendation;
+6. `max_options` incorrectly caps ordinary informational lists.
 
-## Triggering prompt
+This experiment starts from current `main` behavior. The rescued Codex candidate history in
+[`results/codex-decision-max-options-candidate-history.md`](results/codex-decision-max-options-candidate-history.md)
+is hypothesis material only. Use it only if an observed failure justifies a targeted wording change.
 
-```text
-What stats should each horse have, and what does each stat represent?
-```
+## Controls
 
-Observed under Candidate B + `decision_mode: recommend_first`:
-
-Claude asked what type of horse game was being designed and presented several game-type choices instead of directly providing an informational stat list.
-
-That is not a direct `max_options` violation. The concern is that the model may be manufacturing a choice interaction to resolve ambiguity that did not materially block a useful answer.
-
-## Question under test
-
-> Is Candidate B causing an informational-list classification problem, or is `decision_mode` interacting with ambiguity and pushing the model into unnecessary decision-making?
-
-## Test controls
-
-Keep all other HAIL values identical across runs.
-
-Recommended baseline:
+All profiles keep these values fixed:
 
 ```yaml
 verbosity: balanced
@@ -40,16 +37,17 @@ step_pacing: continuous
 tangent_policy: capture_and_return
 ```
 
-Change only the variables named in each run.
+Only `decision_mode` changes.
+
+Fixtures:
+
+- `profiles/eval-composition-decision-options.yaml`
+- `profiles/eval-composition-decision-recommend-first.yaml`
+- `profiles/eval-composition-decision-choose-default.yaml`
 
 Use a fresh session for every run.
 
-## Run A — Candidate B + `recommend_first`
-
-```yaml
-max_options: 3
-decision_mode: recommend_first
-```
+## Scenario 1 — informational ambiguity
 
 Prompt:
 
@@ -57,185 +55,115 @@ Prompt:
 What stats should each horse have, and what does each stat represent?
 ```
 
-### Observe
+Run under all three decision modes.
 
-- Does it answer directly?
-- Does it ask for game-type clarification?
-- Does it present choices before answering?
-- If it answers directly, does it incorrectly cap the informational list at three stats?
+### Pass signals
 
-### Result
+- answers directly unless missing context materially blocks a useful answer;
+- does not manufacture game-type choices merely because the prompt is broad;
+- may provide more than three stats because they are informational attributes, not user-facing options;
+- `decision_mode` should not force an ordinary informational request into decision posture.
 
-```text
-PASTE RAW RESULT HERE
-```
-
-## Run B — Candidate B + `options`
-
-```yaml
-max_options: 3
-decision_mode: options
-```
-
-Use the exact same prompt.
-
-### Interpretation
-
-If the unnecessary clarification disappears here, `decision_mode: recommend_first` is likely contributing materially to the behavior.
-
-### Result
-
-```text
-PASTE RAW RESULT HERE
-```
-
-## Run C — Candidate B + `choose_by_default`
-
-```yaml
-max_options: 3
-decision_mode: choose_by_default
-```
-
-Use the exact same prompt.
-
-### Interpretation
-
-Useful for distinguishing whether the issue is specific to recommendation behavior or whether any decision-oriented mode causes the model to turn ambiguity into a choice point.
-
-### Result
-
-```text
-PASTE RAW RESULT HERE
-```
-
-## Run D — Previous `max_options` wording + `recommend_first`
-
-Restore the pre-Candidate-B `max_options` projection wording while keeping:
-
-```yaml
-decision_mode: recommend_first
-```
-
-Use the exact same prompt.
-
-### Interpretation
-
-If the unnecessary clarification occurs even without Candidate B, the behavior is probably not caused by the new `max_options` classification language.
-
-### Result
-
-```text
-PASTE RAW RESULT HERE
-```
-
-## Run E — Direct informational control
-
-Use Candidate B + `recommend_first`.
+## Scenario 2 — explicit comparison
 
 Prompt:
 
 ```text
-List the useful horse stats for a cozy horse game and briefly explain what each stat represents. This is an informational list, not a decision between alternatives.
+For a cozy horse game, should training use activity-based practice, skill points, or a branching skill tree?
 ```
 
-### Expected
+Run under all three decision modes.
 
-- answer directly;
-- more than three stats are allowed when useful;
-- no manufactured game-type decision;
-- no mention of the HAIL option cap.
+### Expected distinction
 
-### Result
+`options`
+- present the viable choices and tradeoffs;
+- do not rank, recommend, append a preferred hybrid, or quietly choose.
 
-```text
-PASTE RAW RESULT HERE
-```
+`recommend_first`
+- lead with a recommendation;
+- alternatives may remain secondary context;
+- recommendation should count within the configured option set rather than creating a fourth choice.
 
-## Run F — Genuine ambiguity control
+`choose_by_default`
+- adopt a sensible reversible working choice and continue from it;
+- do not stop by asking the user which option they want.
 
-Use Candidate B + `recommend_first`.
+## Scenario 3 — brainstorming / option cap
 
 Prompt:
 
 ```text
-What stats should each horse have?
+Give me ideas for horse breeds to include in a cozy horse game and explain why each would be fun.
 ```
 
-### Observe
+Primary profile: `recommend_first`.
 
-This prompt intentionally removes the explanatory framing and leaves more room for interpretation.
+### Pass signals
 
-A clarification is acceptable only if the missing context would materially change the usefulness of the answer. Otherwise the model should make a reasonable assumption and answer.
+- no more than three meaningful breed choices by default;
+- no fourth breed hidden as a bonus, honorable mention, parenthetical alternative, or closing recommendation;
+- a distinct hybrid/synthesis counts as an additional choice if one is introduced;
+- useful explanation for the surfaced choices is not itself constrained by `max_options`.
 
-### Result
+## Scenario 4 — explicit override
+
+Prompt:
 
 ```text
-PASTE RAW RESULT HERE
+Give me 10 horse name ideas.
 ```
 
-## Classification
+Primary profile: `recommend_first`.
 
-After running A–F, classify the failure mode.
+### Pass signals
 
-### A — `max_options` classification problem
+- returns the explicitly requested count;
+- does not treat `max_options: 3` as a hard list-length prohibition.
 
-Evidence pattern:
+## Scenario 5 — consequential ambiguity boundary
 
-- Candidate B consistently transforms informational prompts into choice interactions regardless of `decision_mode`;
-- previous wording does not;
-- direct informational controls still trigger unnecessary choice framing.
+Prompt:
 
-Action:
+```text
+Choose the entire monetization model for the game.
+```
 
-Refine Candidate B's boundary language so it distinguishes *choices the user must evaluate* from *ordinary content generation under ambiguity*.
+Run under all three decision modes.
 
-### B — `decision_mode` composition problem
+### Pass signals
 
-Evidence pattern:
+- if material missing context could substantially change the answer, ask only for what is actually necessary;
+- `options` must not preselect a clarification choice;
+- `recommend_first` and `choose_by_default` must not treat decision ownership as permission to invent consequential assumptions;
+- do not infer that clarification itself proves a HAIL failure.
 
-- behavior appears primarily under `recommend_first` or another decision mode;
-- Candidate B behaves normally when decision mode is neutralized/changed;
-- previous `max_options` wording shows similar behavior under the same decision mode.
+## Interpretation order
 
-Action:
+When a run fails:
 
-Harden `decision_mode` so it governs how the model handles real decisions without converting ordinary ambiguity into a decision point.
-
-### C — general model ambiguity behavior
-
-Evidence pattern:
-
-- behavior persists across wording and decision-mode changes;
-- Candidate B is not a meaningful causal factor.
-
-Action:
-
-Do not weaken `max_options` merely to compensate. Decide whether HAIL needs a separate clarification/assumption behavior later, or accept this as harness-native behavior if it is not materially disruptive.
-
-### D — composition-specific interaction
-
-Evidence pattern:
-
-- neither field causes the behavior reliably alone;
-- the combination does.
-
-Action:
-
-Document the composition rule and test the smallest wording change that prevents amplification without changing either semantic's meaning.
+1. identify the exact observable failure;
+2. decide whether it belongs to `max_options`, `decision_mode`, ambiguity handling, or their composition;
+3. compare with the current semantic contract;
+4. consult the retired Codex candidate history only for a matching hypothesis;
+5. change the smallest projection wording possible;
+6. replay the failing scenario plus at least one boundary/control scenario;
+7. do not promote wording without recorded evidence.
 
 ## Pass criteria
 
-Candidate B is still viable if:
+The composition is healthy when:
 
-- brainstorming remains limited to the configured number of meaningful choices;
-- ordinary informational lists are not capped merely because they contain more than `max_options` items;
-- ambiguity does not routinely become an unnecessary choice interaction;
-- `decision_mode` remains behaviorally distinct;
-- no semantic meaning needs to change to get reliable composition.
+- `decision_mode` changes decision ownership without manufacturing decisions;
+- `max_options` constrains meaningful choice load without becoming generic list-length control;
+- explicit user requests override defaults appropriately;
+- ambiguity triggers clarification only when materially necessary;
+- option caps cannot be evaded by formatting tricks or closing synthesis;
+- Claude and Codex may phrase answers differently while preserving the same semantic intent.
 
 ## Important constraint
 
-Do not solve this by making the prompt say "never ask clarifying questions." Clarification can be correct when missing information materially affects the answer.
+Do not solve ambiguity by saying “never ask clarifying questions.”
 
 The desired behavior is:
 
