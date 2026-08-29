@@ -233,7 +233,7 @@ Recommendation: bond/trust progression.
 
 Compact Candidate A ambiguity control: **PASS** — Claude asks for material context and stops before choosing.
 
-Detailed Candidate A ambiguity control (`33254816560`): the workflow remained queued before preflight during the evaluation window and produced no semantic response, so it is **not counted as evidence**. This does not block promotion because the pre-candidate detailed ambiguity control passed, the Candidate A compact ambiguity control passed, and Candidate A changes only reversible-choice adoption phrasing after the shared material-ambiguity boundary has been satisfied.
+Detailed Candidate A ambiguity control (`33254816560`): **PASS**. After an initial runner queue delay, Claude asked for the missing platform, game structure, and audience/region context, then stopped before choosing a monetization model.
 
 
 ## Final assessment
@@ -296,7 +296,7 @@ The recommendation-first control remains visibly different:
 Recommendation: bond/trust progression.
 ```
 
-The compact consequential-ambiguity regression also passes, confirming the stronger adoption wording does not override material uncertainty.
+The compact and detailed consequential-ambiguity regressions both pass, confirming the stronger adoption wording does not override material uncertainty.
 
 ## Promotion decision
 
