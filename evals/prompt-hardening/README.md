@@ -25,7 +25,7 @@ Claude has reached a strong hardening checkpoint for the currently exercised sem
 | Preference | Status | Decision |
 | --- | --- | --- |
 | `decision_mode` | strong cross-harness single-turn evidence | Candidate D promoted |
-| `max_options` | strong cross-harness single-turn evidence | Candidate D promoted |
+| `max_options` | strong cross-harness single-turn evidence; known closing-synthesis enforcement limit | Candidate B from `verbosity × max_options` selected as best prompt-only projection |
 | `task_chunking` | strong Claude base differentiation | Candidate A promoted; boundary/cross-harness work remains |
 | `verbosity` | strong cross-harness evidence | strengthened shared `detailed` wording promoted |
 
@@ -37,6 +37,7 @@ Authoritative current evidence:
 - [`results/task-chunking-claude-sonnet.md`](results/task-chunking-claude-sonnet.md)
 - [`results/verbosity-claude-sonnet.md`](results/verbosity-claude-sonnet.md)
 - [`results/verbosity-cross-harness-detailed.md`](results/verbosity-cross-harness-detailed.md)
+- [`results/verbosity-max-options-cross-harness.md`](results/verbosity-max-options-cross-harness.md)
 
 The native integration paths are authoritative for current hardening. Earlier reference-compiler runs remain useful historical diagnostics but should not override native integration evidence.
 
@@ -159,7 +160,7 @@ Do not:
 
 ## Next work
 
-Immediate work is the **active** single-turn-observable [`verbosity × max_options`](verbosity-max-options-composition.md) suite. The `max_options × decision_mode × ambiguity` composition is complete for the recorded Claude/Codex conditions and Candidate D is promoted. Base `task_chunking` replay and any composition involving `task_chunking` or `step_pacing` remain blocked until a semantic runner can preserve conversation state (or a separate valid multi-turn manual method is used).
+The `verbosity × max_options` suite is complete for the recorded single-turn scope. Candidate B is the selected max-options projection, with residual closing-synthesis leakage documented as a prompt/harness enforcement limitation. The next evaluation-infrastructure question is multi-turn semantic runner support, because `task_chunking`, `task_chunking × step_pacing`, and `tangent_policy × step_pacing` cannot be assessed authoritatively with the current one-prompt runner.
 
 ## Files
 
