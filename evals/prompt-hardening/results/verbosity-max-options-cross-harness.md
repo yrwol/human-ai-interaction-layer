@@ -282,3 +282,68 @@ Candidate B preserves the semantic meaning while reducing instruction length and
 5. explicit detail override under compact.
 
 Promotion requires both leakage repair **and** preservation of the informational-list boundary.
+
+
+## Composition Candidate B replay
+
+### Result
+
+**Candidate B is materially better than Candidate A but not promotable yet.**
+
+#### Open-ended cap pressure
+
+- Claude compact: **FAIL** — after three approaches, constructed a concrete bond + discipline + lightweight-stat combination.
+- Codex compact: **PASS** — stayed within the three approaches; closing text discussed behavioral outcomes rather than another selectable progression model.
+- Claude balanced: **PASS** — stayed within the three approaches; closing note was a general genre principle rather than a fourth selectable design.
+- Codex balanced: **PASS / acceptable summary** — said one surfaced approach could be the backbone and elements could be borrowed lightly, without constructing a concrete fourth progression model.
+- Claude detailed: **PASS** — stayed within the three approaches.
+- Codex detailed: **PASS** — stayed within the three approaches; closing guidance compared the existing design axis without another selectable model.
+
+#### Fixed three-choice control
+
+- Claude balanced: **FAIL** — explicitly mentioned a hybrid combining the approaches as another possibility.
+- Codex balanced: **PASS**.
+- Claude detailed: **FAIL** — explicitly mentioned a trust-gating + stat hybrid even while saying it was not a fourth option.
+- Codex detailed: **PASS**.
+
+Candidate B therefore improves compliance substantially, especially in Codex, but Claude still has a repeatable “helpful closing synthesis” leak.
+
+#### Informational boundary
+
+**PASS in both harnesses at compact and detailed.**
+
+Candidate B restored the negative boundary that Candidate A made noisy:
+
+- Claude compact: 11+ informational attributes;
+- Codex compact: 20 informational attributes;
+- Claude detailed: 14 informational attributes;
+- Codex detailed: 19 informational attributes.
+
+The rule is no longer behaving like a generic three-item list cap.
+
+#### Explicit overrides
+
+- six-choice override: **PASS in both harnesses**;
+- detailed-explanation override under compact: **PASS in both harnesses**.
+
+### Interpretation
+
+Candidate B shows that a shorter, more salient semantic contract is preferable to the stacked Candidate A wording, but prohibition alone is still not enough for reliable Claude enforcement.
+
+The remaining failure pattern is highly specific:
+
+> after satisfying the allowed choice set, Claude adds a “helpful” synthesis or hybrid as closing advice.
+
+## Composition Candidate C — procedural option-count check
+
+Candidate C keeps Candidate B's concise classification/boundary language and adds an execution procedure:
+
+```text
+For a choice-like request, determine the active choice limit before writing: use the user's explicit requested count when present; otherwise use <max_options>. Select no more than that many distinct user-selectable directions before composing the response. Write only those selected choices. Before finalizing, internally count every distinct selectable direction mentioned anywhere in the answer, including hybrids, combinations, nested alternatives, examples offered as alternatives, and closing syntheses. If the count exceeds the active limit, remove the extra directions completely; do not mention that they were removed or excluded. Closing text may compare or summarize the surfaced choices but must not create another selectable direction. This rule applies to choice-like output, not ordinary informational lists, facts, attributes, steps, or other non-choice content.
+```
+
+This is still projection enforcement of the same `max_options` semantic. It does not expose the internal count to the user and does not require a schema change.
+
+### Candidate C promotion threshold
+
+Replay the known Claude leakage cases and cross-harness controls. If Candidate C still produces repeatable extra choices despite correct projection delivery, record the remaining behavior as a harness enforcement limitation rather than indefinitely escalating prompt wording.
