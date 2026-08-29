@@ -7,7 +7,7 @@
 - **Codex model:** GPT-5.5, high reasoning effort
 - **HAIL ref:** `eval/decision-max-options-ambiguity`
 - **Method:** one prompt in a fresh session per profile/harness
-- **Current status:** in progress
+- **Current status:** complete — Candidate D selected for promotion
 
 ## Scenario 1 — informational ambiguity
 
@@ -350,3 +350,142 @@ Before promotion, replay:
 4. Scenario 1 informational-list boundary under all three modes.
 
 Do not change semantic schema. These are projection-enforcement repairs to already-defined interaction meaning.
+
+## Candidate D final replay
+
+### Scenario 3 — brainstorming cap
+
+Private raw run: `33228810272`.
+
+**PASS in both harnesses.**
+
+- Claude surfaced exactly three breed choices.
+- Codex surfaced exactly three breed choices.
+- Both preserved useful explanation for each choice.
+- No hidden fourth breed, bonus suggestion, or appended hybrid appeared.
+
+The stronger classification rule repaired the demonstrated open-ended brainstorming failure without reducing explanatory detail.
+
+### Scenario 4 — explicit count override
+
+Private raw run: `33228812245`.
+
+**PASS in both harnesses.**
+
+Claude and Codex each returned exactly ten names despite `max_options: 3`.
+
+The explicit current request correctly overrides the persistent default.
+
+### Scenario 5 — consequential ambiguity
+
+Candidate D runs:
+
+- `33228814506` — options
+- `33228817850` — recommend_first
+- `33228820107` — choose_by_default
+
+The first two runs had successful Claude/Codex semantic jobs but their raw-persistence jobs were cancelled by the runner's then-current shared concurrency group. Their harness outputs were recovered directly from the successful job logs. The persistence issue was infrastructure-only and was fixed separately in `yrwol/hail-testing` PR #9.
+
+#### Claude
+
+**PASS in all three modes.**
+
+- `options`: identified the decision as consequential/underdetermined, asked for game/business/audience context, and stopped without choosing.
+- `recommend_first`: asked for platform, genre/session style, and constraints, then stopped without appending the previous fallback recommendation.
+- `choose_by_default`: explicitly said it would not invent assumptions for a consequential choice, requested the missing context, and stopped.
+
+#### Codex
+
+**PASS in all three modes.**
+
+- `options`: asked for the minimum game/platform/business context and did not choose.
+- `recommend_first`: asked for game format context and did not provide a provisional model.
+- `choose_by_default`: asked for genre, platform, and audience and did not select a model.
+
+Candidate D repaired the prior Codex behavior where all three modes invented a premium model and pricing assumptions.
+
+### Scenario 1 — informational-list regression
+
+Primary Candidate D runs:
+
+- `33228821820` — options
+- `33228824704` — recommend_first
+- `33228826392` — choose_by_default
+
+Codex answered directly with informational stat lists under all three profiles.
+
+Claude:
+
+- `recommend_first` answered directly with a full informational list.
+- the first `options` run organized the answer as three design approaches;
+- the first `choose_by_default` run asked for game-type context.
+
+Because earlier Candidate C runs had already shown Claude variability on this prompt, those two outputs were repeated rather than immediately treated as regressions.
+
+Repeat controls:
+
+- `33228972240` — Claude options repeat 1: direct informational list
+- `33228975023` — Claude options repeat 2: direct informational list
+- `33228977608` — Claude choose-by-default repeat 1: direct informational list
+- `33228980012` — Claude choose-by-default repeat 2: direct informational list
+
+All four repeats answered directly and allowed more than three informational attributes.
+
+**Assessment: PASS with retained Claude run-to-run ambiguity variance.**
+
+There is no repeatable evidence that Candidate D turns ordinary informational lists into capped option sets or systematically forces clarification.
+
+## Final decision
+
+**Promote Candidate D unchanged to both Claude and Codex integrations.**
+
+Candidate D is supported by current cross-harness single-turn evidence for:
+
+- neutral user-choice preservation in `options`;
+- recommendation-first posture in `recommend_first`;
+- stronger working-decision behavior in `choose_by_default`;
+- open-ended brainstorming enforcement for `max_options`;
+- explicit current-request count override;
+- hybrid/synthesis option counting;
+- preservation of ordinary informational-list length;
+- a shared material-ambiguity boundary across decision modes;
+- stop-after-clarification behavior when missing information materially blocks a consequential decision.
+
+The evidence does **not** claim deterministic identical output across runs. Claude showed ordinary ambiguity variance on the informational control, but repeat testing did not reproduce a stable Candidate D regression.
+
+## Promoted projection wording
+
+### Shared decision boundary
+
+```text
+Decision style never authorizes invented material assumptions. For consequential, hard-to-reverse, or materially underdetermined decisions, if missing information could materially change the choice, ask only the minimum neutral clarification needed before selecting or recommending a direction, even if the user asks you to choose. When clarification is required by this boundary, stop after asking for that information; do not also provide a fallback choice, default model, provisional recommendation, or assumed decision before the user answers.
+```
+
+### `options`
+
+```text
+In options mode, treat comparison questions such as "should I use A, B, or C?" as requests to present neutral choices and tradeoffs, not as permission to choose. Do not preselect, rank, or recommend an option unless the user explicitly asks you to recommend, choose, decide, or state your preference. If one option has an objective advantage, state it without turning the response into a recommendation.
+```
+
+### `choose_by_default`
+
+```text
+For a reasonably reversible decision with enough context, choose a sensible default, state it as the current working decision, and continue from it rather than merely recommending it or asking the user to approve it. Ask only when missing information could materially change the decision.
+```
+
+### `max_options`
+
+```text
+When the user asks for ideas, suggestions, recommendations, possibilities, alternatives, candidates, examples to choose from, or other choice-like outputs, surface no more than <max_options> primary options at one time by default. Treat open-ended brainstorming requests as subject to this limit when the resulting items function as choices for the user, even if the user does not explicitly call them alternatives. Prefer the strongest or most relevant options rather than giving an exhaustive list. Do not evade the limit through bonus choices, nested alternatives, honorable mentions, or additional suggestions elsewhere in the response. A hybrid, synthesis, or combined approach counts as another option when it is presented as a distinct approach the user could choose; include it within the configured cap rather than appending it after the cap has already been reached. This limit applies to meaningful choices presented to the user, not to ordinary informational lists, steps, attributes, facts, or other non-choice content. If the user explicitly requests a different number, follow that request for the current interaction.
+```
+
+## Scope of the claim
+
+This result establishes strong cross-harness evidence for the tested single-turn composition under:
+
+- Claude Code / Sonnet;
+- Codex / GPT-5.5 / high reasoning effort;
+- the recorded HAIL profiles and prompts;
+- fresh-session evaluation.
+
+It does not establish multi-turn behavior, universal model behavior, or deterministic output identity.
