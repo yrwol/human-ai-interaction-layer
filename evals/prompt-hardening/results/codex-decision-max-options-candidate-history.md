@@ -4,7 +4,8 @@
 
 - **Source:** retired branch `eval/codex-hardening-first-two`
 - **Date of experiment:** 2026-08-26
-- **Evidence status:** candidate history only; **not promoted evidence**
+- **Evidence status:** the retired branch itself remains candidate history only; **not promoted evidence**
+- **Later resolution:** several hypotheses were independently reproduced, tested, and promoted on 2026-08-29; see [`decision-max-options-ambiguity-cross-harness.md`](decision-max-options-ambiguity-cross-harness.md)
 - **Current architecture status:** source branch predates the bundled runtime references, discoverable management-skill split, YAML serialization repair, and later verbosity/task-chunking promotions
 - **Use:** preserve useful hypotheses for a future Codex replay without preserving obsolete implementation code
 
@@ -12,7 +13,7 @@
 
 The retired Codex hardening branch contained seven unique commits that attempted to port the already-hardened Claude `decision_mode` and `max_options` behavior into Codex and then tighten several observed or anticipated loopholes.
 
-The branch did **not** contain a committed result record, assessment, promotion decision, or completed PR. Current HAIL documentation therefore correctly treats cross-harness hardening for these semantics as incomplete.
+The branch did **not** contain a committed result record, assessment, promotion decision, or completed PR. It therefore remains historical candidate material. Later cross-harness work independently reproduced several of its suspected failure modes and validated equivalent repairs; that later evidence does not retroactively validate the retired branch or its obsolete implementation.
 
 Do not treat any wording below as validated merely because it existed on the branch.
 
@@ -45,7 +46,7 @@ The branch proposed making this boundary explicit across all decision modes:
 
 > Decision style must not authorize invented material assumptions. For consequential, hard-to-reverse, or materially underdetermined decisions, ask only for the minimum information needed before selecting or recommending a direction.
 
-The final branch wording additionally required the model to stop after a materially necessary clarification rather than simultaneously supplying a fallback decision. That stronger stop behavior remains **unvalidated** and may interact with pacing.
+The final branch wording additionally required the model to stop after a materially necessary clarification rather than simultaneously supplying a fallback decision. That idea was later independently justified by current Claude/Codex failures and validated in the 2026-08-29 composition replay.
 
 ### `decision_mode: options`
 
@@ -127,8 +128,23 @@ When `decision_mode` and `max_options` return to active cross-harness hardening:
 6. use `max-options-decision-mode-composition.md` for hybrid/cap/ambiguity interactions;
 7. promote only the smallest wording change supported by evidence.
 
+## Later resolution
+
+The 2026-08-29 `max_options × decision_mode × ambiguity` experiment independently reproduced and validated several ideas that had existed only as hypotheses here:
+
+- comparison questions in `options` must not silently authorize recommendations;
+- `choose_by_default` needs an observable working-decision mechanic;
+- decision style must not authorize invented material assumptions;
+- materially necessary clarification should stop before a fallback/provisional choice;
+- open-ended brainstorming can create option load and must be classified accordingly;
+- hybrids/syntheses count when presented as distinct user choices.
+
+See [`decision-max-options-ambiguity-cross-harness.md`](decision-max-options-ambiguity-cross-harness.md) for the actual evidence and promoted wording.
+
+This does **not** retroactively validate the retired branch, its commit history, or its obsolete root-skill architecture.
+
 ## Bottom line
 
-The retired branch contained **useful research hypotheses, not promotable code or evidence**.
+The retired branch contained **useful research hypotheses, not promotable code or evidence**. Some hypotheses later proved valuable, but only after they were independently reproduced and tested on current architecture.
 
-Preserve this record; retire the branch.
+Preserve this record as history; retire the branch.
