@@ -121,45 +121,63 @@ Evidence:
 
 - [`../evals/prompt-hardening/results/verbosity-max-options-cross-harness.md`](../evals/prompt-hardening/results/verbosity-max-options-cross-harness.md)
 - [`../evals/prompt-hardening/verbosity-max-options-composition.md`](../evals/prompt-hardening/verbosity-max-options-composition.md)
+### Cross-harness `verbosity × decision_mode` composition
+
+Status: **complete for the tested single-turn scope / Claude Candidate A promoted**
+
+The final planned single-turn composition established that explanatory depth and decision ownership remain independently meaningful under the recorded Claude/Codex conditions.
+
+Key findings:
+
+- `options` remains neutral overall across verbosity; one compact Codex recommendation drift did not reproduce on two repeats;
+- `recommend_first` remains explicit and early at compact, balanced, and detailed;
+- Codex `choose_by_default` already adopted a working decision with existing wording;
+- Claude `choose_by_default` collapsed into recommendation-style “best fit” language at all three verbosity levels;
+- a Claude-specific projection requiring explicit working-default adoption repaired the distinction across compact, balanced, and detailed;
+- explicit current recommendation requests override persistent `options` for that interaction;
+- consequential ambiguity remains governed by the shared material-context boundary.
+
+Evidence:
+
+- [`../evals/prompt-hardening/results/verbosity-decision-mode-cross-harness.md`](../evals/prompt-hardening/results/verbosity-decision-mode-cross-harness.md)
+- [`../evals/prompt-hardening/verbosity-decision-mode-composition.md`](../evals/prompt-hardening/verbosity-decision-mode-composition.md)
 ## Current project checkpoint
 
 ### Multi-turn semantic eval support
 
 Status: **next**
 
-The current one-prompt/fresh-session runner has reached the edge of what it can validly prove. Several existing HAIL semantics depend on behavior across interaction turns.
+The defined single-turn composition backlog is complete. The remaining tracked semantics require preserved conversation state.
 
 The immediate infrastructure question is:
 
 > Can `hail-testing` preserve one harness conversation across a scripted sequence of user turns while capturing the complete interaction record and keeping HAIL profile/projection state stable?
 
-This work is now justified by concrete blocked semantic questions; it is not general-purpose runtime/MCP infrastructure.
-
 Minimum runner contract:
 
-- start each scenario from a fresh harness session;
+- start from a fresh harness session;
 - apply one recorded HAIL ref/profile before the scenario begins;
-- send an ordered sequence of user turns through the **same** conversation/session;
-- preserve assistant context naturally between those turns;
+- send an ordered sequence of user turns through the same conversation/session;
+- preserve assistant context naturally between turns;
 - capture every user/assistant turn plus harness/model/effort/profile/ref metadata;
 - do not mutate the persistent profile between turns unless the scenario explicitly tests profile management;
-- keep Claude and Codex behavior records comparable without requiring identical harness implementation details;
-- retain the existing single-turn runner for scenarios that do not require state.
+- keep Claude and Codex records comparable without requiring identical harness internals;
+- retain the existing single-turn runner for one-response semantics.
 
-First semantics unlocked by this runner:
+First semantics unlocked:
 
 1. base `task_chunking` cross-harness replay;
 2. [`verbosity × task_chunking`](../evals/prompt-hardening/verbosity-task-chunking-composition.md);
 3. [`task_chunking × step_pacing`](../evals/prompt-hardening/task-chunking-step-pacing-composition.md);
 4. [`tangent_policy × step_pacing`](../evals/prompt-hardening/tangent-policy-step-pacing-composition.md).
 
-The first validation scenario should prove the runner itself can observe a wait/resume interaction that the current single-turn runner cannot.
+The corrected `verbosity × task_chunking` spec now explicitly requires multi-turn evidence rather than treating single-response headings as authoritative chunking behavior.
 
 ## Near-term work
 
 ### Build the smallest multi-turn runner extension
 
-Prefer extending the private `yrwol/hail-testing` harness rather than adding runtime infrastructure to HAIL itself. Do not design a general conversation protocol before the minimum scripted-turn experiment proves useful.
+Prefer extending private `yrwol/hail-testing`. The first validation should prove a wait/resume sequence that the current one-prompt runner cannot observe.
 ### Discoverable skills interaction surface
 
 Status: **implemented; deterministic management behavior validated; interactive discovery UI check pending**

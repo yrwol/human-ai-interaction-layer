@@ -24,7 +24,7 @@ Claude has reached a strong hardening checkpoint for the currently exercised sem
 
 | Preference | Status | Decision |
 | --- | --- | --- |
-| `decision_mode` | strong cross-harness single-turn evidence | Candidate D promoted |
+| `decision_mode` | strong cross-harness single-turn evidence | Candidate D shared boundaries + Claude-specific choose-by-default Candidate A promoted |
 | `max_options` | strong cross-harness single-turn evidence; known closing-synthesis enforcement limit | Candidate B from `verbosity × max_options` selected as best prompt-only projection |
 | `task_chunking` | strong Claude base differentiation | Candidate A promoted; boundary/cross-harness work remains |
 | `verbosity` | strong cross-harness evidence | strengthened shared `detailed` wording promoted |
@@ -38,6 +38,7 @@ Authoritative current evidence:
 - [`results/verbosity-claude-sonnet.md`](results/verbosity-claude-sonnet.md)
 - [`results/verbosity-cross-harness-detailed.md`](results/verbosity-cross-harness-detailed.md)
 - [`results/verbosity-max-options-cross-harness.md`](results/verbosity-max-options-cross-harness.md)
+- [`results/verbosity-decision-mode-cross-harness.md`](results/verbosity-decision-mode-cross-harness.md)
 
 The native integration paths are authoritative for current hardening. Earlier reference-compiler runs remain useful historical diagnostics but should not override native integration evidence.
 
@@ -160,7 +161,7 @@ Do not:
 
 ## Next work
 
-The `verbosity × max_options` suite is complete for the recorded single-turn scope. Candidate B is the selected max-options projection, with residual closing-synthesis leakage documented as a prompt/harness enforcement limitation. The next evaluation-infrastructure question is multi-turn semantic runner support, because `task_chunking`, `task_chunking × step_pacing`, and `tangent_policy × step_pacing` cannot be assessed authoritatively with the current one-prompt runner.
+The `verbosity × decision_mode` suite is complete for the recorded single-turn scope. The defined single-turn composition backlog is now exhausted. Remaining tracked composition work requires multi-turn semantic runner support.
 
 ## Files
 
@@ -176,6 +177,7 @@ The `verbosity × max_options` suite is complete for the recorded single-turn sc
 - [`max-options-decision-mode-composition.md`](max-options-decision-mode-composition.md) — `max_options × decision_mode × ambiguity`
 - [`task-chunking-step-pacing-composition.md`](task-chunking-step-pacing-composition.md) — `task_chunking × step_pacing`
 - [`verbosity-max-options-composition.md`](verbosity-max-options-composition.md) — `verbosity × max_options`
+- [`verbosity-decision-mode-composition.md`](verbosity-decision-mode-composition.md) — `verbosity × decision_mode`
 - [`verbosity-task-chunking-composition.md`](verbosity-task-chunking-composition.md) — `verbosity × task_chunking`
 - [`tangent-policy-step-pacing-composition.md`](tangent-policy-step-pacing-composition.md) — `tangent_policy × step_pacing`
 

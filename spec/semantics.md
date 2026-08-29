@@ -108,7 +108,7 @@ choose_by_default
 → AI assumes responsibility for a reversible choice and carries it forward
 ```
 
-Status: **validated and hardened across Claude and Codex under the recorded single-turn composition conditions**. Cross-harness evidence supports neutral comparison behavior in `options`, recommendation-first posture in `recommend_first`, stronger working-decision behavior in `choose_by_default`, and the shared material-ambiguity boundary.
+Status: **validated and hardened across Claude and Codex under the recorded single-turn composition conditions**. Cross-harness evidence supports neutral comparison behavior in `options`, recommendation-first posture in `recommend_first`, working-decision behavior in `choose_by_default`, and the shared material-ambiguity boundary. The latest `verbosity × decision_mode` composition showed that Claude needs more explicit harness-specific adoption wording for `choose_by_default` than Codex, while the vendor-neutral semantic meaning remains unchanged.
 
 ### `max_options`
 

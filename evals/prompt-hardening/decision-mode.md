@@ -94,9 +94,21 @@ No additional Candidate D change was required. Both native integrations retain t
 
 ### `choose_by_default`
 
+The semantic intent is shared, but the latest composition replay found different projection needs by harness.
+
+**Codex retains:**
+
 ```text
 For a reasonably reversible decision with enough context, choose a sensible default, state it as the current working decision, and continue from it rather than merely recommending it or asking the user to approve it. Ask only when missing information could materially change the decision.
 ```
+
+**Claude promotes the stronger adoption wording:**
+
+```text
+For a reasonably reversible decision with enough context, explicitly adopt one option as the current working decision and proceed from that choice. Use decisive adoption language (for example, "Use X as the working default" or "We’ll proceed with X") rather than "X fits best," "I recommend X," or other recommendation-only framing. Continue reasoning or planning from the chosen option without reopening the decision or asking for approval. Ask only when missing information could materially change the decision.
+```
+
+The stronger Claude wording is projection enforcement only; it does not change the vendor-neutral meaning of `choose_by_default`.
 
 ## Observable distinction
 
@@ -132,13 +144,14 @@ Verify that:
 - option limits do not prevent a clear recommendation or working decision;
 - clarification questions do not accidentally inherit recommendation behavior when `decision_mode: options`.
 
-See [`max-options-decision-mode-composition.md`](max-options-decision-mode-composition.md) for the focused composition evaluation.
+See [`max-options-decision-mode-composition.md`](max-options-decision-mode-composition.md) and [`verbosity-decision-mode-composition.md`](verbosity-decision-mode-composition.md) for focused composition evidence.
 
 ## Results
 
-Authoritative current cross-harness composition evidence:
+Authoritative current composition evidence:
 
-[`results/decision-max-options-ambiguity-cross-harness.md`](results/decision-max-options-ambiguity-cross-harness.md)
+- [`results/decision-max-options-ambiguity-cross-harness.md`](results/decision-max-options-ambiguity-cross-harness.md)
+- [`results/verbosity-decision-mode-cross-harness.md`](results/verbosity-decision-mode-cross-harness.md)
 
 Earlier Claude-only hardening evidence remains useful history:
 

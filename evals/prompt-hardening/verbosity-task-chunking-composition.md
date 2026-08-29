@@ -16,9 +16,13 @@ This is a focused composition boundary, not part of either field's individual ha
 
 ## Evaluation support
 
-The core comparison is single-turn observable and may be run through the current `hail-testing` workflow. Do not use it to claim follow-up persistence or wait/resume behavior.
+**Multi-turn required for authoritative evaluation.**
 
-Record harness, model, effort/reasoning mode, full profile, exact projection wording, fresh-session status, and date. Store evidence under `results/` using `template.md`.
+The behavior HAIL cares about is not merely whether one answer contains more headings or bullets. `task_chunking` controls how work is partitioned and carried forward as collaboration proceeds across turns. A one-response comparison can be retained as a diagnostic snapshot, but it must not be promoted as authoritative composition evidence.
+
+Use a manual or future multi-turn runner that preserves one conversation across the scenario. The evaluation should observe whether the same chunking strategy remains stable as the user completes, redirects, or resumes work while verbosity changes only the explanatory depth inside the active chunk.
+
+Record harness, model, effort/reasoning mode, full profile, exact projection wording, conversation/session continuity, and date. Store the complete transcript and assessment under `results/` using `template.md`.
 
 Suggested result filename:
 
@@ -28,11 +32,13 @@ results/verbosity-task-chunking-<model>-<effort>.md
 
 ## Core scenario
 
-Prompt:
+Start one preserved conversation with:
 
 ```text
 Help me plan a horse breeding system for a cozy horse game, including genetics, inheritance rules, breeding eligibility, foal outcomes, UI, and tests.
 ```
+
+Then continue through at least two meaningful follow-up turns that advance the same work so the evaluator can observe whether chunk boundaries remain stable rather than judging decomposition from formatting alone.
 
 Hold all other profile values constant. Run two fixed chunking bands separately:
 
@@ -85,9 +91,10 @@ Expected:
 
 The composition passes when:
 
-- verbosity changes information depth without materially changing chunk size/count;
-- task chunking changes work partitioning without becoming a proxy for response length;
-- `adaptive` and `always` remain distinguishable at each tested verbosity level;
+- verbosity changes information depth within the active chunk without materially changing the work partition;
+- task chunking changes how work is divided/carried forward without becoming a proxy for response length;
+- `adaptive` and `always` remain distinguishable across the preserved conversation, not merely by heading count;
+- completed work is not re-chunked or restarted just because verbosity changes;
 - simple requests remain proportionate;
 - no schema change is required.
 
