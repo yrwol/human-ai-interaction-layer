@@ -158,7 +158,7 @@ Do not:
 
 ## Next work
 
-Immediate work remains cross-harness `task_chunking` replay and its supported single-turn boundaries. Focused composition suites are tracked independently and should be executed only when their required evaluation method is available.
+Immediate work is the single-turn-observable [`max_options × decision_mode × ambiguity`](max-options-decision-mode-composition.md) suite. Base `task_chunking` replay and any composition involving `task_chunking` or `step_pacing` are blocked until a semantic runner can preserve conversation state (or a separate valid multi-turn manual method is used).
 
 ## Files
 
