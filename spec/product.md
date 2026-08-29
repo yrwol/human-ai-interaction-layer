@@ -183,6 +183,7 @@ Some HAIL behaviors are coherent capability areas rather than current persistent
 
 - [`capabilities/discoverable-skills.md`](capabilities/discoverable-skills.md) defines how meaningful HAIL management actions become first-class discoverable harness skills without changing profile semantics or persistence boundaries.
 - [`capabilities/conversation-review.md`](capabilities/conversation-review.md) defines an evidence-based retrospective over the human–AI interaction itself, including collaboration friction/success, profile-vs-projection diagnosis, confidence, and non-mutating recommendations.
+- [`capabilities/semantic-context-reflection.md`](capabilities/semantic-context-reflection.md) defines a proposed provider-neutral semantic interpretation layer for converting bounded conversation evidence into structured context proposals while preserving HAIL governance and explicit persistence boundaries.
 - [`capabilities/review-guidance.md`](capabilities/review-guidance.md) explores how HAIL can help users evaluate AI output, allocate skepticism, surface material assumptions, recognize verification boundaries, and stop unproductive review loops without telling users simply to trust AI.
 
 Capability specs do not automatically become current semantics. Their implementation and evidence status must be tracked separately.
