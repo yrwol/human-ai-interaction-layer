@@ -159,7 +159,7 @@ Do not:
 
 ## Next work
 
-Immediate work is the single-turn-observable [`verbosity × max_options`](verbosity-max-options-composition.md) suite. The `max_options × decision_mode × ambiguity` composition is complete for the recorded Claude/Codex conditions and Candidate D is promoted. Base `task_chunking` replay and any composition involving `task_chunking` or `step_pacing` remain blocked until a semantic runner can preserve conversation state (or a separate valid multi-turn manual method is used).
+Immediate work is the **active** single-turn-observable [`verbosity × max_options`](verbosity-max-options-composition.md) suite. The `max_options × decision_mode × ambiguity` composition is complete for the recorded Claude/Codex conditions and Candidate D is promoted. Base `task_chunking` replay and any composition involving `task_chunking` or `step_pacing` remain blocked until a semantic runner can preserve conversation state (or a separate valid multi-turn manual method is used).
 
 ## Files
 
