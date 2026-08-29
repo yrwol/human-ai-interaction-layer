@@ -2,11 +2,11 @@
 
 ## Status
 
-- **Status:** active
+- **Status:** complete for recorded single-turn scope; Candidate D promoted
 - **Evaluation method:** single-turn observable
 - **Harness target:** Claude + Codex
 - **Current HAIL ref under test:** `eval/decision-max-options-ambiguity`
-- **Starting point:** current integration wording; do not pre-apply the retired Codex candidate hypotheses
+- **Starting point:** baseline current integration wording; the completed replay subsequently promoted Candidate D from observed failures rather than pre-applying retired hypotheses
 
 ## Purpose
 
@@ -168,3 +168,15 @@ Do not solve ambiguity by saying “never ask clarifying questions.”
 The desired behavior is:
 
 > clarify when materially necessary; otherwise make a reasonable assumption and answer.
+
+## Outcome
+
+The suite completed with Candidate D promoted to both native integrations for the recorded Claude Sonnet and Codex GPT-5.5/high single-turn conditions.
+
+Authoritative evidence:
+
+[`results/decision-max-options-ambiguity-cross-harness.md`](results/decision-max-options-ambiguity-cross-harness.md)
+
+The completed replay supports neutral explicit comparisons in `options`, recommendation-first posture in `recommend_first`, stronger working-decision behavior in `choose_by_default`, open-ended brainstorming limits, explicit count overrides, hybrid/synthesis counting, preservation of ordinary informational-list length, and shared material-ambiguity / stop-after-clarification behavior.
+
+Do not generalize this evidence to multi-turn behavior or untested model configurations.
