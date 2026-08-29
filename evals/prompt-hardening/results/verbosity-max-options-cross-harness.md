@@ -7,7 +7,7 @@
 - **Codex model:** GPT-5.5, high reasoning effort
 - **HAIL ref:** `eval/verbosity-max-options`
 - **Method:** one prompt in a fresh session per profile/harness
-- **Current status:** in progress
+- **Current status:** complete — Candidate B selected as best-performing projection with known enforcement limitation
 - **Starting projection:** current promoted verbosity wording + Candidate D decision/option boundaries from `main`
 
 ## Profiles
@@ -347,3 +347,101 @@ This is still projection enforcement of the same `max_options` semantic. It does
 ### Candidate C promotion threshold
 
 Replay the known Claude leakage cases and cross-harness controls. If Candidate C still produces repeatable extra choices despite correct projection delivery, record the remaining behavior as a harness enforcement limitation rather than indefinitely escalating prompt wording.
+
+## Composition Candidate C replay
+
+Candidate C was confirmed present in the generated Claude and Codex projections. The procedural “select before writing, then internally count before finalizing” instruction therefore reached the evaluated sessions correctly.
+
+### Result
+
+**REJECT Candidate C.**
+
+The procedural self-check did not eliminate the closing-synthesis failure:
+
+- open compact:
+  - Claude **FAIL** — after three approaches, said the three could coexist and gave a concrete bond-gating-stat example;
+  - Codex **FAIL** — appended a concrete combined routine + personality/trust + skill-layer design.
+- open balanced:
+  - Claude **PASS** — closing text stayed a cross-cutting design principle;
+  - Codex **FAIL / leakage** — explicitly offered combining the three approaches as another direction.
+- open detailed:
+  - Claude **FAIL** — explicitly described combining approaches with a bond-as-multiplier example;
+  - Codex **PASS** — stayed within the three surfaced directions.
+- fixed balanced:
+  - Claude **FAIL** — explicitly offered a hybrid as a fourth direction;
+  - Codex **PASS**.
+- fixed detailed:
+  - Claude **PASS**;
+  - Codex **PASS**.
+- informational detailed boundary:
+  - Claude **PASS** — 19+ informational attributes;
+  - Codex **PASS** — 20+ informational attributes.
+
+Candidate C did not outperform Candidate B and introduced no new semantic insight.
+
+The explicit-six Candidate C workflow had one infrastructure/account failure: Claude Code reported a session-limit exhaustion before producing the semantic response. Codex completed successfully. This does not create an evidence gap because Candidate B had already passed the same explicit-six override in both harnesses.
+
+## Final assessment
+
+### `verbosity`
+
+**PASS for the tested composition scope.**
+
+Evidence supports that:
+
+- compact responses remain useful enough to distinguish the surfaced approaches;
+- detailed responses can add materially deeper reasoning without requiring additional choices;
+- the initial Claude balanced/detailed inversion was not stable and reversed on repeat testing;
+- explicit current requests for detailed explanation override the persistent compact default;
+- no verbosity projection change is justified by this experiment.
+
+### `max_options`
+
+**Semantic boundary remains valid; prompt-only enforcement is strong but not deterministic.**
+
+Stable evidence supports:
+
+- open-ended brainstorming is choice-like;
+- informational lists are not choice-like merely because they contain many items;
+- explicit requested counts override the persistent default for the current interaction;
+- hybrids/syntheses are semantically additional choices when presented as distinct selectable directions.
+
+However, both harnesses — especially Claude — can still append a “helpful” combined/hybrid direction after satisfying the allowed choice set, even when the generated projection explicitly prohibits it and even when a procedural internal count/check is added.
+
+This is therefore recorded as a **harness/projection enforcement limitation**, not a semantic-schema gap.
+
+## Promotion decision
+
+**Promote Composition Candidate B as the best-performing shared `max_options` projection.**
+
+Why Candidate B:
+
+- materially improves open-ended cap compliance versus the starting Candidate D projection;
+- preserves informational-list boundaries in both harnesses;
+- preserves explicit current-request count overrides;
+- preserves explicit detail overrides;
+- is shorter and more salient than Candidate A;
+- outperforms the more procedural Candidate C overall;
+- avoids indefinitely escalating prompt wording after repeatable evidence of a remaining harness enforcement ceiling.
+
+Promoted wording:
+
+```text
+Limit user-facing choice load to at most <max_options> meaningful choices at one time by default when the user asks for ideas, suggestions, recommendations, possibilities, alternatives, candidates, examples to choose from, brainstorming, or other choice-like output. Hybrids, combinations, nested alternatives, bonus ideas, and syntheses count as choices when the user could reasonably select them as a distinct direction. Hard stop: once <max_options> distinct choices have been surfaced, do not mention or construct another distinct choice anywhere else in the response — not even as an excluded option, hypothetical hybrid, aside, honorable mention, follow-up offer, or closing synthesis. Closing text may only compare or summarize the same surfaced choices. This limit does not apply to ordinary informational lists, facts, attributes, steps, or other non-choice content. If the user explicitly requests a different number of choices, use that number for the current interaction.
+```
+
+## Scope of claim
+
+This experiment supports the following under the recorded fresh-session conditions:
+
+- Claude Code / Sonnet;
+- Codex / GPT-5.5 / high reasoning effort;
+- `max_options: 3`;
+- compact / balanced / detailed verbosity;
+- explicit count/detail override scenarios.
+
+It does **not** establish deterministic option-count compliance, universal model behavior, or any multi-turn behavior.
+
+The correct product claim is:
+
+> HAIL can strongly steer simultaneous choice load while preserving verbosity independence, but prompt-only projections cannot guarantee perfect counting/enforcement in every generated response.
