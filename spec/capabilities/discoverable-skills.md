@@ -56,7 +56,7 @@ $hail-reset
 
 Codex uses HAIL-prefixed action names because skill names are effectively global and generic names such as `$show` or `$change` would create unnecessary collision risk. Claude action skill folders may use the short conceptual names because the HAIL plugin namespace exposes them as `/hail:<skill>`; they are not intended to be installed as generic standalone global skills.
 
-`review` remains reserved for the separately defined review capability and is not exposed as implemented.
+`review` remains reserved for the separately defined [`conversation-review`](conversation-review.md) capability and is not exposed as implemented.
 
 ## Behavioral contract
 
@@ -236,7 +236,7 @@ This capability does **not**:
 
 ### Review capability
 
-The review capability is a natural candidate for a separate discoverable skill because it represents a distinct user intent. It should only be exposed after its own contract and implementation are sufficient.
+[`conversation-review.md`](conversation-review.md) defines the behavioral contract for reviewing the human–AI interaction itself. It is a natural candidate for a separate discoverable skill because it represents a distinct user intent. It should only be exposed after that contract has an implementation and validation evidence sufficient to advertise truthfully.
 
 ### Future capabilities
 
