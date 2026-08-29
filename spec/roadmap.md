@@ -107,7 +107,7 @@ Evidence:
 
 ### `verbosity × max_options`
 
-Status: **next**
+Status: **active**
 
 The immediate single-turn composition question is:
 
@@ -132,6 +132,14 @@ The current semantic `hail-testing` workflow supplies one prompt in a fresh sess
 ### Active single-turn composition
 
 Run [`verbosity × max_options`](../evals/prompt-hardening/verbosity-max-options-composition.md).
+
+Execution plan:
+
+1. compare `compact`, `balanced`, and `detailed` on a fixed three-choice prompt;
+2. pressure-test the persistent `max_options: 3` cap with an open-ended choice request;
+3. replay the informational-list boundary;
+4. verify explicit current-request overrides for both choice count and detail;
+5. change projection wording only if a repeatable composition failure appears.
 
 ### Blocked pending multi-turn semantic runner
 
