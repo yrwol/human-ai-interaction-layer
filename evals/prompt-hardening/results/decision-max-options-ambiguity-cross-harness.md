@@ -155,3 +155,85 @@ These changes intentionally do **not** add the stronger retired-branch clarifica
 ## Next replay
 
 Replay Scenario 2 under all three decision modes using Candidate C, then rerun the informational Scenario 1 boundary to ensure the stronger choice wording does not transform ordinary informational lists into capped choice sets.
+
+## Candidate C replay
+
+### Scenario 2 replay — explicit comparison
+
+Private raw runs:
+
+- `33228379277` — options
+- `33228380283` — recommend_first
+- `33228381895` — choose_by_default
+
+#### `options`
+
+**PASS in both harnesses.**
+
+Claude presented all three approaches with pros/cons and did not choose one. It stated an objective genre-fit advantage for activity-based practice without converting that observation into a recommendation.
+
+Codex likewise described when each approach fits and did not select a preferred direction.
+
+The original cross-harness recommendation leakage was removed.
+
+#### `recommend_first`
+
+**PASS on decision posture in both harnesses.**
+
+Claude led with a concrete recommendation. Codex explicitly labeled its recommendation first.
+
+Both could still synthesize or lightly combine mechanics while explaining the recommendation, so the dedicated brainstorming/cap scenario remains necessary before concluding that the `max_options` repair is complete.
+
+#### `choose_by_default`
+
+**PASS for the tested single-turn distinction.**
+
+Claude said it would default to a concrete training model and continued reasoning from that choice rather than presenting a neutral menu.
+
+Codex directly instructed the working approach to use and continued from it.
+
+The mode is now more observably action-oriented than `recommend_first` in this scenario without requiring multi-turn state claims.
+
+### Informational boundary replay
+
+Candidate C was replayed on:
+
+```text
+What stats should each horse have, and what does each stat represent?
+```
+
+Evidence:
+
+- Codex answered directly with substantial informational lists under all three modes.
+- Claude `recommend_first` answered directly and explicitly treated the request as informational.
+- Claude `options` and `choose_by_default` each produced one clarification-first run, but an immediate repeat under the same Candidate C wording answered directly with a full informational list.
+
+Repeat runs:
+
+- `33228527495` — Claude options repeat: direct informational answer
+- `33228535590` — Claude choose-by-default repeat: direct informational answer
+- `33228385638` attempt 2 — Codex recommend-first boundary: direct informational answer
+
+### Boundary assessment
+
+**PASS with observed Claude run-to-run ambiguity variance.**
+
+There is no stable evidence that Candidate C causes informational lists to become choice sets or caps them at three.
+
+The isolated clarification-first Claude outputs should be retained as variance evidence, not used to justify another projection change without repeatable failure.
+
+## Candidate C checkpoint
+
+Supported by current evidence:
+
+- comparison syntax no longer defeats `options` mode;
+- `recommend_first` still leads with judgment;
+- `choose_by_default` has a stronger observable working-decision mechanic;
+- the `max_options` wording does not behave as a generic informational-list cap.
+
+Still to test:
+
+1. open-ended brainstorming option-cap enforcement;
+2. explicit current-request override of the persistent cap;
+3. consequential ambiguity across decision modes.
+
