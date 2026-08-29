@@ -1,0 +1,8 @@
+version: 0.1
+profile:
+  verbosity: balanced
+  decision_mode: options
+  max_options: 3
+  task_chunking: adaptive
+  step_pacing: continuous
+  tangent_policy: capture_and_return

@@ -1,0 +1,447 @@
+# Cross-Harness Composition Eval — `verbosity × max_options`
+
+## Status
+
+- **Harnesses:** Claude Code + Codex
+- **Claude model:** Sonnet
+- **Codex model:** GPT-5.5, high reasoning effort
+- **HAIL ref:** `eval/verbosity-max-options`
+- **Method:** one prompt in a fresh session per profile/harness
+- **Current status:** complete — Candidate B selected as best-performing projection with known enforcement limitation
+- **Starting projection:** current promoted verbosity wording + Candidate D decision/option boundaries from `main`
+
+## Profiles
+
+All profiles use:
+
+```yaml
+decision_mode: options
+max_options: 3
+task_chunking: adaptive
+step_pacing: continuous
+tangent_policy: capture_and_return
+```
+
+Only `verbosity` changes.
+
+Fixtures:
+
+- `profiles/eval-composition-verbosity-compact.yaml`
+- `profiles/eval-composition-verbosity-balanced.yaml`
+- `profiles/eval-composition-verbosity-detailed.yaml`
+
+## Scenario 1 — fixed three-choice depth control
+
+Prompt:
+
+```text
+Give me three approaches for designing horse training progression in a cozy horse game, and explain the tradeoffs of each.
+```
+
+### Expected
+
+- three primary approaches in all profiles;
+- compact preserves minimum useful distinctions;
+- balanced adds moderate rationale/tradeoffs;
+- detailed deepens the same choice set without introducing more approaches.
+
+## Scenario 2 — open-ended cap pressure
+
+Prompt:
+
+```text
+What are some good approaches for designing horse training progression in a cozy horse game? Explain the tradeoffs.
+```
+
+### Expected
+
+- no more than three meaningful approaches under any verbosity;
+- detailed adds depth rather than choices;
+- compact remains decision-useful.
+
+## Scenario 3 — informational-list boundary
+
+Prompt:
+
+```text
+List the core attributes a horse could have in a cozy horse game and explain what each attribute represents.
+```
+
+### Expected
+
+- ordinary informational items are not mechanically capped at three;
+- verbosity changes explanation depth, not semantic classification.
+
+## Scenario 4 — explicit current-request overrides
+
+### Choice-count override
+
+```text
+Give me 6 horse training progression approaches. Keep each explanation short.
+```
+
+Expected: six approaches despite persistent `max_options: 3`.
+
+### Detail override
+
+Profile: `verbosity: compact`.
+
+```text
+Give me three horse training progression approaches and explain each one in detail, including tradeoffs and implementation implications.
+```
+
+Expected: current explicit detail request wins without changing the persistent profile.
+
+## Evidence discipline
+
+Raw runner records remain private in `yrwol/hail-testing`. Record run IDs and reviewed findings here. Do not promote any projection wording change from a single stochastic response without a repeat or meaningful cross-harness pattern.
+
+
+## Launched runs
+
+### Scenario 1 — fixed three-choice depth control
+
+- `33233429854` — compact
+- `33233432832` — balanced
+- `33233435980` — detailed
+
+### Scenario 2 — open-ended cap pressure
+
+- `33233446636` — compact
+- `33233448385` — balanced
+- `33233450593` — detailed
+
+### Scenario 3 — informational-list boundary
+
+- `33233452331` — compact
+- `33233454299` — detailed
+
+### Scenario 4 — explicit current-request overrides
+
+- `33233455887` — balanced profile, explicit six-choice request
+- `33233458116` — compact profile, explicit detailed-explanation request
+
+All runs target Claude Sonnet + Codex GPT-5.5/high and use fresh sessions against `eval/verbosity-max-options`.
+
+
+## Baseline assessment
+
+### Scenario 1 — fixed three-choice depth control
+
+#### Option-count behavior
+
+- Claude compact: **PASS** — exactly three approaches, no additional distinct approach.
+- Codex compact: **PASS** — exactly three approaches.
+- Claude balanced: **FAIL option-cap composition** — after three approaches, it added a distinct hybrid combining bond-gating and stats.
+- Codex balanced: **PASS** — closing summary compared the three surfaced approaches without introducing a clearly distinct fourth design.
+- Claude detailed: **FAIL option-cap composition** — explicitly named a combined bond + stats + disciplines model as “a fourth distinct option,” despite saying it was being kept out.
+- Codex detailed: **PASS** — remained within the three surfaced approaches.
+
+The Claude detailed result is especially diagnostic: the model understood the semantic rule well enough to identify the combined design as a fourth option, but still surfaced the option by naming and describing it.
+
+#### Verbosity differentiation
+
+Observed response word counts:
+
+| Harness | compact | balanced | detailed |
+| --- | ---: | ---: | ---: |
+| Claude | 214 | 398 | 279 |
+| Codex | 185 | 262 | 374 |
+
+Codex shows the expected directional depth increase.
+
+Claude does **not** show a stable monotonic progression in this one matrix: the balanced response was substantially more developed than the detailed response. Word count alone is not the semantic target, but the balanced response also contained more explicit pros/cons detail than the detailed response.
+
+**Assessment:** Claude verbosity differentiation requires repeat testing before any wording change. Do not harden from one stochastic ordering.
+
+### Scenario 2 — open-ended cap pressure
+
+- Claude compact: **FAIL option-cap composition** — surfaced three primary approaches, then named a hybrid as a fourth distinct approach.
+- Codex compact: **FAIL option-cap composition** — surfaced three primary approaches, then proposed combining relationship progression, trait/habit, and skill-tree structure into another coherent design.
+- Claude balanced: **FAIL option-cap composition** — surfaced three primary approaches, then described combining them into a bond-gated/narrative synthesis.
+- Codex balanced: **FAIL option-cap composition** — surfaced three primary approaches, then proposed a combined routine + personality/trust + skill-tree design.
+- Claude detailed: **PASS** — remained within three approaches and summarized only the tradeoff axis.
+- Codex detailed: **FAIL option-cap composition** — surfaced three primary approaches, then suggested a combined design.
+
+This is a repeatable cross-harness composition failure.
+
+The existing Candidate D wording already says hybrids/syntheses count as options and should not be appended after the cap. The remaining loophole is **mentioning/describing the extra approach while claiming it is excluded or merely a closing synthesis**.
+
+### Scenario 3 — informational-list boundary
+
+- Claude compact: **PASS** — 12 informational attributes.
+- Codex compact: **PASS** — 10 informational attributes.
+- Claude detailed: **PASS** — 13 informational attributes.
+- Codex detailed: **PASS** — 20 informational attributes.
+
+The option cap did not become mechanical bullet-count control.
+
+### Scenario 4A — explicit six-choice override
+
+**PASS in both harnesses.**
+
+Both Claude and Codex returned exactly six approaches under persistent `max_options: 3`.
+
+### Scenario 4B — explicit detail override
+
+**PASS in both harnesses.**
+
+Under persistent `verbosity: compact`, both harnesses honored the explicit current request for detailed explanations, tradeoffs, and implementation implications while retaining exactly three primary approaches.
+
+## Composition Candidate A — closing-choice leakage repair
+
+The evidence supports a narrow strengthening of `max_options`, not a semantic change.
+
+Add this enforcement boundary after the existing hybrid/synthesis rule:
+
+```text
+Once the configured or explicitly requested choice count has been reached, do not introduce, name, suggest, describe, or offer another distinct option anywhere else in the response — including as a hybrid, combined approach, excluded alternative, aside, caveat, honorable mention, follow-up invitation, or closing synthesis. A closing summary may compare or synthesize the already-surfaced choices, but it must not construct another selectable approach from them.
+```
+
+Why this is needed:
+
+- the current wording correctly teaches the model that a hybrid counts as an option;
+- multiple runs still mention or construct that extra option after the cap;
+- one Claude run explicitly called its own closing synthesis a “fourth distinct option” and surfaced it anyway.
+
+This is enforcement hardening of the existing semantic meaning.
+
+## Next validation
+
+1. Apply Composition Candidate A unchanged to both harnesses.
+2. Replay Scenario 2 under compact / balanced / detailed.
+3. Replay Scenario 1 under at least balanced and detailed.
+4. Preserve Scenario 3 informational boundary.
+5. Repeat Claude fixed-control balanced/detailed runs separately to determine whether the observed verbosity inversion is stable or stochastic before changing verbosity wording.
+
+
+## Composition Candidate A replay
+
+Candidate A was delivered correctly into the generated Claude and Codex projections. The compiled instruction explicitly contained the new “do not introduce/name/describe another distinct option after the cap” rule, so remaining failures are genuine enforcement behavior rather than stale projection plumbing.
+
+### Result
+
+**REJECT Candidate A.**
+
+It improved some runs but did not reliably close the leak:
+
+- Claude open compact: borderline — did not describe a concrete hybrid, but still referenced a combination as a potential extra option.
+- Claude open balanced: **FAIL** — explicitly offered a bond-gated + lightweight-stats hybrid as a fourth distinct approach.
+- Claude open detailed: **FAIL** — explicitly described a combined bond-multiplier + stat/skill-tree approach as a fourth distinct option.
+- Codex open compact: **FAIL** — appended a concrete combined routine + temperament + skill-tree design.
+- Codex open balanced: **PASS** — summarized the existing choice axis without constructing a new selectable design.
+- Codex open detailed: **FAIL** — appended a concrete combined design.
+- Claude fixed balanced: **FAIL** — explicitly named a combined bond-gated-stat model as a fourth option.
+- Claude fixed detailed: **PASS**.
+- Codex fixed balanced/detailed: **PASS**.
+
+### Candidate A boundary regression
+
+The informational-list detailed control exposed a separate concern:
+
+- baseline Claude detailed: 13 informational attributes;
+- Candidate A Claude detailed: only three “core attribute categories”;
+- Candidate A Codex detailed: 18 informational attributes.
+
+Because the semantic explicitly excludes informational lists from the cap, the Claude result is a possible over-classification regression. Candidate A should not be promoted even if its option leakage were stronger.
+
+### Verbosity repeat assessment
+
+The original fixed-control Claude matrix had an inverted depth ordering:
+
+- baseline balanced: 398 words;
+- baseline detailed: 279 words.
+
+Repeat testing under unchanged verbosity wording produced:
+
+- Claude balanced repeat: 166 words;
+- Claude detailed repeat: 407 words.
+
+The repeated detailed response also added materially deeper pros/cons and implementation considerations rather than merely more wording.
+
+**Assessment:** the original inversion is not stable evidence of a verbosity projection failure. Do not change verbosity wording.
+
+## Composition Candidate B — simplify rather than stack rules
+
+Candidate A demonstrated that adding more clauses to the already-long `max_options` projection did not reliably increase compliance and may have made classification behavior noisier.
+
+Candidate B replaces the long projection with a shorter operational contract:
+
+```text
+Limit user-facing choice load to at most <max_options> meaningful choices at one time by default when the user asks for ideas, suggestions, recommendations, possibilities, alternatives, candidates, examples to choose from, brainstorming, or other choice-like output. Hybrids, combinations, nested alternatives, bonus ideas, and syntheses count as choices when the user could reasonably select them as a distinct direction. Hard stop: once <max_options> distinct choices have been surfaced, do not mention or construct another distinct choice anywhere else in the response — not even as an excluded option, hypothetical hybrid, aside, honorable mention, follow-up offer, or closing synthesis. Closing text may only compare or summarize the same surfaced choices. This limit does not apply to ordinary informational lists, facts, attributes, steps, or other non-choice content. If the user explicitly requests a different number of choices, use that number for the current interaction.
+```
+
+Candidate B preserves the semantic meaning while reducing instruction length and making the hard-stop boundary more salient.
+
+### Candidate B replay requirements
+
+1. open-ended cap pressure under compact / balanced / detailed;
+2. fixed three-choice control under balanced / detailed;
+3. informational-list boundary under compact / detailed;
+4. explicit six-choice override;
+5. explicit detail override under compact.
+
+Promotion requires both leakage repair **and** preservation of the informational-list boundary.
+
+
+## Composition Candidate B replay
+
+### Result
+
+**Candidate B is materially better than Candidate A but not promotable yet.**
+
+#### Open-ended cap pressure
+
+- Claude compact: **FAIL** — after three approaches, constructed a concrete bond + discipline + lightweight-stat combination.
+- Codex compact: **PASS** — stayed within the three approaches; closing text discussed behavioral outcomes rather than another selectable progression model.
+- Claude balanced: **PASS** — stayed within the three approaches; closing note was a general genre principle rather than a fourth selectable design.
+- Codex balanced: **PASS / acceptable summary** — said one surfaced approach could be the backbone and elements could be borrowed lightly, without constructing a concrete fourth progression model.
+- Claude detailed: **PASS** — stayed within the three approaches.
+- Codex detailed: **PASS** — stayed within the three approaches; closing guidance compared the existing design axis without another selectable model.
+
+#### Fixed three-choice control
+
+- Claude balanced: **FAIL** — explicitly mentioned a hybrid combining the approaches as another possibility.
+- Codex balanced: **PASS**.
+- Claude detailed: **FAIL** — explicitly mentioned a trust-gating + stat hybrid even while saying it was not a fourth option.
+- Codex detailed: **PASS**.
+
+Candidate B therefore improves compliance substantially, especially in Codex, but Claude still has a repeatable “helpful closing synthesis” leak.
+
+#### Informational boundary
+
+**PASS in both harnesses at compact and detailed.**
+
+Candidate B restored the negative boundary that Candidate A made noisy:
+
+- Claude compact: 11+ informational attributes;
+- Codex compact: 20 informational attributes;
+- Claude detailed: 14 informational attributes;
+- Codex detailed: 19 informational attributes.
+
+The rule is no longer behaving like a generic three-item list cap.
+
+#### Explicit overrides
+
+- six-choice override: **PASS in both harnesses**;
+- detailed-explanation override under compact: **PASS in both harnesses**.
+
+### Interpretation
+
+Candidate B shows that a shorter, more salient semantic contract is preferable to the stacked Candidate A wording, but prohibition alone is still not enough for reliable Claude enforcement.
+
+The remaining failure pattern is highly specific:
+
+> after satisfying the allowed choice set, Claude adds a “helpful” synthesis or hybrid as closing advice.
+
+## Composition Candidate C — procedural option-count check
+
+Candidate C keeps Candidate B's concise classification/boundary language and adds an execution procedure:
+
+```text
+For a choice-like request, determine the active choice limit before writing: use the user's explicit requested count when present; otherwise use <max_options>. Select no more than that many distinct user-selectable directions before composing the response. Write only those selected choices. Before finalizing, internally count every distinct selectable direction mentioned anywhere in the answer, including hybrids, combinations, nested alternatives, examples offered as alternatives, and closing syntheses. If the count exceeds the active limit, remove the extra directions completely; do not mention that they were removed or excluded. Closing text may compare or summarize the surfaced choices but must not create another selectable direction. This rule applies to choice-like output, not ordinary informational lists, facts, attributes, steps, or other non-choice content.
+```
+
+This is still projection enforcement of the same `max_options` semantic. It does not expose the internal count to the user and does not require a schema change.
+
+### Candidate C promotion threshold
+
+Replay the known Claude leakage cases and cross-harness controls. If Candidate C still produces repeatable extra choices despite correct projection delivery, record the remaining behavior as a harness enforcement limitation rather than indefinitely escalating prompt wording.
+
+## Composition Candidate C replay
+
+Candidate C was confirmed present in the generated Claude and Codex projections. The procedural “select before writing, then internally count before finalizing” instruction therefore reached the evaluated sessions correctly.
+
+### Result
+
+**REJECT Candidate C.**
+
+The procedural self-check did not eliminate the closing-synthesis failure:
+
+- open compact:
+  - Claude **FAIL** — after three approaches, said the three could coexist and gave a concrete bond-gating-stat example;
+  - Codex **FAIL** — appended a concrete combined routine + personality/trust + skill-layer design.
+- open balanced:
+  - Claude **PASS** — closing text stayed a cross-cutting design principle;
+  - Codex **FAIL / leakage** — explicitly offered combining the three approaches as another direction.
+- open detailed:
+  - Claude **FAIL** — explicitly described combining approaches with a bond-as-multiplier example;
+  - Codex **PASS** — stayed within the three surfaced directions.
+- fixed balanced:
+  - Claude **FAIL** — explicitly offered a hybrid as a fourth direction;
+  - Codex **PASS**.
+- fixed detailed:
+  - Claude **PASS**;
+  - Codex **PASS**.
+- informational detailed boundary:
+  - Claude **PASS** — 19+ informational attributes;
+  - Codex **PASS** — 20+ informational attributes.
+
+Candidate C did not outperform Candidate B and introduced no new semantic insight.
+
+The explicit-six Candidate C workflow had one infrastructure/account failure: Claude Code reported a session-limit exhaustion before producing the semantic response. Codex completed successfully. This does not create an evidence gap because Candidate B had already passed the same explicit-six override in both harnesses.
+
+## Final assessment
+
+### `verbosity`
+
+**PASS for the tested composition scope.**
+
+Evidence supports that:
+
+- compact responses remain useful enough to distinguish the surfaced approaches;
+- detailed responses can add materially deeper reasoning without requiring additional choices;
+- the initial Claude balanced/detailed inversion was not stable and reversed on repeat testing;
+- explicit current requests for detailed explanation override the persistent compact default;
+- no verbosity projection change is justified by this experiment.
+
+### `max_options`
+
+**Semantic boundary remains valid; prompt-only enforcement is strong but not deterministic.**
+
+Stable evidence supports:
+
+- open-ended brainstorming is choice-like;
+- informational lists are not choice-like merely because they contain many items;
+- explicit requested counts override the persistent default for the current interaction;
+- hybrids/syntheses are semantically additional choices when presented as distinct selectable directions.
+
+However, both harnesses — especially Claude — can still append a “helpful” combined/hybrid direction after satisfying the allowed choice set, even when the generated projection explicitly prohibits it and even when a procedural internal count/check is added.
+
+This is therefore recorded as a **harness/projection enforcement limitation**, not a semantic-schema gap.
+
+## Promotion decision
+
+**Promote Composition Candidate B as the best-performing shared `max_options` projection.**
+
+Why Candidate B:
+
+- materially improves open-ended cap compliance versus the starting Candidate D projection;
+- preserves informational-list boundaries in both harnesses;
+- preserves explicit current-request count overrides;
+- preserves explicit detail overrides;
+- is shorter and more salient than Candidate A;
+- outperforms the more procedural Candidate C overall;
+- avoids indefinitely escalating prompt wording after repeatable evidence of a remaining harness enforcement ceiling.
+
+Promoted wording:
+
+```text
+Limit user-facing choice load to at most <max_options> meaningful choices at one time by default when the user asks for ideas, suggestions, recommendations, possibilities, alternatives, candidates, examples to choose from, brainstorming, or other choice-like output. Hybrids, combinations, nested alternatives, bonus ideas, and syntheses count as choices when the user could reasonably select them as a distinct direction. Hard stop: once <max_options> distinct choices have been surfaced, do not mention or construct another distinct choice anywhere else in the response — not even as an excluded option, hypothetical hybrid, aside, honorable mention, follow-up offer, or closing synthesis. Closing text may only compare or summarize the same surfaced choices. This limit does not apply to ordinary informational lists, facts, attributes, steps, or other non-choice content. If the user explicitly requests a different number of choices, use that number for the current interaction.
+```
+
+## Scope of claim
+
+This experiment supports the following under the recorded fresh-session conditions:
+
+- Claude Code / Sonnet;
+- Codex / GPT-5.5 / high reasoning effort;
+- `max_options: 3`;
+- compact / balanced / detailed verbosity;
+- explicit count/detail override scenarios.
+
+It does **not** establish deterministic option-count compliance, universal model behavior, or any multi-turn behavior.
+
+The correct product claim is:
+
+> HAIL can strongly steer simultaneous choice load while preserving verbosity independence, but prompt-only projections cannot guarantee perfect counting/enforcement in every generated response.
