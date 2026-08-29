@@ -89,9 +89,11 @@ Controls **who owns a decision and how strongly the AI acts on its judgment**.
 
 Values:
 
-- `options` — preserve user choice by presenting viable choices and meaningful tradeoffs without preselecting, ranking, or labeling a choice as recommended by default. Material objective advantages may be stated without converting them into a recommendation unless the user asks for guidance.
+- `options` — preserve user choice by presenting viable choices and meaningful tradeoffs without preselecting, ranking, or recommending a choice by default. A comparison question alone does not authorize the AI to choose; material objective advantages may be stated without converting them into a recommendation unless the user explicitly asks for guidance or a decision.
 - `recommend_first` — lead with the AI's recommended option and rationale; alternatives remain secondary context rather than an unranked menu.
-- `choose_by_default` — when the user has delegated a reasonably reversible decision, choose a sensible working default, state material assumptions, and continue using that choice without stopping for approval. Ask only when missing information could materially change the decision.
+- `choose_by_default` — when the user has delegated a reasonably reversible decision and enough material context exists, choose a sensible working default, state only non-material assumptions, and continue using that choice without stopping for approval.
+
+All decision modes share a material-ambiguity boundary: decision style never authorizes invented material assumptions. For consequential, hard-to-reverse, or materially underdetermined decisions, if missing information could materially change the choice, ask only the minimum clarification needed before selecting or recommending a direction. When such clarification is required, do not also provide a fallback choice, provisional recommendation, or assumed decision before the user answers.
 
 Behavioral distinction:
 
@@ -106,7 +108,7 @@ choose_by_default
 → AI assumes responsibility for a reversible choice and carries it forward
 ```
 
-Status: **validated**. Recent Claude prompt-hardening work produced strong differentiation under the recorded test conditions; cross-harness hardening evidence is still incomplete.
+Status: **validated and hardened across Claude and Codex under the recorded single-turn composition conditions**. Cross-harness evidence supports neutral comparison behavior in `options`, recommendation-first posture in `recommend_first`, stronger working-decision behavior in `choose_by_default`, and the shared material-ambiguity boundary.
 
 ### `max_options`
 
@@ -118,7 +120,7 @@ The limit applies to meaningful choice-like output such as alternatives, suggest
 
 An explicit request for a different number may override the persistent default for the current interaction.
 
-Status: **validated**, with enforcement strength varying by harness. Recent prompt-hardening evidence supports treating open-ended brainstorming as choice-like when it creates a selection burden for the user.
+Status: **validated and hardened across Claude and Codex under the recorded single-turn composition conditions**. Current evidence supports treating open-ended brainstorming as choice-like when it creates a selection burden, counting hybrids/syntheses as choices when presented as distinct approaches, preserving explicit current-request count overrides, and leaving ordinary informational lists outside the cap.
 
 ### `task_chunking`
 
