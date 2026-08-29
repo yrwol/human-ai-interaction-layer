@@ -177,6 +177,10 @@ Immediate work remains cross-harness `task_chunking` replay and its supported si
 - [`verbosity-task-chunking-composition.md`](verbosity-task-chunking-composition.md) — `verbosity × task_chunking`
 - [`tangent-policy-step-pacing-composition.md`](tangent-policy-step-pacing-composition.md) — `tangent_policy × step_pacing`
 
+### Candidate / historical notes
+
+- [`results/codex-decision-max-options-candidate-history.md`](results/codex-decision-max-options-candidate-history.md) — rescued unvalidated hypotheses from the retired Codex hardening branch; not evidence or promoted wording.
+
 ### Shared template
 
 - [`template.md`](template.md)
