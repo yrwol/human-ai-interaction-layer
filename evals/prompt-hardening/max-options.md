@@ -78,16 +78,18 @@ Expected:
 - do not mechanically limit an informational list to three items;
 - ordinary attributes, facts, steps, and other non-choice content are outside the semantic cap.
 
-## Current Claude candidate wording
+## Promoted cross-harness wording
 
-This is the current candidate produced by the Sonnet 5 / high-effort experiment. It is not yet established as universal cross-harness wording.
+The 2026-08-29 cross-harness composition replay promoted this classification and enforcement wording for the tested single-turn scope:
 
 ```text
-When the user asks for ideas, suggestions, recommendations, possibilities, alternatives, candidates, examples to choose from, or other choice-like outputs, surface no more than 3 primary options at one time by default.
+When the user asks for ideas, suggestions, recommendations, possibilities, alternatives, candidates, examples to choose from, or other choice-like outputs, surface no more than <max_options> primary options at one time by default.
 
 Treat open-ended brainstorming requests as subject to this limit when the resulting items function as choices for the user, even if the user does not explicitly call them alternatives.
 
 Prefer the strongest or most relevant options rather than giving an exhaustive list. Do not evade the limit through bonus choices, nested alternatives, honorable mentions, or additional suggestions elsewhere in the response.
+
+A hybrid, synthesis, or combined approach counts as another option when it is presented as a distinct approach the user could choose; include it within the configured cap rather than appending it after the cap has already been reached.
 
 This limit applies to meaningful choices presented to the user, not to ordinary informational lists, steps, attributes, facts, or other non-choice content.
 
@@ -102,7 +104,7 @@ The earlier phrase:
 when presenting alternatives
 ```
 
-was too narrow. Claude could interpret brainstorming as content generation rather than option presentation, then produce many user-facing choices despite understanding the cap after the fact.
+was too narrow. Earlier Claude evidence showed brainstorming could escape the rule, and the 2026-08-29 cross-harness Candidate C replay reproduced the same problem in both harnesses: Claude surfaced eight breed choices and Codex surfaced twelve under `max_options: 3`. Candidate D's explicit brainstorming classification reduced both to three while preserving useful explanation.
 
 The current candidate adds an explicit classification rule:
 
@@ -136,13 +138,17 @@ Expected:
 - no filler options added merely to hit the cap;
 - no unnecessary conversion of informational requests into decision interactions.
 
-The informational-control run exposed a focused composition question when Claude asked a clarification question instead of answering the stat list directly.
+The focused composition replay confirmed that hybrids/syntheses count when they function as distinct choices, explicit current-request counts override the persistent default, and ordinary informational lists remain outside the cap. Claude showed some run-to-run ambiguity variance on the informational control, but repeat runs did not reproduce a stable regression.
 
-See [`max-options-decision-mode-composition.md`](max-options-decision-mode-composition.md) for that evaluation.
+See [`max-options-decision-mode-composition.md`](max-options-decision-mode-composition.md) and [`results/decision-max-options-ambiguity-cross-harness.md`](results/decision-max-options-ambiguity-cross-harness.md) for the completed evaluation.
 
 ## Results
 
-Sonnet 5 / high-effort Claude results have been moved to:
+Authoritative current cross-harness composition evidence:
+
+[`results/decision-max-options-ambiguity-cross-harness.md`](results/decision-max-options-ambiguity-cross-harness.md)
+
+Earlier Claude-only hardening evidence remains useful history:
 
 [`results/max-options-sonnet-5-high.md`](results/max-options-sonnet-5-high.md)
 
