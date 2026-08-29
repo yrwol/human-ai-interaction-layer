@@ -95,3 +95,30 @@ Expected: current explicit detail request wins without changing the persistent p
 ## Evidence discipline
 
 Raw runner records remain private in `yrwol/hail-testing`. Record run IDs and reviewed findings here. Do not promote any projection wording change from a single stochastic response without a repeat or meaningful cross-harness pattern.
+
+
+## Launched runs
+
+### Scenario 1 — fixed three-choice depth control
+
+- `33233429854` — compact
+- `33233432832` — balanced
+- `33233435980` — detailed
+
+### Scenario 2 — open-ended cap pressure
+
+- `33233446636` — compact
+- `33233448385` — balanced
+- `33233450593` — detailed
+
+### Scenario 3 — informational-list boundary
+
+- `33233452331` — compact
+- `33233454299` — detailed
+
+### Scenario 4 — explicit current-request overrides
+
+- `33233455887` — balanced profile, explicit six-choice request
+- `33233458116` — compact profile, explicit detailed-explanation request
+
+All runs target Claude Sonnet + Codex GPT-5.5/high and use fresh sessions against `eval/verbosity-max-options`.
