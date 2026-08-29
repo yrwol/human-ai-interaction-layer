@@ -123,43 +123,46 @@ Evidence:
 - [`../evals/prompt-hardening/verbosity-max-options-composition.md`](../evals/prompt-hardening/verbosity-max-options-composition.md)
 ## Current project checkpoint
 
-### Multi-turn semantic eval support
+### `verbosity × decision_mode`
 
-Status: **next**
+Status: **active — final planned single-turn composition**
 
-The current one-prompt/fresh-session runner has reached the edge of what it can validly prove. Several existing HAIL semantics depend on behavior across interaction turns.
+The immediate question is:
 
-The immediate infrastructure question is:
+> Can HAIL change explanatory depth without changing who owns the decision?
 
-> Can `hail-testing` preserve one harness conversation across a scripted sequence of user turns while capturing the complete interaction record and keeping HAIL profile/projection state stable?
+This composition is valid for the current fresh-session runner because both response depth and decision ownership are observable in one response.
 
-This work is now justified by concrete blocked semantic questions; it is not general-purpose runtime/MCP infrastructure.
+Primary checks:
 
-Minimum runner contract:
+- `options` remains neutral under compact, balanced, and detailed responses;
+- `recommend_first` keeps the recommendation unmistakable at every verbosity;
+- `choose_by_default` remains observably action-oriented rather than collapsing into recommendation-first behavior;
+- detailed reasoning does not create recommendation/decision creep;
+- compact responses do not erase decision-ownership distinctions;
+- explicit current recommendation requests override persistent `options` for that interaction;
+- the shared consequential-ambiguity boundary remains stable across verbosity.
 
-- start each scenario from a fresh harness session;
-- apply one recorded HAIL ref/profile before the scenario begins;
-- send an ordered sequence of user turns through the **same** conversation/session;
-- preserve assistant context naturally between those turns;
-- capture every user/assistant turn plus harness/model/effort/profile/ref metadata;
-- do not mutate the persistent profile between turns unless the scenario explicitly tests profile management;
-- keep Claude and Codex behavior records comparable without requiring identical harness implementation details;
-- retain the existing single-turn runner for scenarios that do not require state.
+Evidence:
 
-First semantics unlocked by this runner:
+- [`../evals/prompt-hardening/verbosity-decision-mode-composition.md`](../evals/prompt-hardening/verbosity-decision-mode-composition.md)
+
+## Near-term work
+
+### Finish the final single-turn composition
+
+Run the `verbosity × decision_mode` cross-harness matrix and focused override/ambiguity controls. Change projection wording only for repeatable composition failures.
+
+### Then build multi-turn semantic eval support
+
+After this suite, the remaining defined composition work requires conversation state. Extend private `yrwol/hail-testing` with the smallest scripted multi-turn capability needed to unlock:
 
 1. base `task_chunking` cross-harness replay;
 2. [`verbosity × task_chunking`](../evals/prompt-hardening/verbosity-task-chunking-composition.md);
 3. [`task_chunking × step_pacing`](../evals/prompt-hardening/task-chunking-step-pacing-composition.md);
 4. [`tangent_policy × step_pacing`](../evals/prompt-hardening/tangent-policy-step-pacing-composition.md).
 
-The first validation scenario should prove the runner itself can observe a wait/resume interaction that the current single-turn runner cannot.
-
-## Near-term work
-
-### Build the smallest multi-turn runner extension
-
-Prefer extending the private `yrwol/hail-testing` harness rather than adding runtime infrastructure to HAIL itself. Do not design a general conversation protocol before the minimum scripted-turn experiment proves useful.
+The runner should preserve one harness conversation across ordered user turns and capture the full transcript. Do not substitute independent single-turn prompts.
 ### Discoverable skills interaction surface
 
 Status: **implemented; deterministic management behavior validated; interactive discovery UI check pending**
