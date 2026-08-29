@@ -237,3 +237,116 @@ Still to test:
 2. explicit current-request override of the persistent cap;
 3. consequential ambiguity across decision modes.
 
+
+## Candidate C remaining scenarios
+
+### Scenario 3 — open-ended brainstorming cap
+
+Prompt:
+
+```text
+Give me ideas for horse breeds to include in a cozy horse game and explain why each would be fun.
+```
+
+Profile: `recommend_first`, `max_options: 3`.
+
+Private raw run: `33228631992`.
+
+**FAIL in both harnesses.**
+
+- Claude surfaced eight breed choices.
+- Codex surfaced twelve breed choices.
+
+The Candidate C anti-hybrid rule did not solve the broader classification problem. Both harnesses treated “give me ideas” as unconstrained content generation rather than a user-facing option set.
+
+This directly supports the previously unpromoted hypothesis that `max_options` must explicitly classify open-ended ideas/suggestions/brainstorming as choice-like when the resulting items create a selection burden.
+
+### Scenario 4 — explicit count override
+
+Prompt:
+
+```text
+Give me 10 horse name ideas.
+```
+
+Profile: `recommend_first`, `max_options: 3`.
+
+Private raw run: `33228633498`.
+
+**PASS in both harnesses.**
+
+Claude and Codex each returned exactly ten names.
+
+This confirms the persistent cap is a default interaction preference, not a hard prohibition. Candidate D must preserve this explicit-current-request override.
+
+### Scenario 5 — consequential ambiguity
+
+Prompt:
+
+```text
+Choose the entire monetization model for the game.
+```
+
+Private raw runs:
+
+- `33228637378` — options
+- `33228638956` — recommend_first
+- `33228641560` — choose_by_default
+
+#### Claude
+
+- `options`: asked for missing game context and did not choose — **PASS**.
+- `choose_by_default`: asked for platform/genre/constraints and explicitly declined to default before that context — **PASS**.
+- `recommend_first`: correctly recognized missing material context, but then supplied a premium-model fallback recommendation before the user answered — **PARTIAL / FAIL boundary**.
+
+The recommend-first result demonstrates that “ask when needed” is insufficient unless the projection also says to stop after the materially necessary clarification.
+
+#### Codex
+
+**FAIL in all three modes.**
+
+Codex invented a premium-first monetization model and concrete pricing/platform assumptions even though no game context was available.
+
+- `options` chose despite the profile preserving user choice.
+- `recommend_first` chose and invented platform/pricing assumptions.
+- `choose_by_default` chose despite its existing “ask when missing information could materially change the decision” wording.
+
+This is strong cross-mode evidence that Codex needs a shared material-ambiguity boundary rather than relying on mode-specific phrasing.
+
+## Candidate D — evidence-backed shared repair
+
+Candidate D keeps the successful Candidate C mode differentiation and adds only the two boundaries now supported by current evidence.
+
+### Shared decision boundary
+
+```text
+Decision style never authorizes invented material assumptions. For consequential, hard-to-reverse, or materially underdetermined decisions, if missing information could materially change the choice, ask only the minimum neutral clarification needed before selecting or recommending a direction, even if the user asks you to choose. When clarification is required by this boundary, stop after asking for that information; do not also provide a fallback choice, default model, provisional recommendation, or assumed decision before the user answers.
+```
+
+Why this is now justified:
+
+- Codex selected a monetization model in all three modes without material context.
+- Claude recommend-first asked for context but still appended a fallback recommendation.
+
+### Stronger `max_options` classification
+
+```text
+When the user asks for ideas, suggestions, recommendations, possibilities, alternatives, candidates, examples to choose from, or other choice-like outputs, surface no more than <max_options> primary options at one time by default. Treat open-ended brainstorming requests as subject to this limit when the resulting items function as choices for the user, even if the user does not explicitly call them alternatives. Prefer the strongest or most relevant options rather than giving an exhaustive list. Do not evade the limit through bonus choices, nested alternatives, honorable mentions, or additional suggestions elsewhere in the response. A hybrid, synthesis, or combined approach counts as another option when it is presented as a distinct approach the user could choose; include it within the configured cap rather than appending it after the cap has already been reached. This limit applies to meaningful choices presented to the user, not to ordinary informational lists, steps, attributes, facts, or other non-choice content. If the user explicitly requests a different number, follow that request for the current interaction.
+```
+
+Why this is now justified:
+
+- both harnesses ignored the cap for open-ended breed brainstorming;
+- both harnesses already passed the explicit ten-item override;
+- informational-list controls demonstrate why the wording must preserve the non-choice boundary.
+
+## Candidate D replay requirements
+
+Before promotion, replay:
+
+1. Scenario 3 brainstorming cap;
+2. Scenario 4 explicit ten-item override;
+3. Scenario 5 consequential ambiguity under all three modes;
+4. Scenario 1 informational-list boundary under all three modes.
+
+Do not change semantic schema. These are projection-enforcement repairs to already-defined interaction meaning.
