@@ -2,7 +2,7 @@
 
 ## Status
 
-- **Status:** active
+- **Status:** complete for recorded single-turn scope; Claude Candidate A promoted
 - **Evaluation method:** single-turn observable
 - **Harness target:** Claude + Codex
 - **Current HAIL ref under test:** `eval/verbosity-decision-mode`
@@ -179,3 +179,25 @@ Record reviewed evidence in:
 ```text
 results/verbosity-decision-mode-cross-harness.md
 ```
+
+
+## Outcome
+
+The composition is complete for the recorded single-turn scope.
+
+Findings:
+
+- verbosity remained independently meaningful; no verbosity wording change was justified;
+- `options` remained neutral overall, with one non-repeatable compact Codex drift;
+- `recommend_first` remained clear at compact, balanced, and detailed;
+- Codex `choose_by_default` remained distinct with existing wording;
+- Claude `choose_by_default` collapsed into recommendation-style “best fit” language at all three verbosity levels;
+- a Claude-specific Candidate A requiring explicit working-decision adoption repaired that distinction at compact, balanced, and detailed;
+- explicit recommendation requests correctly overrode persistent `options`;
+- consequential ambiguity remained governed by the shared material-context boundary.
+
+Authoritative evidence:
+
+[`results/verbosity-decision-mode-cross-harness.md`](results/verbosity-decision-mode-cross-harness.md)
+
+No schema change is required.
