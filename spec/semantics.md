@@ -120,7 +120,7 @@ The limit applies to meaningful choice-like output such as alternatives, suggest
 
 An explicit request for a different number may override the persistent default for the current interaction.
 
-Status: **validated and hardened across Claude and Codex under the recorded single-turn composition conditions**. Current evidence supports treating open-ended brainstorming as choice-like when it creates a selection burden, counting hybrids/syntheses as choices when presented as distinct approaches, preserving explicit current-request count overrides, and leaving ordinary informational lists outside the cap.
+Status: **validated and cross-harness hardened under the recorded single-turn composition conditions**. Current evidence supports treating open-ended brainstorming as choice-like when it creates a selection burden, counting hybrids/syntheses as choices when presented as distinct approaches, preserving explicit current-request count overrides, and leaving ordinary informational lists outside the cap. Prompt-only enforcement is not deterministic: both tested harnesses can still occasionally append a distinct closing synthesis/hybrid after the configured choice limit despite explicit projection wording. That is an enforcement limitation, not a semantic-schema gap.
 
 ### `task_chunking`
 
