@@ -77,52 +77,61 @@ Evidence:
 - [`../evals/prompt-hardening/results/verbosity-cross-harness-detailed.md`](../evals/prompt-hardening/results/verbosity-cross-harness-detailed.md)
 - [`../evals/prompt-hardening/verbosity.md`](../evals/prompt-hardening/verbosity.md)
 
+### Cross-harness `max_options × decision_mode × ambiguity` hardening
+
+Status: **complete for the tested single-turn scope / promoted**
+
+The cross-harness composition replay exposed and repaired several interaction failures:
+
+- `options` treated explicit comparisons as permission to recommend;
+- `choose_by_default` was not reliably distinct from recommendation-first behavior;
+- open-ended brainstorming bypassed `max_options: 3` in both harnesses;
+- hybrids/syntheses could behave as hidden extra choices;
+- Codex invented consequential monetization assumptions across all decision modes;
+- Claude `recommend_first` could ask for necessary context and still append a fallback recommendation.
+
+Candidate D repaired those failures while preserving:
+
+- explicit current-request count overrides;
+- ordinary informational lists outside the option cap; and
+- recognizable decision ownership across `options`, `recommend_first`, and `choose_by_default`.
+
+Claude showed some run-to-run ambiguity variance on the informational control, but repeat runs did not reproduce a stable regression.
+
+Evidence:
+
+- [`../evals/prompt-hardening/results/decision-max-options-ambiguity-cross-harness.md`](../evals/prompt-hardening/results/decision-max-options-ambiguity-cross-harness.md)
+- [`../evals/prompt-hardening/max-options-decision-mode-composition.md`](../evals/prompt-hardening/max-options-decision-mode-composition.md)
+
 ## Current project checkpoint
 
-### `max_options × decision_mode × ambiguity`
+### `verbosity × max_options`
 
-Status: **active**
+Status: **next**
 
-The immediate semantic-hardening question is:
+The immediate single-turn composition question is:
 
-> Do `max_options` and `decision_mode` remain independently meaningful when an otherwise answerable prompt contains ambiguity, or do they amplify each other into unnecessary choice-making, hidden recommendations, or option leakage?
+> Can HAIL increase useful explanatory depth without increasing simultaneous choice load, and can `max_options` constrain choices without flattening the explanation around them?
 
-This suite is valid for the current semantic runner because the target failures are observable in one response.
+This suite is valid for the current semantic runner because both response detail and user-facing option count are observable in one response.
 
-The hardening method remains:
+Primary checks:
 
-```text
-semantic intent
-→ observable behavioral distinction
-→ targeted failure scenario
-→ smallest projection-wording change
-→ regression / boundary checks
-→ cross-harness replay
-→ composition only when the evaluation runner can validly observe it
-```
+- `verbosity: detailed` adds useful explanatory layers around the same bounded choice set rather than generating more alternatives;
+- `verbosity: compact` does not collapse necessary tradeoff information merely to stay brief;
+- `max_options` continues to count meaningful choices rather than bullets, examples, facts, or explanatory subpoints;
+- explicit user requests for more/fewer choices or more/less detail still override persistent defaults for the current interaction;
+- the already-promoted Candidate D decision/option boundaries remain stable while verbosity changes.
 
 Evidence should record harness, model, effort/reasoning mode, profile values, session conditions, and exact projection wording. A successful result under one configuration is evidence for that configuration, not a universal model/harness claim.
 
 The current semantic `hail-testing` workflow supplies one prompt in a fresh session. Treat it as authoritative only for behavior that can be judged from that single response.
 
-The separate skill-surface workflow is deterministic state validation, not a conversational multi-turn runner.
-
 ## Near-term work
 
 ### Active single-turn composition
 
-Run [`max_options × decision_mode × ambiguity`](../evals/prompt-hardening/max-options-decision-mode-composition.md) first.
-
-Primary checks:
-
-- `options` does not smuggle in a preferred answer when the user has not asked for one;
-- `recommend_first` recommends without creating unnecessary menus;
-- `choose_by_default` actually adopts a reversible working choice when sufficient context exists;
-- `max_options` limits meaningful choices without capping ordinary informational content;
-- clarification occurs only when missing context materially blocks a useful answer;
-- hybrids, syntheses, or closing recommendations do not silently create extra options beyond the configured cap.
-
-After that, [`verbosity × max_options`](../evals/prompt-hardening/verbosity-max-options-composition.md) remains a valid single-turn composition candidate.
+Run [`verbosity × max_options`](../evals/prompt-hardening/verbosity-max-options-composition.md).
 
 ### Blocked pending multi-turn semantic runner
 
