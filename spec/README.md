@@ -20,6 +20,7 @@ For **profile fields**, a capability spec is also required as the field's durabl
 - [`capabilities/template.md`](capabilities/template.md) — required starting structure for a new profile-field capability contract.
 - [`capabilities/review-guidance.md`](capabilities/review-guidance.md) — review confidence, intelligent skepticism, verification support, review-loop detection, domain-local scaffolding, and cognitive-load reduction while evaluating AI output.
 - [`capabilities/conversation-review.md`](capabilities/conversation-review.md) — evidence-based retrospective of human–AI collaboration, including friction/success detection, profile-vs-projection diagnosis, confidence, and non-mutating recommendations.
+- [`capabilities/semantic-context-reflection.md`](capabilities/semantic-context-reflection.md) — proposed semantic interpretation layer that turns bounded conversation evidence into governed context proposals without keyword-driven extraction or automatic persistence.
 - [`capabilities/discoverable-skills.md`](capabilities/discoverable-skills.md) — implemented first-class management-skill architecture for `show`, `setup`, `change`, and `reset`, with future capabilities such as `review` reserved until their own contracts and implementations are ready.
 
 A non-profile capability spec may contribute durable product principles or interaction-surface behavior while remaining separate from the current semantic model.
