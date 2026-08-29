@@ -77,4 +77,4 @@ HAIL owns the generated projection file, but unrelated content in `~/.claude/CLA
 
 ## Validation status
 
-The original native Claude profile-management flow was manually validated before the discoverable-skill split. The new skill surface and bundled-resource architecture still require discovery, normalization, and behavioral-parity validation before the capability is marked complete.
+The original native Claude profile-management flow was manually validated before the discoverable-skill split. The current skill surface and bundled-resource architecture now pass deterministic package, callability, normalization, state-mutation, and projection/import-integrity validation. Interactive autocomplete/search presentation remains a separate manual harness-UI check.
