@@ -185,6 +185,22 @@ Relevant unresolved design questions include explicit versus inferred state, sco
 
 ## Later candidates
 
+### Conversation review
+
+Status: **specified; implementation pending**
+
+The capability contract is defined in [`capabilities/conversation-review.md`](capabilities/conversation-review.md).
+
+Conversation review asks:
+
+> Given this conversation, what interaction patterns helped or hindered the user, what evidence supports that conclusion, and what is the smallest appropriate response?
+
+The first implementation should stay intentionally narrow: review the current conversation from available transcript context, identify explicit corrections/repeated overrides and positive alignment signals, cluster them into evidence-backed findings, compare relevant findings against the active HAIL profile when available, and distinguish profile mismatch from projection/enforcement failure, situational behavior, unmodeled interaction signals, task/domain failures, or insufficient evidence.
+
+Review must remain read-only with respect to persistent HAIL configuration unless the user separately and explicitly requests a supported profile change. Historical-session adapters, automatic eval persistence, broad history indexing, shared runtime/MCP infrastructure, and automatic preference learning are not prerequisites for the first experiment.
+
+The discoverable-skills capability reserves a future `review` skill, but Claude/Codex must not package or advertise it until this capability is implemented and validated.
+
 ### Runtime / MCP — only if justified
 
 Explore a shared runtime only if a validated capability cannot be delivered adequately with harness-native mechanisms. Multi-harness projection synchronization alone is not justification for one.
