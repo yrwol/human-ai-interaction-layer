@@ -166,3 +166,71 @@ Candidate A must replay:
 - Claude compact / balanced / detailed core `choose_by_default`;
 - Claude compact + detailed consequential ambiguity controls;
 - at least one Claude `recommend_first` control to confirm the distinction remains clear.
+
+
+## Repeat and corrected-control evidence
+
+### Codex compact `options` repeats
+
+The initial compact Codex run drifted toward a bond/trust-centered design. Two Codex-only repeats were run before changing wording:
+
+- `33254739788`
+- `33254742505`
+
+Both repeats stayed conditional rather than selecting a winner: they mapped each progression model to a different player fantasy and left the decision with the user.
+
+**Assessment:** the initial compact Codex recommendation creep is stochastic, not a stable verbosity-specific failure. No Codex projection change is justified.
+
+### Corrected explicit recommendation override
+
+Self-contained prompt:
+
+```text
+For a cozy horse game, recommend one of these horse training progression approaches and explain why: stat-based leveling, bond/trust progression, or discipline skill trees.
+```
+
+Runs:
+
+- `33254734562` — compact × options
+- `33254737735` — detailed × options
+
+**PASS in both harnesses at both verbosity levels.**
+
+Persistent `decision_mode: options` correctly yields to an explicit current recommendation request, while verbosity changes the depth of the explanation.
+
+## Candidate A replay — Claude `choose_by_default`
+
+Runs:
+
+- `33254807079` — compact core
+- `33254809403` — balanced core
+- `33254811960` — detailed core
+- `33254814263` — compact consequential ambiguity
+- `33254816560` — detailed consequential ambiguity
+- `33254819162` — balanced `recommend_first` differentiation control
+
+### Core result
+
+Candidate A repairs the repeated Claude differentiation failure:
+
+- compact: **PASS** — “Use bond/trust progression as the working default.”
+- balanced: **PASS** — same explicit adoption mechanic with more rationale.
+- detailed: **PASS** — same explicit adoption mechanic with deeper tradeoff discussion.
+
+The change is observable and stable across verbosity values. Claude now adopts a working decision instead of merely saying one option “fits best.”
+
+### Recommendation-first distinction
+
+Balanced `recommend_first` remains distinct:
+
+```text
+Recommendation: bond/trust progression.
+```
+
+**PASS.** Candidate A does not collapse recommendation-first and choose-by-default into the same behavior.
+
+### Consequential ambiguity
+
+Compact Candidate A ambiguity control: **PASS** — Claude asks for material context and stops before choosing.
+
+Detailed Candidate A ambiguity control: **pending final run completion**.
